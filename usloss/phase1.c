@@ -19,7 +19,7 @@ int sentinel (char *);
 void dispatcher(void);
 void launch();
 static void checkDeadlock();
-
+void initializeProcessTableEntry(int entryNumber); 
 
 /* -------------------------- Globals ------------------------------------- */
 
@@ -55,6 +55,10 @@ void startup(int argc, char *argv[])
     /* initialize the process table */
     if (DEBUG && debugflag)
         USLOSS_Console("startup(): initializing process table, ProcTable[]\n");
+    //Now that the debug message has been printed, initialize the process table 
+    for(int i = 0; i < MAXPROC; i++){
+        initializeProcessTableEntry(i); 
+    }
 
     // Initialize the Ready list, etc.
     if (DEBUG && debugflag)
@@ -282,3 +286,28 @@ void disableInterrupts()
     // halt USLOSS
 
 } /* disableInterrupts */
+
+/* ------------------------------------------------------------------------
+ * Name - initializeProcessTableEntry 
+ * Purpose - The singular purpose of this function is to 
+ *              initialize every variable contained within 
+ *              the procStruct that acts as the Process Table
+ *              for each element of the process table. 
+ * Parameters - The index of the entry to be initialized 
+ * Returns - nothing 
+ * Side effects - If called on an existing indice, 
+ *                  it will erease all data. 
+   ----------------------------------------------------------------------- */
+void initializeProcessTableEntry(int entryNumber){
+
+    ProcTable[entryNumber].nextProcPtr = NULL; 
+    ProcTable[entryNumber].childProcPtr = NULL; 
+    ProcTable[entryNumber].nextSiblingPtr = NULL; 
+    ProcTable[entryNumber].name[0] = 0; 
+    ProcTable[entryNumber].startArg[0] = 0; 
+   //ProcTable[entryNumber].state
+    ProcTable[entryNumber].pid = 0; 
+    ProcTable[entryNumber].priority = 0; 
+    ProcTable[entryNumber].stackSize = 0; 
+    ProcTable[entryNumber].status = 0; 
+}
