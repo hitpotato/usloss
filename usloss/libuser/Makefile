@@ -3,7 +3,7 @@ include ../version.mk
 include ../config.mk
 
 srcdir = .
-prefix = /Users/rodrigo
+prefix = /Users/longchen
 exec_prefix =   ${prefix}
 
 COBJS = libuser.o
