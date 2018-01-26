@@ -126,8 +126,11 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
         USLOSS_Console("fork1(): creating process %s\n", name);
 
     // test if in kernel mode; halt if in user mode
-    if (((USLOSS_PsrGet() << 7) >> 7) == 0)
+    if (((USLOSS_PsrGet() << 7) >> 7) == 0){
+        USLOSS_Console("fork1(): in user mode, halting %s\n", name);
         USLOSS_Halt(1);
+    }
+       
     // Return if stack size is too small
 
     // Is there room in the process table? What is the next PID?
