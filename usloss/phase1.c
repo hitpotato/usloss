@@ -19,7 +19,10 @@ int sentinel (char *);
 void dispatcher(void);
 void launch();
 static void checkDeadlock();
-void initializeProcessTableEntry(int entryNumber); 
+void initializeProcessTableEntry(int entryNumber);
+
+//Interrupt Handlers
+void clockHandler(int dev, void *arg);
 
 /* -------------------------- Globals ------------------------------------- */
 
@@ -38,6 +41,7 @@ procPtr Current;
 // the next pid to be assigned
 unsigned int nextPid = SENTINELPID;
 
+// Some ints for the clock
 
 /* -------------------------- Functions ----------------------------------- */
 /* ------------------------------------------------------------------------
@@ -66,6 +70,7 @@ void startup(int argc, char *argv[])
     ReadyList = NULL;
 
     // Initialize the clock interrupt handler
+    USLOSS_IntVec[USLOSS_CLOCK_INT] = clockHandler;
 
     // startup a sentinel process
     if (DEBUG && debugflag)
@@ -306,8 +311,20 @@ void initializeProcessTableEntry(int entryNumber){
     ProcTable[entryNumber].name[0] = 0; 
     ProcTable[entryNumber].startArg[0] = 0; 
    //ProcTable[entryNumber].state
-    ProcTable[entryNumber].pid = 0; 
+    ProcTable[entryNumber].pid = -1;
     ProcTable[entryNumber].priority = 0; 
     ProcTable[entryNumber].stackSize = 0; 
-    ProcTable[entryNumber].status = 0; 
+    ProcTable[entryNumber].status = 0;
+}
+
+/*
+ * Interrupt handlers are passed two parameters
+ * The first parameter indicates the type of argument,
+ * the second parameter varies depending on the type of interrupt
+ *
+ */
+void clockHandler(int dev, void *arg){
+
+
+
 }
