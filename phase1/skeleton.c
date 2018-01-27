@@ -39,6 +39,8 @@ procPtr Current;
 unsigned int nextPid = SENTINELPID;
 
 
+
+
 /* -------------------------- Functions ----------------------------------- */
 /* ------------------------------------------------------------------------
    Name - startup
@@ -126,14 +128,20 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
         USLOSS_Console("fork1(): creating process %s\n", name);
 
     // test if in kernel mode; halt if in user mode
-    if (((USLOSS_PsrGet() << 7) >> 7) == 0){
+    if (((USLOSS_PsrGet() << 31) >> 31) == 0){
         USLOSS_Console("fork1(): in user mode, halting %s\n", name);
         USLOSS_Halt(1);
     }
        
     // Return if stack size is too small
-
+    if (stacksize < USLOSS_MIN_STACK)
+        return -1;
     // Is there room in the process table? What is the next PID?
+    while (ProcTable[nextPid % sizeof(ProcTable)].status != 0){
+        nextPid += 1;
+    }
+    procSlot = nextPid % sizeof(ProcTable);
+    
 
     // fill-in entry in process table */
     if ( strlen(name) >= (MAXNAME - 1) ) {
@@ -150,6 +158,7 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     }
     else
         strcpy(ProcTable[procSlot].startArg, arg);
+    ProcTable[procSlot].status = 1;
 
     // Initialize context for this process, but use launch function pointer for
     // the initial value of the process's program counter (PC)
