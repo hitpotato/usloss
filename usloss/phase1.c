@@ -3,14 +3,18 @@
 
    University of Arizona
    Computer Science 452
-   Fall 2015
+   Spring 2018
+
+   Rodrigo Silva Mendoza
+   Long Chen
 
    ------------------------------------------------------------------------ */
 
 #include "phase1.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
+#include <stdbool.h>
+
 
 #include "kernel.h"
 #include "usloss.h"
@@ -22,6 +26,7 @@ void dispatcher(void);
 void launch();
 static void checkDeadlock();
 void initializeProcessTableEntry(int entryNumber);
+bool inKernelMode();
 
 //Interrupt Handlers
 void clockHandler(int dev, void *arg);
@@ -154,10 +159,38 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
         USLOSS_Console("fork1(): creating process %s\n", name);
 
     // test if in kernel mode; halt if in user mode
+//    if (((USLOSS_PsrGet() << 31) >> 31) == 0){
+//        USLOSS_Console("fork1(): in user mode, halting %s\n", name);
+//        USLOSS_Halt(1);
+//    }
+
+    // test if in kernel mode; halt if in user mode
+    if(!inKernelMode()){
+        haltAndPrintError();
+    }
+
+    //Error check the priority
+    // MAXPRIORITY = 1
+    // MINPRIORITY = 5
+    if(priority < MAXPRIORITY || priority > MINPRIORITY)
+        //Make sure that that we are not forking sentinenl,
+        //Which has a priority of 6
+        if(startFunc != sentinel)
+            return -1;
 
     // Return if stack size is too small
+    if (stacksize < USLOSS_MIN_STACK)
+        return -1;
 
     // Is there room in the process table? What is the next PID?
+    int i = 0;
+    while (ProcTable[nextPid % sizeof(ProcTable)].status != 0){
+        if (i > 50)
+            return -1;
+        nextPid += 1;
+        i++;
+    }
+    procSlot = nextPid % sizeof(ProcTable);
 
     // fill-in entry in process table */
     if ( strlen(name) >= (MAXNAME - 1) ) {
@@ -174,6 +207,15 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     }
     else
         strcpy(ProcTable[procSlot].startArg, arg);
+    ProcTable[procSlot].nextProcPtr = NULL;
+    ProcTable[procSlot].nextSiblingPtr = NULL;
+    ProcTable[procSlot].childProcPtr = NULL;
+    ProcTable[procSlot].status = 1;
+    ProcTable[procSlot].pid = (short) nextPid;
+    ProcTable[procSlot].priority = priority;
+    ProcTable[procSlot].stackSize = stacksize;
+    ProcTable[procSlot].stack = (char*) malloc (stacksize);
+    ProcTable[procSlot].state = NULL;
 
     // Initialize context for this process, but use launch function pointer for
     // the initial value of the process's program counter (PC)
@@ -184,12 +226,18 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
                        NULL,
                        launch);
 
+
     // for future phase(s)
     p1_fork(ProcTable[procSlot].pid);
 
     // More stuff to do here...
+    nextPid += 1;
+    dispatcher();
+    unsigned int interrupt_bit = 1;
+    USLOSS_PsrSet(USLOSS_PsrGet() & (interrupt_bit << 1));
 
-    return -1;  // -1 is not correct! Here to prevent warning.
+
+    return nextPid - 1;  // -1 is not correct! Here to prevent warning.
 } /* fork1 */
 
 /* ------------------------------------------------------------------------
@@ -308,8 +356,33 @@ void disableInterrupts()
     // turn the interrupts OFF iff we are in kernel mode
     // if not in kernel mode, print an error message and
     // halt USLOSS
+    if(!inKernelMode()){
+        //Display an error message to console
+        USLOSS_Console("Kernel Error: Not in kernel mode, interrupts cannot be disabled\n");
+        //Halt process with an non-zero argument, this dumps a core file
+        USLOSS_Halt(1);
+    }
+    else {
+        //Set the current enable bit to 0, which disables interrupts
+        USLOSS_PsrSet(USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_INT);
+    }
 
 } /* disableInterrupts */
+
+void enableInterrupts(){
+
+    //We can only turn interrupts on if we are in kernal mode, so do that first
+    if(!inKernelMode()){
+        //Display an error message to console
+        USLOSS_Console("Kernel Error: Not in kernel mode, interrupts cannot be enabled\n");
+        //Halt process with an non-zero argument, this dumps a core file
+        USLOSS_Halt(1);
+    }
+    else{
+        //This sets the current enable interrupt bit to 1, enabling interrupts
+        USLOSS_PsrSet(USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT);
+    }
+}
 
 /* ------------------------------------------------------------------------
  * Name - initializeProcessTableEntry 
@@ -339,3 +412,37 @@ void clockHandler(int dev, void *arg){
 
 
 }
+
+/*
+ * Checks whether we are currently in kernel mode
+ * Returns true if we are
+ * False otherwise
+ */
+bool inKernelMode(){
+    bool kernelMode = false;
+
+    //This ands the 0x1 with the PSR from USloss, giving us
+    //the current mode bit.
+    //If this bit is 0, we are in user mode
+    //If it is something else, then we are in kernel mode
+    if((USLOSS_PSR_CURRENT_MODE & USLOSS_PsrGet()) != 0)
+        kernelMode = true;
+
+    return kernelMode;
+
+}
+
+/* ------------------------------------------------------------------------
+ * Name:            haltAndPrintError
+ * Purpose:         Print an error to console, and halt USLOSS
+ * Parameter:       None
+ * Returns:         Nothing
+ * Side Effects:    USLOSS is Halted and Error is printed to console
+ * ------------------------------------------------------------------------ */
+void haltAndPrintError(){
+    USLOSS_Console("ERROR: Not in kernel mode!\n");
+    USLOSS_Halt(1);
+}
+
+
+

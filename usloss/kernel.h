@@ -44,5 +44,6 @@ union psrValues {
 #define QUIT 0
 #define READY 1
 #define BLOCKED = -1
+#define EMPTY = 2
 
 
