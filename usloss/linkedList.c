@@ -26,7 +26,6 @@ void insertNodeIntoList(processPriorityQueue *list, unsigned int pid, int priori
 Node *getNode(processPriorityQueue *list, int element);
 Node *lookAtFirstElement(processPriorityQueue *list);
 Node *popFromList(processPriorityQueue *list);
-Node *find_status(processPriorityQueue *list, unsigned int status);
 Node *find_pid(processPriorityQueue *list, unsigned int pid);
 void printList(processPriorityQueue *list);
 
