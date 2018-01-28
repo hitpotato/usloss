@@ -174,26 +174,37 @@ void printQueue(processPriorityQueue *list){
     printf("The total length of the list was: %d elements\n", length);
 }
 
-int main(){
+bool isEmpty(processPriorityQueue *queue){
+    bool empty = false;
+    Node *node = queue->first;
 
-    processPriorityQueue *priorityList_1 = initializeQueue();
-    processPriorityQueue *priorityList_2 = initializeQueue();
+    if(node == NULL){
+        empty = true;
+    }
 
-
-    insertNodeIntoQueue(priorityList_1, 1, 1);
-    insertNodeIntoQueue(priorityList_1, 2, 1);
-    insertNodeIntoQueue(priorityList_1, 3, 1);
-    insertNodeIntoQueue(priorityList_1, 4, 1);
-    insertNodeIntoQueue(priorityList_1, 5, 1);
-
-
-
-    //Node *temp = lookAtFirstElement(priorityList_1);
-    //printf("First processNode has pid of %d and priority of %d\n", temp->pid, temp->priority);
-
-    printQueue(priorityList_1);
-    printQueue(priorityList_2);
+    return empty;
 }
+
+//int main(){
+//
+//    processPriorityQueue *priorityList_1 = initializeQueue();
+//    processPriorityQueue *priorityList_2 = initializeQueue();
+//
+//    printf("The list is empty at first: %d\n", isEmpty(priorityList_1));
+//    insertNodeIntoQueue(priorityList_1, 1, 1);
+//    insertNodeIntoQueue(priorityList_1, 2, 1);
+//    insertNodeIntoQueue(priorityList_1, 3, 1);
+//    insertNodeIntoQueue(priorityList_1, 4, 1);
+//    insertNodeIntoQueue(priorityList_1, 5, 1);
+//
+//
+//
+//    //Node *temp = lookAtFirstElement(priorityList_1);
+//    //printf("First processNode has pid of %d and priority of %d\n", temp->pid, temp->priority);
+//
+//    printQueue(priorityList_1);
+//    printQueue(priorityList_2);
+//}
 
 
 

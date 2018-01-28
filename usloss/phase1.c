@@ -80,11 +80,13 @@ void startup(int argc, char *argv[])
     if (DEBUG && debugflag)
         USLOSS_Console("startup(): initializing the Ready list\n");
 
-    /*
-     * We have six priority queues. They will be of size 50, to account for the
-     * case in which all 50 processes have the same priority.
-     */
-
+    //Initialize the six priority queues
+    priorityList_1 = initializeQueue();
+    priorityList_2 = initializeQueue();
+    priorityList_3 = initializeQueue();
+    priorityList_4 = initializeQueue();
+    priorityList_5 = initializeQueue();
+    priorityList_6 = initializeQueue();
 
     // Initialize the clock interrupt handler
     USLOSS_IntVec[USLOSS_CLOCK_INT] = clockHandler;

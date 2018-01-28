@@ -41,8 +41,8 @@ union psrValues {
 #define SENTINELPID 1
 #define SENTINELPRIORITY (MINPRIORITY + 1)
 
-
+#define QUIT 0
 #define READY 1
 #define BLOCKED = -1
-#define QUIT 0
+
 
