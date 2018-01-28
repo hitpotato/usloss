@@ -2,7 +2,7 @@
 include ../version.mk
 include ../config.mk
 
-# List of object files to generate (and the list of source files, generated
+# processPriorityQueue of object files to generate (and the list of source files, generated
 # by pattern substitution)
 
 COBJS=main.o globals.o devices.o dev_disk.o dev_term.o dev_alarm.o dev_clock.o \

@@ -3,63 +3,63 @@
 #include <string.h>
 #include <assert.h>
 
-typedef struct node {
+typedef struct processNode {
     unsigned int pid;
     int priority;
-    struct node *next;
+    struct processNode *next;
 } Node;
 
 typedef struct list {
     Node *first;
-} List;
+} processPriorityQueue;
 
-Node *create_node();
-void delete_node(Node *node);
-void remove_node(List *list, unsigned int pid);
+Node *createNewNode();
+void deleteNode(Node *node);
+void deleteNodeWithPID(processPriorityQueue *list, unsigned int pid);
 
-List *create_list();
-void delete_list(List *list);
-
-
-void append_list(List *list, unsigned int pid, int priority);
-void insert(List *list, unsigned int pid, int priority);
-Node *getNode(List *list, int element);
-Node *peek(List *list);
-Node *pop(List* list);
-Node *find_status(List *list, unsigned int status);
-Node *find_pid(List *list, unsigned int pid);
-void print_list(List *list);
+processPriorityQueue *initializeList();
+void freeList(processPriorityQueue *list);
 
 
-List *create_list() {
-    List *new_list = malloc(sizeof(List));
-    Node *first = create_node();
+
+void insertNodeIntoList(processPriorityQueue *list, unsigned int pid, int priority);
+Node *getNode(processPriorityQueue *list, int element);
+Node *lookAtFirstElement(processPriorityQueue *list);
+Node *popFromList(processPriorityQueue *list);
+Node *find_status(processPriorityQueue *list, unsigned int status);
+Node *find_pid(processPriorityQueue *list, unsigned int pid);
+void printList(processPriorityQueue *list);
+
+
+processPriorityQueue *initializeList() {
+    processPriorityQueue *new_list = malloc(sizeof(processPriorityQueue));
+    Node *first = createNewNode();
     new_list->first = first;
     return new_list;
 }
 
-void delete_list(List *list){
+void freeList(processPriorityQueue *list){
     Node *node = list->first;
     Node *next;
     while(node) {
         next = node->next;
-        delete_node(node);
+        deleteNode(node);
         node=next;
     }
     free(list);
 }
 
-Node *create_node(){
+Node *createNewNode(){
     Node *temp = malloc(sizeof(Node));
     temp->next=NULL;
     return temp;
 }
 
-void delete_node(Node *node){
+void deleteNode(Node *node){
     free(node);
 }
 
-void remove_node(List *list, unsigned int pid){
+void deleteNodeWithPID(processPriorityQueue *list, unsigned int pid){
     Node *node = list->first;
 
     //If the head element of the list is the one we want to remove
@@ -87,11 +87,11 @@ void remove_node(List *list, unsigned int pid){
  * Duplicate the action a queue takes when an element is popped.
  * Remove and return the first element in the linked list
  */
-Node *pop(List *list){
+Node *popFromList(processPriorityQueue *list){
     Node *temp = list->first;
 
     if(temp->next == NULL){
-        Node *new_first = create_node();
+        Node *new_first = createNewNode();
         list->first = new_first;
     }
     else {
@@ -103,13 +103,13 @@ Node *pop(List *list){
     return temp;
 }
 
-void insert(List *list, unsigned int pid, int priority){
+void insertNodeIntoList(processPriorityQueue *list, unsigned int pid, int priority){
     Node *temp;
     Node *node;
 
-    //Create a temp node with a pid and priority the same
+    //Create a temp processNode with a pid and priority the same
     //as the one that was passed in to us
-    temp = create_node();
+    temp = createNewNode();
     temp->pid = pid;
     temp->priority = priority;
 
@@ -119,7 +119,7 @@ void insert(List *list, unsigned int pid, int priority){
     node = list->first;
 
     //If the list was empty at first, simpyl set its first element
-    //to the new node
+    //to the new processNode
     if(node == NULL) {
         list->first = temp;
         return;
@@ -130,16 +130,16 @@ void insert(List *list, unsigned int pid, int priority){
         node = node->next;
     }
 
-    //Now, set the last node to our created temp node
+    //Now, set the last processNode to our created temp processNode
     node->next = temp;
 }
 
 // Simple function that returns the first element in the list
-Node *lookAtFirstElement(List *list){
+Node *lookAtFirstElement(processPriorityQueue *list){
     return list->first;
 }
 
-Node *getNode(List *list, int nodeNumber){
+Node *getNode(processPriorityQueue *list, int nodeNumber){
     Node *node = list->first;
 
     int i = 0;
@@ -151,7 +151,7 @@ Node *getNode(List *list, int nodeNumber){
     return node;
 }
 
-Node *find_pid(List *list, unsigned int pid){
+Node *find_pid(processPriorityQueue *list, unsigned int pid){
     Node *node = list->first;
 
     while(node->next != NULL){
@@ -164,7 +164,7 @@ Node *find_pid(List *list, unsigned int pid){
     return NULL;
 }
 
-void print_list(List *list){
+void printList(processPriorityQueue *list){
     Node *node = list->first;
 
     int length = 0;
@@ -179,19 +179,27 @@ void print_list(List *list){
 }
 
 int main(){
-    List *priorityList_1 = create_list();
 
+    processPriorityQueue *priorityList_1 = initializeList();
+    processPriorityQueue *priorityList_2 = initializeList();
 
-    insert(priorityList_1, 1, 1);
-    insert(priorityList_1, 2, 1);
-    insert(priorityList_1, 3, 1);
-    insert(priorityList_1, 4, 1);
-    insert(priorityList_1, 5, 1);
+    insertNodeIntoList(priorityList_1, 1, 1);
+    insertNodeIntoList(priorityList_1, 2, 1);
+    insertNodeIntoList(priorityList_1, 3, 1);
+    insertNodeIntoList(priorityList_1, 4, 1);
+    insertNodeIntoList(priorityList_1, 5, 1);
 
-    Node *temp = lookAtFirstElement(priorityList_1);
-    printf("First node has pid of %d and priority of %d\n", temp->pid, temp->priority);
+    insertNodeIntoList(priorityList_2, 1, 2);
+    insertNodeIntoList(priorityList_2, 2, 2);
+    insertNodeIntoList(priorityList_2, 3, 2);
+    insertNodeIntoList(priorityList_2, 4, 2);
+    insertNodeIntoList(priorityList_2, 5, 2);
 
-    print_list(priorityList_1);
+    //Node *temp = lookAtFirstElement(priorityList_1);
+    //printf("First processNode has pid of %d and priority of %d\n", temp->pid, temp->priority);
+
+    printList(priorityList_1);
+    printList(priorityList_2);
 }
 
 
