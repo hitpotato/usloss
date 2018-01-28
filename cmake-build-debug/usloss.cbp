@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="usloss"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="usloss">
+				<Option output="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/usloss" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 usloss"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="usloss/fast">
+				<Option output="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/usloss" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 usloss/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/longchen/Google\ Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/Makefile">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/kernel.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/p1.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/phase1.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/skeleton.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test00.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test01.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test02.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test03.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test04.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test05.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test06.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test07.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test08.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test09.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test10.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test11.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test12.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test13.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test14.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test15.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test16.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test17.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test18.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test19.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test20.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test21.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test22.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test23.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test24.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test25.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test26.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test27.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test28.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test29.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test30.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test31.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test32.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test33.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test34.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test35.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testResults/test36.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test00.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test01.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test02.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test03.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test04.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test05.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test06.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test07.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test08.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test09.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test10.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test11.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test12.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test13.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test14.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test15.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test16.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test17.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test18.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test19.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test20.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test21.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test22.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test23.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test24.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test25.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test26.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test27.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test28.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test29.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test30.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test31.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test32.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test33.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test34.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test35.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/phase1/testcases/test36.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/ChangeLog">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/Makefile">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/Makefile.in">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/README.md">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/config.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/config.h.in">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/config.log">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/config.mk">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/config.mk.in">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/config.status">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/configure">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/configure.ac">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/install-sh">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/kernel.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/Makefile">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/Makefile.in">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/disk.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/disk.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/libdisk.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/libdisk3.6.a">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/makedisk">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/makedisk.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libdisk/makedisk.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libphase1.a">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libuser/Makefile">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libuser/Makefile.in">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libuser/libuser.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libuser/libuser.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libuser/libuser.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/libuser/libuser3.6.a">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/p1.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/phase1.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/phase1.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/phase1.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/pterm/Makefile">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/pterm/Makefile.in">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/pterm/pterm">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/pterm/pterm.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/pterm/pterm.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/Makefile">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/Makefile.in">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_alarm.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_alarm.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_alarm.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_clock.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_clock.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_clock.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_disk.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_disk.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_disk.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_term.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_term.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/dev_term.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/devices.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/devices.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/devices.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/globals.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/globals.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/globals.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/libusloss3.6.a">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/main.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/main.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/main.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/mmu.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/mmu.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/mmuInt.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/project.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/sig_ints.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/sig_ints.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/sig_ints.o">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/syscall.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/test.py">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/usloss.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/src/usyscall.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test00.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test01.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test02.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test03.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test04.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test05.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test06.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test07.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test08.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test09.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test10.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test11.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test12.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test13.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test14.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test15.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test16.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test17.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test18.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test19.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test20.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test21.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test22.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test23.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test24.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test25.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test26.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test27.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test28.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test29.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test30.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test31.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test32.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test33.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test34.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test35.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testResults/test36.txt">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test00.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test01.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test02.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test03.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test04.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test05.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test06.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test07.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test08.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test09.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test10.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test11.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test12.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test13.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test14.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test15.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test16.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test17.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test18.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test19.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test20.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test21.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test22.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test23.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test24.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test25.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test26.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test27.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test28.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test29.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test30.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test31.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test32.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test33.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test34.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test35.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/testcases/test36.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/usloss.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/usloss/version.mk">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/longchen/Google Drive/Spring2018/cs452/usloss/phase1/usloss/usloss/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

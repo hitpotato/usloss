@@ -17,7 +17,7 @@ struct procStruct {
    int (* startFunc) (char *);   /* function where process begins -- launch */
    char           *stack;
    unsigned int    stackSize;
-   int             status;        /* READY, BLOCKED, QUIT, etc. */
+   int             status;        /* READY=1, BLOCKE=-1, QUIT=0, etc. */
    /* other fields as needed... */
 };
 

@@ -13,6 +13,7 @@
 #include <stdio.h>
 
 #include "kernel.h"
+#include "../usloss/usloss.h"
 
 /* ------------------------- Prototypes ----------------------------------- */
 int sentinel (char *);
@@ -137,11 +138,14 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     if (stacksize < USLOSS_MIN_STACK)
         return -1;
     // Is there room in the process table? What is the next PID?
+    int i = 0;
     while (ProcTable[nextPid % sizeof(ProcTable)].status != 0){
+        if (i > 50)
+            return -1;
         nextPid += 1;
+        i++;
     }
     procSlot = nextPid % sizeof(ProcTable);
-    
 
     // fill-in entry in process table */
     if ( strlen(name) >= (MAXNAME - 1) ) {
@@ -158,7 +162,15 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     }
     else
         strcpy(ProcTable[procSlot].startArg, arg);
+    ProcTable[procSlot].nextProcPtr = NULL;
+    ProcTable[procSlot].nextSiblingPtr = NULL;
+    ProcTable[procSlot].childProcPtr = NULL;
     ProcTable[procSlot].status = 1;
+    ProcTable[procSlot].pid = (short) nextPid;
+    ProcTable[procSlot].priority = priority;
+    ProcTable[procSlot].stackSize = stacksize;
+    ProcTable[procSlot].stack = (char*) malloc (stacksize);
+    ProcTable[procSlot].state = NULL;
 
     // Initialize context for this process, but use launch function pointer for
     // the initial value of the process's program counter (PC)
@@ -169,12 +181,18 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
                        NULL,
                        launch);
 
-    // for future phase(s)
+
+            // for future phase(s)
     p1_fork(ProcTable[procSlot].pid);
 
     // More stuff to do here...
+    nextPid += 1;
+    dispatcher();
+    unsigned int interrupt_bit = 1;
+    USLOSS_PsrSet(USLOSS_PsrGet() & (interrupt_bit << 1));
 
-    return -1;  // -1 is not correct! Here to prevent warning.
+
+    return nextPid - 1;  // -1 is not correct! Here to prevent warning.
 } /* fork1 */
 
 /* ------------------------------------------------------------------------
