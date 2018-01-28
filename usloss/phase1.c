@@ -13,6 +13,7 @@
 #include <stdio.h>
 
 #include "kernel.h"
+#include "usloss.h"
 
 /* ------------------------- Prototypes ----------------------------------- */
 int sentinel (char *);
@@ -33,7 +34,9 @@ int debugflag = 1;
 procStruct ProcTable[MAXPROC];
 
 // Process lists
-static procPtr ReadyList;
+static procPtr READYLIST;
+
+List *priorityQueue_1;
 
 // current process ID
 procPtr Current;
@@ -67,7 +70,12 @@ void startup(int argc, char *argv[])
     // Initialize the Ready list, etc.
     if (DEBUG && debugflag)
         USLOSS_Console("startup(): initializing the Ready list\n");
-    ReadyList = NULL;
+
+    /*
+     * We have six priority queues. They will be of size 50, to account for the
+     * case in which all 50 processes have the same priority.
+     */
+
 
     // Initialize the clock interrupt handler
     USLOSS_IntVec[USLOSS_CLOCK_INT] = clockHandler;
@@ -305,16 +313,8 @@ void disableInterrupts()
    ----------------------------------------------------------------------- */
 void initializeProcessTableEntry(int entryNumber){
 
-    ProcTable[entryNumber].nextProcPtr = NULL; 
-    ProcTable[entryNumber].childProcPtr = NULL; 
-    ProcTable[entryNumber].nextSiblingPtr = NULL; 
-    ProcTable[entryNumber].name[0] = 0; 
-    ProcTable[entryNumber].startArg[0] = 0; 
-   //ProcTable[entryNumber].state
     ProcTable[entryNumber].pid = -1;
-    ProcTable[entryNumber].priority = 0; 
-    ProcTable[entryNumber].stackSize = 0; 
-    ProcTable[entryNumber].status = 0;
+    ProcTable[entryNumber].status = QUIT;
 }
 
 /*

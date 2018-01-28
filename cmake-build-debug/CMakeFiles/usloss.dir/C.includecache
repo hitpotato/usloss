@@ -1,0 +1,998 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/kernel.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/p1.c
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/phase1.h
+usloss.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/skeleton.c
+phase1.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/phase1.h
+stdlib.h
+-
+string.h
+-
+stdio.h
+-
+kernel.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/kernel.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test00.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test01.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test02.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test03.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test04.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+string.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test05.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test06.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test07.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test08.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test09.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test10.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test11.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test12.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test13.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test14.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test15.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test16.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test17.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test18.c
+stdio.h
+-
+stdlib.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test19.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test20.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test21.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test22.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test23.c
+stdio.h
+-
+stdlib.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test24.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test25.c
+stdio.h
+-
+stdlib.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test26.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test27.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test28.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test29.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test30.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test31.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test32.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test33.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test34.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test35.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/phase1/testcases/test36.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/kernel.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libdisk/disk.c
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+sys/types.h
+-
+fcntl.h
+-
+string.h
+-
+sys/param.h
+-
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libdisk/usloss.h
+libdisk.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libdisk/libdisk.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libdisk/libdisk.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libdisk/makedisk.c
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+sys/types.h
+-
+fcntl.h
+-
+string.h
+-
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libdisk/usloss.h
+libdisk.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libdisk/libdisk.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libuser/libuser.c
+libuser.h
+-
+usloss.h
+-
+usyscall.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c
+stdlib.h
+-
+stdio.h
+-
+string.h
+-
+assert.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/p1.c
+/Users/rodrigo/include/usloss.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/phase1.c
+phase1.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/phase1.h
+stdlib.h
+-
+string.h
+-
+stdio.h
+-
+kernel.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/kernel.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/phase1.h
+usloss.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/pterm/pterm.c
+stdio.h
+-
+stdlib.h
+-
+fcntl.h
+-
+sys/ioctl.h
+-
+sys/file.h
+-
+termios.h
+-
+sgtty.h
+-
+signal.h
+-
+sys/time.h
+-
+unistd.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_alarm.c
+stdio.h
+-
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+dev_alarm.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_alarm.h
+devices.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/devices.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_alarm.h
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_clock.c
+stdio.h
+-
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+dev_clock.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_clock.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_clock.h
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_disk.c
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+fcntl.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+string.h
+-
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+dev_disk.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_disk.h
+devices.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/devices.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_disk.h
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_term.c
+stdio.h
+-
+unistd.h
+-
+string.h
+-
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+dev_term.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_term.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_term.h
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/devices.c
+stdio.h
+-
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+dev_alarm.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_alarm.h
+dev_clock.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_clock.h
+dev_disk.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_disk.h
+dev_term.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_term.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/devices.h
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.c
+stdio.h
+-
+stdlib.h
+-
+stdarg.h
+-
+signal.h
+-
+unistd.h
+-
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+main.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/main.h
+sig_ints.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/sig_ints.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+signal.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/main.c
+stdlib.h
+-
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+main.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/main.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+dev_alarm.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_alarm.h
+dev_clock.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_clock.h
+dev_disk.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_disk.h
+dev_term.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_term.h
+devices.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/devices.h
+sig_ints.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/sig_ints.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/main.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/mmu.c
+stdio.h
+-
+stdlib.h
+-
+sys/types.h
+-
+sys/mman.h
+-
+string.h
+-
+assert.h
+-
+stdarg.h
+-
+signal.h
+-
+unistd.h
+-
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+setjmp.h
+-
+fcntl.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/mmuInt.h
+setjmp.h
+-
+ucontext.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/sig_ints.c
+stdio.h
+-
+signal.h
+-
+unistd.h
+-
+assert.h
+-
+stdlib.h
+-
+project.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/project.h
+globals.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+usloss.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+sig_ints.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/sig_ints.h
+devices.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/devices.h
+mmuInt.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/mmuInt.h
+fcntl.h
+-
+sys/time.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/sig_ints.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/usloss.h
+stdarg.h
+-
+signal.h
+-
+ucontext.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test00.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test01.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test02.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test03.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test04.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+string.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test05.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test06.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test07.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test08.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test09.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test10.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test11.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test12.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test13.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test14.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test15.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test16.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test17.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test18.c
+stdio.h
+-
+stdlib.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test19.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test20.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test21.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test22.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test23.c
+stdio.h
+-
+stdlib.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test24.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test25.c
+stdio.h
+-
+stdlib.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test26.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test27.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test28.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test29.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test30.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test31.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test32.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test33.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test34.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test35.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/testcases/test36.c
+stdio.h
+-
+usloss.h
+-
+phase1.h
+-
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/usloss.h
+stdarg.h
+-
+signal.h
+-
+ucontext.h
+-
+
+/Users/rodrigo/include/usloss.h
+stdarg.h
+-
+signal.h
+-
+ucontext.h
+-
+

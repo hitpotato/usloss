@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedListTest.c
+stdlib.h
+-
+stdio.h
+-
+string.h
+-
+assert.h
+-
+
