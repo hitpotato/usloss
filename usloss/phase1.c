@@ -14,6 +14,7 @@
 
 #include "kernel.h"
 #include "usloss.h"
+#include "queue.h"
 
 /* ------------------------- Prototypes ----------------------------------- */
 int sentinel (char *);
@@ -36,13 +37,21 @@ procStruct ProcTable[MAXPROC];
 // Process lists
 static procPtr READYLIST;
 
-List *priorityQueue_1;
 
 // current process ID
 procPtr Current;
 
 // the next pid to be assigned
 unsigned int nextPid = SENTINELPID;
+
+//Priority Lists
+processPriorityQueue *priorityList_1;
+processPriorityQueue *priorityList_2;
+processPriorityQueue *priorityList_3;
+processPriorityQueue *priorityList_4;
+processPriorityQueue *priorityList_5;
+processPriorityQueue *priorityList_6;
+
 
 // Some ints for the clock
 

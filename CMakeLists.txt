@@ -149,7 +149,7 @@ add_executable(usloss
         usloss/testcases/test36.c
         usloss/config.h
         usloss/kernel.h
-        usloss/linkedList.c
+        usloss/queue.c
         usloss/Makefile
         usloss/Makefile.in
         usloss/p1.c
@@ -157,6 +157,6 @@ add_executable(usloss
         usloss/phase1.h
         usloss/usloss.h
         README.md
-        usloss-v1.0.pdf)
+        usloss-v1.0.pdf usloss/queue.h)
 
-add_executable(linkedList usloss/linkedList.c)
+add_executable(queue usloss/queue.c usloss/queue.h)
