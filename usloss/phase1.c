@@ -25,8 +25,15 @@ int sentinel (char *);
 void dispatcher(void);
 void launch();
 static void checkDeadlock();
+
+//Our functions
 void initializeProcessTableEntry(int entryNumber);
 bool inKernelMode();
+bool debugEnabled();
+void disableInterrupts();
+void enableInterrupts();
+void haltAndPrintKernelError();
+int findAvailableProcSlot();
 
 //Interrupt Handlers
 void clockHandler(int dev, void *arg);
@@ -155,19 +162,19 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
 {
     int procSlot = -1;
 
-    if (DEBUG && debugflag)
+    if (debugEnabled())
         USLOSS_Console("fork1(): creating process %s\n", name);
 
-    // test if in kernel mode; halt if in user mode
-//    if (((USLOSS_PsrGet() << 31) >> 31) == 0){
-//        USLOSS_Console("fork1(): in user mode, halting %s\n", name);
-//        USLOSS_Halt(1);
-//    }
-
-    // test if in kernel mode; halt if in user mode
+    /*
+     * Ask if we are in kernal mode
+     * If we are not, halt USLOSS
+     */
     if(!inKernelMode()){
-        haltAndPrintError();
+        haltAndPrintKernelError();
     }
+
+    //Make sure that interrupts are disabled during the fork process
+    disableInterrupts();
 
     //Error check the priority
     // MAXPRIORITY = 1
@@ -175,30 +182,37 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     if(priority < MAXPRIORITY || priority > MINPRIORITY)
         //Make sure that that we are not forking sentinenl,
         //Which has a priority of 6
-        if(startFunc != sentinel)
+        if(strcmp("sentinel", name) != 0)
             return -1;
 
     // Return if stack size is too small
-    if (stacksize < USLOSS_MIN_STACK)
+    if (stacksize < USLOSS_MIN_STACK) {
+        if(debugEnabled())
+            USLOSS_Console("Stack size passed to fork1() too small\n");
         return -1;
+    }
 
     // Is there room in the process table? What is the next PID?
-    int i = 0;
-    while (ProcTable[nextPid % sizeof(ProcTable)].status != 0){
-        if (i > 50)
-            return -1;
-        nextPid += 1;
-        i++;
+    procSlot = findAvailableProcSlot();
+
+    //If procSlot is -1, there was no available slot
+    if(procSlot == -1){
+        if(debugEnabled())
+            USLOSS_Console("ProcTable is full!\n");
+        return -1;
     }
-    procSlot = nextPid % sizeof(ProcTable);
 
     // fill-in entry in process table */
     if ( strlen(name) >= (MAXNAME - 1) ) {
         USLOSS_Console("fork1(): Process name is too long.  Halting...\n");
         USLOSS_Halt(1);
     }
+
+    //Set proc name and startFunct
     strcpy(ProcTable[procSlot].name, name);
     ProcTable[procSlot].startFunc = startFunc;
+
+    //Set process starting argument
     if ( arg == NULL )
         ProcTable[procSlot].startArg[0] = '\0';
     else if ( strlen(arg) >= (MAXARG - 1) ) {
@@ -207,14 +221,26 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     }
     else
         strcpy(ProcTable[procSlot].startArg, arg);
+
+    //Set the process stack and stacksize
+    ProcTable[procSlot].stackSize = stacksize;
+    ProcTable[procSlot].stack = (char*) malloc (stacksize);
+
+    //Verify that malloc worked
+    if(ProcTable[procSlot].stack == NULL){
+        if(debugEnabled()) {
+            USLOSS_Console("fork1(): Malloc failed when allocating stack size. Halting....\n");
+        }
+        USLOSS_Halt(1);
+    }
+
+
     ProcTable[procSlot].nextProcPtr = NULL;
     ProcTable[procSlot].nextSiblingPtr = NULL;
     ProcTable[procSlot].childProcPtr = NULL;
-    ProcTable[procSlot].status = 1;
-    ProcTable[procSlot].pid = (short) nextPid;
+    ProcTable[procSlot].status = READY;
+    ProcTable[procSlot].pid = nextPid;
     ProcTable[procSlot].priority = priority;
-    ProcTable[procSlot].stackSize = stacksize;
-    ProcTable[procSlot].stack = (char*) malloc (stacksize);
     ProcTable[procSlot].state = NULL;
 
     // Initialize context for this process, but use launch function pointer for
@@ -398,7 +424,7 @@ void enableInterrupts(){
 void initializeProcessTableEntry(int entryNumber){
 
     ProcTable[entryNumber].pid = -1;
-    ProcTable[entryNumber].status = QUIT;
+    ProcTable[entryNumber].status = EMPTY;
 }
 
 /*
@@ -433,15 +459,61 @@ bool inKernelMode(){
 }
 
 /* ------------------------------------------------------------------------
- * Name:            haltAndPrintError
+ * Name:            haltAndPrintKernelError
  * Purpose:         Print an error to console, and halt USLOSS
  * Parameter:       None
  * Returns:         Nothing
  * Side Effects:    USLOSS is Halted and Error is printed to console
  * ------------------------------------------------------------------------ */
-void haltAndPrintError(){
+void haltAndPrintKernelError(){
     USLOSS_Console("ERROR: Not in kernel mode!\n");
     USLOSS_Halt(1);
+}
+
+/* ------------------------------------------------------------------------
+ * Name:            findAvailableProcSlot
+ * Purpose:         Look through the proc table, find an empty slot and
+ *                      return the index of said slot. Return -1 if there
+ *                      is no empty slot found
+ *                  Also iterate nextPid so that it matches the resulting
+ *                      number of Processes
+ * Parameter:       None
+ * Returns:         index in table (int) or -1
+ * Side Effects:    If -1 is returned, fork1() is stopped
+ * ------------------------------------------------------------------------ */
+int findAvailableProcSlot() {
+    int procSlot = -1;
+    int startPid = nextPid;
+    int i = startPid % MAXPROC;
+
+    //Need to loop between startPid and MAXPROC to find an empty slot
+    for(i; i < MAXPROC; i++){
+        if(ProcTable[i].pid == EMPTY) {
+            procSlot = i;
+            nextPid++;
+            break;
+        }
+    }
+
+    //If nothing was found then look between 0 and startPid
+    if(procSlot == -1){
+        for(i = 0; i < startPid; i++){
+            if(ProcTable[i].pid == EMPTY){
+                procSlot = i;
+                nextPid++;
+                break;
+            }
+        }
+    }
+
+    return procSlot;
+}
+
+bool debugEnabled(){
+    bool debug = false;
+    if(DEBUG && debugflag)
+        debug = true;
+    return debug;
 }
 
 

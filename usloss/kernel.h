@@ -13,6 +13,7 @@ struct procStruct {
    char            startArg[MAXARG];  /* args passed to process */
    USLOSS_Context  state;             /* current context for process */
    short           pid;               /* process id */
+   short           parentPID;         /* parent process id */
    int             priority;
    int (* startFunc) (char *);   /* function where process begins -- launch */
    char           *stack;
@@ -44,6 +45,6 @@ union psrValues {
 #define QUIT 0
 #define READY 1
 #define BLOCKED = -1
-#define EMPTY = 2
+#define EMPTY -2
 
 
