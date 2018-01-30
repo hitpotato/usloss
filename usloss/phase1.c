@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <MacTypes.h>
 
 
 #include "kernel.h"
@@ -28,12 +29,13 @@ static void checkDeadlock();
 
 //Our functions
 void initializeProcessTableEntry(int entryNumber);
-bool inKernelMode();
-bool debugEnabled();
+int inKernelMode();
+int debugEnabled();
 void disableInterrupts();
 void enableInterrupts();
 void haltAndPrintKernelError();
 int findAvailableProcSlot();
+void insertInReadyList(procPtr process);
 
 //Interrupt Handlers
 void clockHandler(int dev, void *arg);
@@ -47,7 +49,7 @@ int debugflag = 1;
 procStruct ProcTable[MAXPROC];
 
 // Process lists
-static procPtr READYLIST;
+static procPtr ReadyList;
 
 
 // current process ID
@@ -99,6 +101,8 @@ void startup(int argc, char *argv[])
     priorityList_4 = initializeQueue();
     priorityList_5 = initializeQueue();
     priorityList_6 = initializeQueue();
+
+    ReadyList = NULL;
 
     // Initialize the clock interrupt handler
     USLOSS_IntVec[USLOSS_CLOCK_INT] = clockHandler;
@@ -262,9 +266,23 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
 
         //If Current DID have a child already, things get more complicated
         else{
-            
+            //Iterate through children until a child with a NULL sibling pointer is found
+            procPtr child;
+            for(child = Current->childProcPtr; child->nextSiblingPtr != NULL;
+                child = child->nextSiblingPtr){
+                ; //Do nothing except iteration
+            }
+
+            //Now that we've found the child with no next sibling, make its next sibling our
+            //  newly created process
+            child->nextSiblingPtr = &ProcTable[procSlot];
         }
 
+    }
+
+    //If the parent is not null, increase the number of children it has
+    if(Current != NULL){
+        Current->numberOfChildren++;
     }
 
     // Initialize context for this process, but use launch function pointer for
@@ -281,6 +299,10 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     p1_fork(ProcTable[procSlot].pid);
 
     // More stuff to do here...
+    //Add the Pid of the process
+
+    //Add the process to the ready table
+    insertInReadyList(&ProcTable[procSlot]);
 
     //If the process is not the sentinel, dispatch it
     if(strcmp("sentinel", name) != 0){
@@ -336,6 +358,31 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *status)
 {
+    //Check to make sure kernel mode is enabled
+    if(!inKernelMode())
+        haltAndPrintKernelError();
+
+    //Halt interrupts
+    disableInterrupts();
+
+    if(debugEnabled())
+        USLOSS_Console("join(): In join, current has a pid of: %d\n", Current->pid);
+
+    //Check if the process has any children
+    if(Current->numberOfChildren == 0){
+        if(debugEnabled())
+            USLOSS_Console("join(): The process has no children\n");
+        return -2;
+    }
+
+    //Make sure the process has not been zapped
+    if(isZapped())
+        return -1;
+
+
+
+
+
     return -1;  // -1 is not correct! Here to prevent warning.
 } /* join */
 
@@ -472,15 +519,15 @@ void clockHandler(int dev, void *arg){
  * Returns true if we are
  * False otherwise
  */
-bool inKernelMode(){
-    bool kernelMode = false;
+int inKernelMode(){
+    int kernelMode = 0;
 
     //This ands the 0x1 with the PSR from USloss, giving us
     //the current mode bit.
     //If this bit is 0, we are in user mode
     //If it is something else, then we are in kernel mode
     if((USLOSS_PSR_CURRENT_MODE & USLOSS_PsrGet()) != 0)
-        kernelMode = true;
+        kernelMode = 1;
 
     return kernelMode;
 
@@ -537,11 +584,54 @@ int findAvailableProcSlot() {
     return procSlot;
 }
 
-bool debugEnabled(){
-    bool debug = false;
+int debugEnabled(){
+    int debug = 0;
     if(DEBUG && debugflag)
-        debug = true;
+        debug = 1;
     return debug;
+}
+
+void insertInReadyList(procPtr process){
+    if(debugEnabled())
+        USLOSS_Console("Adding a process to the "
+                       "readly list with a pid %d and priority %d\n", process->pid, process->priority);
+
+    //Check if the list is empty
+    //If it is, simply add to the head of the list and return
+    if(ReadyList == NULL){
+        ReadyList = process;
+        return;
+    }
+
+    //If the new process has a priority that is greater than
+    //  that of the head nodes
+    if(process->priority < ReadyList->priority) {
+        process->nextProcPtr = ReadyList;
+        ReadyList = process;
+    }
+
+    //Otherwise, the process has a priority lower than the head
+    //Iterate through until we find the sport for proper insertion
+    else {
+
+        //Create a temp pointing to head
+        procPtr temp = ReadyList;
+
+        while(temp->nextProcPtr != NULL){
+            if(temp->nextProcPtr->priority > process->priority)
+                break;
+            temp = temp->nextProcPtr;
+        }
+
+        //Swap pointers to insert process into the list
+        process->nextProcPtr = temp->nextProcPtr;
+        temp->nextProcPtr = process;
+    }
+}
+
+//Returns 0/false if not zapped, 1 otherwise
+int isZapped() {
+    return Current->zapStatus;
 }
 
 

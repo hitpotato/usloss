@@ -57,38 +57,38 @@ include CMakeFiles/linkedList.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/linkedList.dir/flags.make
 
-CMakeFiles/linkedList.dir/usloss/linkedList.c.o: CMakeFiles/linkedList.dir/flags.make
-CMakeFiles/linkedList.dir/usloss/linkedList.c.o: ../usloss/linkedList.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/linkedList.dir/usloss/linkedList.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/linkedList.dir/usloss/linkedList.c.o   -c "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c"
+CMakeFiles/linkedList.dir/usloss/queue.c.o: CMakeFiles/linkedList.dir/flags.make
+CMakeFiles/linkedList.dir/usloss/queue.c.o: ../usloss/queue.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/linkedList.dir/usloss/queue.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/linkedList.dir/usloss/queue.c.o   -c "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.c"
 
-CMakeFiles/linkedList.dir/usloss/linkedList.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/linkedList.dir/usloss/linkedList.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c" > CMakeFiles/linkedList.dir/usloss/linkedList.c.i
+CMakeFiles/linkedList.dir/usloss/queue.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/linkedList.dir/usloss/queue.c.i"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.c" > CMakeFiles/linkedList.dir/usloss/queue.c.i
 
-CMakeFiles/linkedList.dir/usloss/linkedList.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/linkedList.dir/usloss/linkedList.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c" -o CMakeFiles/linkedList.dir/usloss/linkedList.c.s
+CMakeFiles/linkedList.dir/usloss/queue.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/linkedList.dir/usloss/queue.c.s"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.c" -o CMakeFiles/linkedList.dir/usloss/queue.c.s
 
-CMakeFiles/linkedList.dir/usloss/linkedList.c.o.requires:
+CMakeFiles/linkedList.dir/usloss/queue.c.o.requires:
 
-.PHONY : CMakeFiles/linkedList.dir/usloss/linkedList.c.o.requires
+.PHONY : CMakeFiles/linkedList.dir/usloss/queue.c.o.requires
 
-CMakeFiles/linkedList.dir/usloss/linkedList.c.o.provides: CMakeFiles/linkedList.dir/usloss/linkedList.c.o.requires
-	$(MAKE) -f CMakeFiles/linkedList.dir/build.make CMakeFiles/linkedList.dir/usloss/linkedList.c.o.provides.build
-.PHONY : CMakeFiles/linkedList.dir/usloss/linkedList.c.o.provides
+CMakeFiles/linkedList.dir/usloss/queue.c.o.provides: CMakeFiles/linkedList.dir/usloss/queue.c.o.requires
+	$(MAKE) -f CMakeFiles/linkedList.dir/build.make CMakeFiles/linkedList.dir/usloss/queue.c.o.provides.build
+.PHONY : CMakeFiles/linkedList.dir/usloss/queue.c.o.provides
 
-CMakeFiles/linkedList.dir/usloss/linkedList.c.o.provides.build: CMakeFiles/linkedList.dir/usloss/linkedList.c.o
+CMakeFiles/linkedList.dir/usloss/queue.c.o.provides.build: CMakeFiles/linkedList.dir/usloss/queue.c.o
 
 
 # Object files for target linkedList
 linkedList_OBJECTS = \
-"CMakeFiles/linkedList.dir/usloss/linkedList.c.o"
+"CMakeFiles/linkedList.dir/usloss/queue.c.o"
 
 # External object files for target linkedList
 linkedList_EXTERNAL_OBJECTS =
 
-linkedList: CMakeFiles/linkedList.dir/usloss/linkedList.c.o
+linkedList: CMakeFiles/linkedList.dir/usloss/queue.c.o
 linkedList: CMakeFiles/linkedList.dir/build.make
 linkedList: CMakeFiles/linkedList.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable linkedList"
@@ -99,7 +99,7 @@ CMakeFiles/linkedList.dir/build: linkedList
 
 .PHONY : CMakeFiles/linkedList.dir/build
 
-CMakeFiles/linkedList.dir/requires: CMakeFiles/linkedList.dir/usloss/linkedList.c.o.requires
+CMakeFiles/linkedList.dir/requires: CMakeFiles/linkedList.dir/usloss/queue.c.o.requires
 
 .PHONY : CMakeFiles/linkedList.dir/requires
 

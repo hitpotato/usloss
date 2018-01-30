@@ -6,20 +6,25 @@ typedef struct procStruct procStruct;
 typedef struct procStruct * procPtr;
 
 struct procStruct {
-   procPtr         nextProcPtr;
-   procPtr         childProcPtr;
-   procPtr         nextSiblingPtr;
-   char            name[MAXNAME];     /* process's name */
-   char            startArg[MAXARG];  /* args passed to process */
-   USLOSS_Context  state;             /* current context for process */
-   short           pid;               /* process id */
-   short           parentPID;         /* parent process id */
-   int             priority;
-   int (* startFunc) (char *);   /* function where process begins -- launch */
-   char           *stack;
-   unsigned int    stackSize;
-   int             status;        /* READY, BLOCKED, QUIT, etc. */
-   /* other fields as needed... */
+    procPtr         nextProcPtr;
+    procPtr         childProcPtr;
+    procPtr         nextSiblingPtr;
+    char            name[MAXNAME];     /* process's name */
+    char            startArg[MAXARG];  /* args passed to process */
+    USLOSS_Context  state;             /* current context for process */
+    short           pid;               /* process id */
+    int             priority;
+    int (* startFunc) (char *);         /* function where process begins -- launch */
+    char           *stack;
+    unsigned int    stackSize;
+    int             status;             /* READY, BLOCKED, QUIT, etc. */
+
+    /* other fields as needed... */
+    procPtr         quitChildPtr;
+    short           parentPID;         /* parent process id */
+    int             numberOfChildren;   /* The number of children this process has */
+    int             zapStatus;            /* 0 if not zapped. 1 if zapped */
+
 };
 
 struct psrBits {

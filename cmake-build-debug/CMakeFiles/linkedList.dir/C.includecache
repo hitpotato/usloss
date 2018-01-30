@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.c
 stdlib.h
 -
 stdio.h
@@ -17,6 +17,14 @@ assert.h
 -
 src/globals.h
 /Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
+queue.h
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.h
+
+/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.h
+stdbool.h
+-
+jmorecfg.h
+-
 
 /Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/globals.h
 project.h

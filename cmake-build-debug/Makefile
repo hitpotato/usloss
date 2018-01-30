@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named linkedList
+# Target rules for targets named queue
 
 # Build rule for target.
-linkedList: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 linkedList
-.PHONY : linkedList
+queue: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 queue
+.PHONY : queue
 
 # fast build rule for target.
-linkedList/fast:
-	$(MAKE) -f CMakeFiles/linkedList.dir/build.make CMakeFiles/linkedList.dir/build
-.PHONY : linkedList/fast
+queue/fast:
+	$(MAKE) -f CMakeFiles/queue.dir/build.make CMakeFiles/queue.dir/build
+.PHONY : queue/fast
 
 #=============================================================================
 # Target rules for targets named usloss
@@ -1270,36 +1270,6 @@ usloss/libuser/libuser.c.s:
 	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/libuser/libuser.c.s
 .PHONY : usloss/libuser/libuser.c.s
 
-usloss/linkedList.o: usloss/linkedList.c.o
-
-.PHONY : usloss/linkedList.o
-
-# target to build an object file
-usloss/linkedList.c.o:
-	$(MAKE) -f CMakeFiles/linkedList.dir/build.make CMakeFiles/linkedList.dir/usloss/linkedList.c.o
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/linkedList.c.o
-.PHONY : usloss/linkedList.c.o
-
-usloss/linkedList.i: usloss/linkedList.c.i
-
-.PHONY : usloss/linkedList.i
-
-# target to preprocess a source file
-usloss/linkedList.c.i:
-	$(MAKE) -f CMakeFiles/linkedList.dir/build.make CMakeFiles/linkedList.dir/usloss/linkedList.c.i
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/linkedList.c.i
-.PHONY : usloss/linkedList.c.i
-
-usloss/linkedList.s: usloss/linkedList.c.s
-
-.PHONY : usloss/linkedList.s
-
-# target to generate assembly for a file
-usloss/linkedList.c.s:
-	$(MAKE) -f CMakeFiles/linkedList.dir/build.make CMakeFiles/linkedList.dir/usloss/linkedList.c.s
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/linkedList.c.s
-.PHONY : usloss/linkedList.c.s
-
 usloss/p1.o: usloss/p1.c.o
 
 .PHONY : usloss/p1.o
@@ -1380,6 +1350,36 @@ usloss/pterm/pterm.s: usloss/pterm/pterm.c.s
 usloss/pterm/pterm.c.s:
 	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/pterm/pterm.c.s
 .PHONY : usloss/pterm/pterm.c.s
+
+usloss/queue.o: usloss/queue.c.o
+
+.PHONY : usloss/queue.o
+
+# target to build an object file
+usloss/queue.c.o:
+	$(MAKE) -f CMakeFiles/queue.dir/build.make CMakeFiles/queue.dir/usloss/queue.c.o
+	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/queue.c.o
+.PHONY : usloss/queue.c.o
+
+usloss/queue.i: usloss/queue.c.i
+
+.PHONY : usloss/queue.i
+
+# target to preprocess a source file
+usloss/queue.c.i:
+	$(MAKE) -f CMakeFiles/queue.dir/build.make CMakeFiles/queue.dir/usloss/queue.c.i
+	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/queue.c.i
+.PHONY : usloss/queue.c.i
+
+usloss/queue.s: usloss/queue.c.s
+
+.PHONY : usloss/queue.s
+
+# target to generate assembly for a file
+usloss/queue.c.s:
+	$(MAKE) -f CMakeFiles/queue.dir/build.make CMakeFiles/queue.dir/usloss/queue.c.s
+	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/queue.c.s
+.PHONY : usloss/queue.c.s
 
 usloss/src/dev_alarm.o: usloss/src/dev_alarm.c.o
 
@@ -2631,7 +2631,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... linkedList"
+	@echo "... queue"
 	@echo "... usloss"
 	@echo "... phase1/p1.o"
 	@echo "... phase1/p1.i"
@@ -2759,9 +2759,6 @@ help:
 	@echo "... usloss/libuser/libuser.o"
 	@echo "... usloss/libuser/libuser.i"
 	@echo "... usloss/libuser/libuser.s"
-	@echo "... usloss/linkedList.o"
-	@echo "... usloss/linkedList.i"
-	@echo "... usloss/linkedList.s"
 	@echo "... usloss/p1.o"
 	@echo "... usloss/p1.i"
 	@echo "... usloss/p1.s"
@@ -2771,6 +2768,9 @@ help:
 	@echo "... usloss/pterm/pterm.o"
 	@echo "... usloss/pterm/pterm.i"
 	@echo "... usloss/pterm/pterm.s"
+	@echo "... usloss/queue.o"
+	@echo "... usloss/queue.i"
+	@echo "... usloss/queue.s"
 	@echo "... usloss/src/dev_alarm.o"
 	@echo "... usloss/src/dev_alarm.i"
 	@echo "... usloss/src/dev_alarm.s"

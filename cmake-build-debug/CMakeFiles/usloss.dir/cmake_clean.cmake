@@ -88,7 +88,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/usloss.dir/usloss/testcases/test34.c.o"
   "CMakeFiles/usloss.dir/usloss/testcases/test35.c.o"
   "CMakeFiles/usloss.dir/usloss/testcases/test36.c.o"
-  "CMakeFiles/usloss.dir/usloss/linkedList.c.o"
+  "CMakeFiles/usloss.dir/usloss/queue.c.o"
   "CMakeFiles/usloss.dir/usloss/p1.c.o"
   "CMakeFiles/usloss.dir/usloss/phase1.c.o"
   "usloss.pdb"

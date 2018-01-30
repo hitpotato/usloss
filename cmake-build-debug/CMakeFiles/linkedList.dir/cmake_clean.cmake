@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/linkedList.dir/usloss/linkedList.c.o"
+  "CMakeFiles/linkedList.dir/usloss/queue.c.o"
   "linkedList.pdb"
   "linkedList"
 )

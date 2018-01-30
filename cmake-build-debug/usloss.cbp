@@ -37,8 +37,8 @@
 					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="linkedList">
-				<Option output="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/linkedList" prefix_auto="0" extension_auto="0"/>
+			<Target title="queue">
+				<Option output="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/queue" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -53,14 +53,14 @@
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 linkedList"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 queue"/>
 					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="linkedList/fast">
-				<Option output="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/linkedList" prefix_auto="0" extension_auto="0"/>
+			<Target title="queue/fast">
+				<Option output="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/queue" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -75,7 +75,7 @@
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 linkedList/fast"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 queue/fast"/>
 					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/University\ of\ Arizona/Spring_18/CS_452/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -393,10 +393,6 @@
 		<Unit filename="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/libuser/libuser.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c">
-			<Option target="linkedList"/>
-			<Option target="usloss"/>
-		</Unit>
 		<Unit filename="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/p1.c">
 			<Option target="usloss"/>
 		</Unit>
@@ -407,6 +403,14 @@
 			<Option target="usloss"/>
 		</Unit>
 		<Unit filename="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/pterm/pterm.c">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.c">
+			<Option target="queue"/>
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.h">
+			<Option target="queue"/>
 			<Option target="usloss"/>
 		</Unit>
 		<Unit filename="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/src/dev_alarm.c">

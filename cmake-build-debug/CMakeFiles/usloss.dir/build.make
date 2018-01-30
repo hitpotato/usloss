@@ -2193,28 +2193,28 @@ CMakeFiles/usloss.dir/usloss/testcases/test36.c.o.provides: CMakeFiles/usloss.di
 CMakeFiles/usloss.dir/usloss/testcases/test36.c.o.provides.build: CMakeFiles/usloss.dir/usloss/testcases/test36.c.o
 
 
-CMakeFiles/usloss.dir/usloss/linkedList.c.o: CMakeFiles/usloss.dir/flags.make
-CMakeFiles/usloss.dir/usloss/linkedList.c.o: ../usloss/linkedList.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_90) "Building C object CMakeFiles/usloss.dir/usloss/linkedList.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/usloss.dir/usloss/linkedList.c.o   -c "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c"
+CMakeFiles/usloss.dir/usloss/queue.c.o: CMakeFiles/usloss.dir/flags.make
+CMakeFiles/usloss.dir/usloss/queue.c.o: ../usloss/queue.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_90) "Building C object CMakeFiles/usloss.dir/usloss/queue.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/usloss.dir/usloss/queue.c.o   -c "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.c"
 
-CMakeFiles/usloss.dir/usloss/linkedList.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/usloss.dir/usloss/linkedList.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c" > CMakeFiles/usloss.dir/usloss/linkedList.c.i
+CMakeFiles/usloss.dir/usloss/queue.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/usloss.dir/usloss/queue.c.i"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.c" > CMakeFiles/usloss.dir/usloss/queue.c.i
 
-CMakeFiles/usloss.dir/usloss/linkedList.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/usloss.dir/usloss/linkedList.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/linkedList.c" -o CMakeFiles/usloss.dir/usloss/linkedList.c.s
+CMakeFiles/usloss.dir/usloss/queue.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/usloss.dir/usloss/queue.c.s"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/usloss/usloss/queue.c" -o CMakeFiles/usloss.dir/usloss/queue.c.s
 
-CMakeFiles/usloss.dir/usloss/linkedList.c.o.requires:
+CMakeFiles/usloss.dir/usloss/queue.c.o.requires:
 
-.PHONY : CMakeFiles/usloss.dir/usloss/linkedList.c.o.requires
+.PHONY : CMakeFiles/usloss.dir/usloss/queue.c.o.requires
 
-CMakeFiles/usloss.dir/usloss/linkedList.c.o.provides: CMakeFiles/usloss.dir/usloss/linkedList.c.o.requires
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/linkedList.c.o.provides.build
-.PHONY : CMakeFiles/usloss.dir/usloss/linkedList.c.o.provides
+CMakeFiles/usloss.dir/usloss/queue.c.o.provides: CMakeFiles/usloss.dir/usloss/queue.c.o.requires
+	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/usloss/queue.c.o.provides.build
+.PHONY : CMakeFiles/usloss.dir/usloss/queue.c.o.provides
 
-CMakeFiles/usloss.dir/usloss/linkedList.c.o.provides.build: CMakeFiles/usloss.dir/usloss/linkedList.c.o
+CMakeFiles/usloss.dir/usloss/queue.c.o.provides.build: CMakeFiles/usloss.dir/usloss/queue.c.o
 
 
 CMakeFiles/usloss.dir/usloss/p1.c.o: CMakeFiles/usloss.dir/flags.make
@@ -2356,7 +2356,7 @@ usloss_OBJECTS = \
 "CMakeFiles/usloss.dir/usloss/testcases/test34.c.o" \
 "CMakeFiles/usloss.dir/usloss/testcases/test35.c.o" \
 "CMakeFiles/usloss.dir/usloss/testcases/test36.c.o" \
-"CMakeFiles/usloss.dir/usloss/linkedList.c.o" \
+"CMakeFiles/usloss.dir/usloss/queue.c.o" \
 "CMakeFiles/usloss.dir/usloss/p1.c.o" \
 "CMakeFiles/usloss.dir/usloss/phase1.c.o"
 
@@ -2452,7 +2452,7 @@ usloss: CMakeFiles/usloss.dir/usloss/testcases/test33.c.o
 usloss: CMakeFiles/usloss.dir/usloss/testcases/test34.c.o
 usloss: CMakeFiles/usloss.dir/usloss/testcases/test35.c.o
 usloss: CMakeFiles/usloss.dir/usloss/testcases/test36.c.o
-usloss: CMakeFiles/usloss.dir/usloss/linkedList.c.o
+usloss: CMakeFiles/usloss.dir/usloss/queue.c.o
 usloss: CMakeFiles/usloss.dir/usloss/p1.c.o
 usloss: CMakeFiles/usloss.dir/usloss/phase1.c.o
 usloss: CMakeFiles/usloss.dir/build.make
@@ -2554,7 +2554,7 @@ CMakeFiles/usloss.dir/requires: CMakeFiles/usloss.dir/usloss/testcases/test33.c.
 CMakeFiles/usloss.dir/requires: CMakeFiles/usloss.dir/usloss/testcases/test34.c.o.requires
 CMakeFiles/usloss.dir/requires: CMakeFiles/usloss.dir/usloss/testcases/test35.c.o.requires
 CMakeFiles/usloss.dir/requires: CMakeFiles/usloss.dir/usloss/testcases/test36.c.o.requires
-CMakeFiles/usloss.dir/requires: CMakeFiles/usloss.dir/usloss/linkedList.c.o.requires
+CMakeFiles/usloss.dir/requires: CMakeFiles/usloss.dir/usloss/queue.c.o.requires
 CMakeFiles/usloss.dir/requires: CMakeFiles/usloss.dir/usloss/p1.c.o.requires
 CMakeFiles/usloss.dir/requires: CMakeFiles/usloss.dir/usloss/phase1.c.o.requires
 
