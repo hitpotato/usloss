@@ -49,22 +49,13 @@ int debugflag = 1;
 procStruct ProcTable[MAXPROC];
 
 // Process lists
-static procPtr ReadyList;
-
+static processQueue ReadyList[6];        // Create a ReadyList for each priority
 
 // current process ID
 procPtr Current;
 
 // the next pid to be assigned
 unsigned int nextPid = SENTINELPID;
-
-//Priority Lists
-processPriorityQueue *priorityList_1;
-processPriorityQueue *priorityList_2;
-processPriorityQueue *priorityList_3;
-processPriorityQueue *priorityList_4;
-processPriorityQueue *priorityList_5;
-processPriorityQueue *priorityList_6;
 
 
 // Some ints for the clock
@@ -80,40 +71,38 @@ processPriorityQueue *priorityList_6;
    ----------------------------------------------------------------------- */
 void startup(int argc, char *argv[])
 {
-    int result; /* value returned by call to fork1() */
+    int result;             /* value returned by call to fork1() */
 
     /* initialize the process table */
-    if (DEBUG && debugflag)
+    if (debugEnabled())
         USLOSS_Console("startup(): initializing process table, ProcTable[]\n");
-    //Now that the debug message has been printed, initialize the process table 
+
+
+    // Initialize the Process Table
     for(int i = 0; i < MAXPROC; i++){
         initializeProcessTableEntry(i); 
     }
 
     // Initialize the Ready list, etc.
-    if (DEBUG && debugflag)
+    if (debugEnabled())
         USLOSS_Console("startup(): initializing the Ready list\n");
 
-    //Initialize the six priority queues
-    priorityList_1 = initializeQueue();
-    priorityList_2 = initializeQueue();
-    priorityList_3 = initializeQueue();
-    priorityList_4 = initializeQueue();
-    priorityList_5 = initializeQueue();
-    priorityList_6 = initializeQueue();
-
-    ReadyList = NULL;
+    // Initialize ReadyList
+    // For each element of ReadyList, turn it into a queue of type READYLISt
+    for(int i = 0; i < 6; i++){
+        initializeProcessQueue(&ReadyList[i], READYLIST);
+    }
 
     // Initialize the clock interrupt handler
     USLOSS_IntVec[USLOSS_CLOCK_INT] = clockHandler;
 
     // startup a sentinel process
-    if (DEBUG && debugflag)
+    if (debugEnabled())
         USLOSS_Console("startup(): calling fork1() for sentinel\n");
     result = fork1("sentinel", sentinel, NULL, USLOSS_MIN_STACK,
                     SENTINELPRIORITY);
     if (result < 0) {
-        if (DEBUG && debugflag) {
+        if (debugEnabled()) {
             USLOSS_Console("startup(): fork1 of sentinel returned error, ");
             USLOSS_Console("halting...\n");
         }
@@ -121,7 +110,7 @@ void startup(int argc, char *argv[])
     }
   
     // start the test process
-    if (DEBUG && debugflag)
+    if (debugEnabled())
         USLOSS_Console("startup(): calling fork1() for start1\n");
     result = fork1("start1", start1, NULL, 2 * USLOSS_MIN_STACK, 1);
     if (result < 0) {
@@ -498,8 +487,35 @@ void enableInterrupts(){
    ----------------------------------------------------------------------- */
 void initializeProcessTableEntry(int entryNumber){
 
-    ProcTable[entryNumber].pid = -1;
-    ProcTable[entryNumber].status = EMPTY;
+    int i = entryNumber % MAXPROC;
+
+    // Set the PID to -1 to show it hasnt been assigned
+    // Set status to empty
+    ProcTable[i].pid = -1;
+    ProcTable[i].status = EMPTY;
+
+    // Set all the pointers to NULL
+    ProcTable[i].nextZapPtr = NULL;
+    ProcTable[i].nextProcPtr = NULL;
+    ProcTable[i].childProcPtr = NULL;
+    ProcTable[i].quitChildPtr = NULL;
+    ProcTable[i].nextSiblingPtr = NULL;
+    ProcTable[i].nextDeadSibling = NULL;
+
+    // Miscellaneous values
+    ProcTable[i].stack = NULL;
+    ProcTable[i].stackSize = -1;
+    ProcTable[i].priority = -1;
+    ProcTable[i].zapStatus = 0;
+    ProcTable[i].numberOfChildren = 0;
+    ProcTable[i].parentPID = -1;
+    ProcTable[i].name[0] = '\n';
+
+
+    // Initialize the queues attatched to the process
+    initializeProcessQueue(&ProcTable[i].childrenQueue, CHILDRENLIST);
+    initializeProcessQueue(&ProcTable[i].deadChildrenQueue, DEADCHILDRENLIST);
+    initializeProcessQueue(&ProcTable[i].zappedProcessesQueue, ZAPLIST);
 }
 
 /*
