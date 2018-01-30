@@ -1,4 +1,8 @@
 /* Patrick's DEBUG printing constant... */
+#include "queue.h"
+#include "usloss.h"
+#include "phase1.h"
+
 #define DEBUG 0
 
 typedef struct procStruct procStruct;
@@ -21,10 +25,14 @@ struct procStruct {
 
     /* other fields as needed... */
     procPtr         quitChildPtr;
+    procPtr         nextZapPtr;
+    procPtr         nextDeadSibling;
     short           parentPID;         /* parent process id */
     int             numberOfChildren;   /* The number of children this process has */
     int             zapStatus;            /* 0 if not zapped. 1 if zapped */
-
+    processQueue    childrenQueue;
+    processQueue    deadChildrenQueue;
+    processQueue    zappedProcessesQueue;
 };
 
 struct psrBits {

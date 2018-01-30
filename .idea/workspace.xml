@@ -14,26 +14,9 @@
   <component name="ChangeListManager">
     <list default="true" id="90890bc7-139f-477b-a065-0c2cff875295" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/C.includecache" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/C.includecache" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/DependInfo.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/DependInfo.cmake" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/build.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/build.make" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/cmake_clean.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/cmake_clean.cmake" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/depend.internal" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/depend.internal" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/depend.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/depend.make" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/link.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/link.txt" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/linkedList.dir/usloss/linkedList.c.o" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/usloss.dir/DependInfo.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/usloss.dir/DependInfo.cmake" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/usloss.dir/build.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/usloss.dir/build.make" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/usloss.dir/cmake_clean.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/usloss.dir/cmake_clean.cmake" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/usloss.dir/link.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/usloss.dir/link.txt" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/linkedList" afterPath="$PROJECT_DIR$/cmake-build-debug/linkedList" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/usloss.cbp" afterPath="$PROJECT_DIR$/cmake-build-debug/usloss.cbp" />
       <change beforePath="$PROJECT_DIR$/usloss/kernel.h" afterPath="$PROJECT_DIR$/usloss/kernel.h" />
-      <change beforePath="$PROJECT_DIR$/usloss/phase1.c" afterPath="$PROJECT_DIR$/usloss/phase1.c" />
+      <change beforePath="$PROJECT_DIR$/usloss/queue.c" afterPath="$PROJECT_DIR$/usloss/queue.c" />
+      <change beforePath="$PROJECT_DIR$/usloss/queue.h" afterPath="$PROJECT_DIR$/usloss/queue.h" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -49,9 +32,65 @@
       <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="13" lean-forward="true" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+            <state relative-caret-position="823">
+              <caret line="161" column="0" lean-forward="false" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="51" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="usloss.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/usloss/usloss.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="18" column="17" lean-forward="false" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="kernel.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/usloss/kernel.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="358">
+              <caret line="34" column="41" lean-forward="false" selection-start-line="34" selection-start-column="41" selection-end-line="34" selection-end-column="41" />
+              <folding>
+                <element signature="e#43#61#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="queue.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/usloss/queue.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="29" column="16" lean-forward="false" selection-start-line="29" selection-start-column="16" selection-end-line="29" selection-end-column="16" />
+              <folding>
+                <element signature="e#102#122#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="phase1.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/usloss/phase1.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="queue.c" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/usloss/queue.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="433">
+              <caret line="64" column="38" lean-forward="false" selection-start-line="64" selection-start-column="36" selection-end-line="64" selection-end-column="38" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -59,8 +98,8 @@
       <file leaf-file-name="phase1.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/usloss/phase1.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="618">
-              <caret line="380" column="0" lean-forward="false" selection-start-line="380" selection-start-column="0" selection-end-line="380" selection-end-column="0" />
+            <state relative-caret-position="108">
+              <caret line="346" column="0" lean-forward="false" selection-start-line="346" selection-start-column="0" selection-end-line="357" selection-end-column="78" />
               <folding>
                 <element signature="e#273#292#0" expanded="true" />
               </folding>
@@ -73,50 +112,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="queue.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/usloss/queue.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="825">
-              <caret line="55" column="25" lean-forward="false" selection-start-line="55" selection-start-column="25" selection-end-line="55" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="queue.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/usloss/queue.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-              <folding>
-                <element signature="e#112#132#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="kernel.h" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/usloss/kernel.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="358">
-              <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="usloss.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/usloss/usloss.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1005">
-              <caret line="69" column="29" lean-forward="false" selection-start-line="69" selection-start-column="27" selection-end-line="69" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -155,10 +150,11 @@
         <option value="$PROJECT_DIR$/linkedList.h" />
         <option value="$PROJECT_DIR$/usloss/linkedList.c" />
         <option value="$PROJECT_DIR$/usloss/linkedList.h" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/usloss/queue.c" />
         <option value="$PROJECT_DIR$/usloss/phase1.c" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/usloss/kernel.h" />
+        <option value="$PROJECT_DIR$/usloss/queue.h" />
+        <option value="$PROJECT_DIR$/usloss/queue.c" />
       </list>
     </option>
   </component>
@@ -199,13 +195,25 @@
             <path>
               <item name="usloss" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="usloss" type="462c0819:PsiDirectoryNode" />
+              <item name="cmake-build-debug" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="usloss" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="usloss" type="462c0819:PsiDirectoryNode" />
+              <item name="cmake-build-debug" type="462c0819:PsiDirectoryNode" />
+              <item name="CMakeFiles" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="usloss" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
+              <item name="usloss" type="462c0819:PsiDirectoryNode" />
+              <item name="cmake-build-debug" type="462c0819:PsiDirectoryNode" />
+              <item name="CMakeFiles" type="462c0819:PsiDirectoryNode" />
+              <item name="3.9.6" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="usloss" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="usloss" type="462c0819:PsiDirectoryNode" />
               <item name="usloss" type="462c0819:PsiDirectoryNode" />
-              <item name="testcases" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -229,7 +237,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.queue">
+  <component name="RunManager" selected="Application.usloss">
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="usloss" RUN_TARGET_NAME="queue" EXPLICIT_BUILD_TARGET_NAME="all">
       <envs />
     </configuration>
@@ -241,8 +249,8 @@
     </configuration>
     <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
-      <item index="1" class="java.lang.String" itemvalue="Application.queue" />
-      <item index="2" class="java.lang.String" itemvalue="Application.usloss" />
+      <item index="1" class="java.lang.String" itemvalue="Application.usloss" />
+      <item index="2" class="java.lang.String" itemvalue="Application.queue" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
@@ -261,7 +269,7 @@
       <workItem from="1517015059127" duration="3143000" />
       <workItem from="1517096650730" duration="6517000" />
       <workItem from="1517107130450" duration="11626000" />
-      <workItem from="1517331782569" duration="10401000" />
+      <workItem from="1517331782569" duration="14020000" />
     </task>
     <task id="LOCAL-00001" summary="Removed unnecessary function">
       <created>1517113475842</created>
@@ -312,17 +320,24 @@
       <option name="project" value="LOCAL" />
       <updated>1517338023903</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Mostly finished fork1(). Starting join. Added some fields to procStruct as well as some more helper functions.">
+      <created>1517344202032</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1517344202032</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31687000" />
+    <option name="totallyTimeSpent" value="35306000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="847" y="20" width="813" height="1010" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20295203" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19680198" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -356,7 +371,8 @@
     <MESSAGE value="Added several functions, added priority checking to fork" />
     <MESSAGE value="A couple of new utility functions, added a parameter to the ProcStruct" />
     <MESSAGE value="Added Parent Checking and more checks to fork1()" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Parent Checking and more checks to fork1()" />
+    <MESSAGE value="Mostly finished fork1(). Starting join. Added some fields to procStruct as well as some more helper functions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Mostly finished fork1(). Starting join. Added some fields to procStruct as well as some more helper functions." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -396,7 +412,7 @@
         <state relative-caret-position="555">
           <caret line="37" column="0" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
-            <element signature="e#112#132#0" expanded="true" />
+            <element signature="e#102#122#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -413,7 +429,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
           <caret line="33" column="28" lean-forward="true" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="28" />
-          <folding />
+          <folding>
+            <element signature="e#43#61#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -439,7 +457,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="5" column="35" lean-forward="false" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="35" />
-          <folding />
+          <folding>
+            <element signature="e#43#61#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -487,14 +507,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/usloss/phase1.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/usloss/libdisk/linkedList.c" />
     <entry file="file://$PROJECT_DIR$/usloss/linkedListTest.c" />
     <entry file="file://$PROJECT_DIR$/linkedList.h" />
@@ -519,47 +531,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="13" lean-forward="true" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/usloss/usloss.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1005">
-          <caret line="69" column="29" lean-forward="false" selection-start-line="69" selection-start-column="27" selection-end-line="69" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/usloss/testcases/test29.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-729">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/usloss/queue.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding>
-            <element signature="e#112#132#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/usloss/queue.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="55" column="25" lean-forward="false" selection-start-line="55" selection-start-column="25" selection-end-line="55" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -573,19 +549,73 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/usloss/phase1.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="618">
-          <caret line="380" column="0" lean-forward="false" selection-start-line="380" selection-start-column="0" selection-end-line="380" selection-end-column="0" />
+        <state relative-caret-position="108">
+          <caret line="346" column="0" lean-forward="false" selection-start-line="346" selection-start-column="0" selection-end-line="357" selection-end-column="78" />
           <folding>
             <element signature="e#273#292#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="823">
+          <caret line="161" column="0" lean-forward="false" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usloss/usloss.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="18" column="17" lean-forward="false" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/usloss/kernel.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <caret line="34" column="41" lean-forward="false" selection-start-line="34" selection-start-column="41" selection-end-line="34" selection-end-column="41" />
+          <folding>
+            <element signature="e#43#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usloss/queue.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="16" lean-forward="false" selection-start-line="29" selection-start-column="16" selection-end-line="29" selection-end-column="16" />
+          <folding>
+            <element signature="e#102#122#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usloss/phase1.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usloss/queue.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="433">
+          <caret line="64" column="38" lean-forward="false" selection-start-line="64" selection-start-column="36" selection-end-line="64" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

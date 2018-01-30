@@ -2,36 +2,34 @@
 // Created by Rodrigo Silva Mendoza on 1/27/18.
 //
 
-#ifndef USLOSS_LINKEDLIST_H
-#define USLOSS_LINKEDLIST_H
+#ifndef USLOSS_QUEUE_H
+#define USLOSS_QUEUE_H
 
 #include <stdbool.h>
-#include <jmorecfg.h>
+#include "kernel.h"
 
-typedef struct processNode {
-    unsigned int pid;
-    int priority;
-    struct processNode *next;
-} Node;
+typedef struct processQueue processQueue;
 
-typedef struct list {
-    Node *first;
-} processPriorityQueue;
+struct processQueue {
+    procPtr headProcess;
+    procPtr tailProcess;
+    int     length;
+    int     typeOfQueue;
+};
+
+#define READYLIST           0
+#define CHILDRENLIST        1
+#define DEADCHILDRENLIST    2
+#define ZAPLIST             3
+
 
 /* -------------------------- Function Prototypes ---------------------------------- */
 
-extern Node *createNewNode();
-extern void deleteNode(Node *node);
-extern void deleteNodeWithPID(processPriorityQueue *queue, unsigned int pid);
+extern void     initializeProcessQueue(processQueue* queue, int queueType);
+extern void     appendProcessToQueue(processQueue* queue, procPtr process);
+extern procPtr  popFromQueue(processQueue* queue);
+extern void     removeChildFromQueue(processQueue* queue, procPtr child);
+extern procPtr  peekAtHead(processQueue* queue);
 
-extern processPriorityQueue *initializeQueue();
-extern void freeQueue(processPriorityQueue *queue);
-extern void insertNodeIntoQueue(processPriorityQueue *queue, unsigned int pid, int priority);
-extern Node *getNode(processPriorityQueue *queue, int element);
-extern Node *lookAtFirstElement(processPriorityQueue *queue);
-extern Node *popFromQueue(processPriorityQueue *queue);
-extern Node *find_pid(processPriorityQueue *queue, unsigned int pid);
-extern void printQueue(processPriorityQueue *queue);
-extern bool isEmpty(processPriorityQueue *queue);
 
-#endif //USLOSS_LINKEDLIST_H
+#endif USLOSS_QUEUE_H

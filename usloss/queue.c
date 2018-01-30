@@ -2,206 +2,96 @@
 #include <stdio.h>
 #include "queue.h"
 
-
-
-
-/* -------------------------- Functions ------------------------------------- */
-Node *createNewNode(){
-    Node *temp = malloc(sizeof(Node));
-    temp->next=NULL;
-    return temp;
+/* ------------------------------------------------------------------------
+   Name - initializeProcessQueue
+   Purpose -
+   Parameters -
+   Returns -
+   Side Effects -
+   ------------------------------------------------------------------------ */
+void     initializeProcessQueue(processQueue* queue, int queueType){
+    queue->headProcess  = NULL;
+    queue->tailProcess  = NULL;
+    queue->length       = 0;
+    queue->typeOfQueue  = queueType;
 }
 
-void deleteNode(Node *node){
-    free(node);
-}
+/* ------------------------------------------------------------------------
+   Name - appendProcessToQueue
+   Purpose -
+   Parameters -
+   Returns -
+   Side Effects -
+   ------------------------------------------------------------------------ */
+void     appendProcessToQueue(processQueue* queue, procPtr process){
 
-void deleteNodeWithPID(processPriorityQueue *list, unsigned int pid){
-    Node *node = list->first;
-
-    //If the head element of the list is the one we want to remove
-    if(node->pid == pid){
-        list->first = node->next;
-        free(node);
-        return;
+    // If the list is empty, set the first and tail elements to the given process
+    if(queue->headProcess == NULL && queue->tailProcess == NULL) {
+        queue->headProcess = process;
+        queue->tailProcess = process;
     }
 
-    //Otherwise, iterate through the list
-    while(node != NULL){
-        if(node->next == NULL)
-            break;
-        if(node->next->pid == pid){
-            Node *temp = node->next;
-            node->next = node->next->next;
-            free(temp);
-            return;
+    // If the list is not empty
+    else{
+        //Check the type of the list before deciding what to do
+        switch(queue->typeOfQueue){
+            case READYLIST :
+                queue->tailProcess->nextProcPtr = process;
+            case CHILDRENLIST :
+                queue->tailProcess->nextSiblingPtr = process;
+            case ZAPLIST :
+                queue->tailProcess->nextZapPtr = process;
+            case DEADCHILDRENLIST :
+                queue->tailProcess->nextDeadSibling = process;
         }
-        node = node->next;
+        queue->tailProcess = process;
     }
+
+    //increase the size of the queue
+    queue->length++;
 }
 
-processPriorityQueue *initializeQueue() {
-    processPriorityQueue *new_list = malloc(sizeof(processPriorityQueue));
-    //Node *first = createNewNode();
-    //new_list->first = first;
-    new_list->first = NULL;
-    return new_list;
+/* ------------------------------------------------------------------------
+   Name - popFromQueue
+   Purpose -
+   Parameters -
+   Returns -
+   Side Effects -
+   ------------------------------------------------------------------------ */
+procPtr   popFromQueue(processQueue* queue){
+
+    procPtr temp = queue->headProcess;
+
+    // Check to make sure the queue is not empty
+    if(temp == NULL)
+        return NULL;
+
+    // If the queue is only of length 1, return
+    // the head and set the head and tail to null
+    if(queue->headProcess == queue->tailProcess) {
+        queue->headProcess = NULL;
+        queue->tailProcess = NULL;
+    }
+
 }
 
-void freeQueue(processPriorityQueue *list){
-    Node *node = list->first;
-    Node *next;
-    while(node) {
-        next = node->next;
-        deleteNode(node);
-        node=next;
-    }
-    free(list);
-}
+/* ------------------------------------------------------------------------
+   Name - removeChildFromQueue
+   Purpose -
+   Parameters -
+   Returns -
+   Side Effects -
+   ------------------------------------------------------------------------ */
+void     removeChildFromQueue(processQueue* queue, procPtr child);
 
-
-
-/*
- * Duplicate the action a queue takes when an element is popped.
- * Remove and return the first element in the linked list
- */
-Node *popFromQueue(processPriorityQueue *list){
-    Node *temp = list->first;
-
-    if(temp->next == NULL){
-        Node *new_first = createNewNode();
-        list->first = new_first;
-    }
-    else {
-        Node *new_first = temp->next;
-        list->first = new_first;
-    }
-
-    //Now return the head element of the list
-    return temp;
-}
-
-void insertNodeIntoQueue(processPriorityQueue *list, unsigned int pid, int priority){
-
-    Node *temp;
-    Node *node;
-
-    //Create a temp processNode with a pid and priority the same
-    //as the one that was passed in to us
-    temp = createNewNode();
-    temp->pid = pid;
-    temp->priority = priority;
-
-    //Because we have multiple lists, with predefined priority
-    //levels, we don't have to worry about placing something
-    //in the proper location. Simply place at the end
-
-
-    //If the list was empty at first, simpyl set its first element
-    //to the new processNode
-    if(list->first == NULL) {
-        // temp->next = list->first; # No need for this, createNewNode() sets its next to null already
-        list->first = temp;
-        printf("\n");
-        printf("Added node with PID of %d to beginning\n", list->first->pid);
-        printf("\n");
-        return;
-    }
-
-    node = list->first;
-    printf("Setting head to a node with a PID of %d\n", node->pid);
-    //Otherwise, iterate to the end
-    while(node->next != NULL){
-        node = node->next;
-        printf("Node is now the node with a PID of: %d\n", node->pid);
-    }
-
-    //Now, set the last processNode to our created temp processNode
-    printf("Inserted a node with PID: %d\t Priority: %d\n", temp->pid, temp->priority);
-    printf("\n");
-    node->next = temp;
-}
-
-// Simple function that returns the first element in the list
-Node *lookAtFirstElement(processPriorityQueue *list){
-    return list->first;
-}
-
-Node *getNode(processPriorityQueue *list, int nodeNumber){
-    Node *node = list->first;
-
-    int i = 0;
-    while(i < nodeNumber && node != NULL){
-        node = node->next;
-        i++;
-    }
-
-    return node;
-}
-
-Node *find_pid(processPriorityQueue *list, unsigned int pid){
-    Node *node = list->first;
-
-    while(node->next != NULL){
-        if(node->pid == pid)
-            return node;
-        else
-            node = node->next;
-    }
-
-    return NULL;
-}
-
-void printQueue(processPriorityQueue *list){
-    Node *node = list->first;
-    //printf("PID: %d\t Priority: %d\n", node->pid, node->priority);
-    int length = 0;
-
-    if(node == NULL){
-        printf("List is empty\n");
-        return;
-    }
-
-    while(node != NULL){
-        printf("PID: %d\t Priority: %d\n", node->pid, node->priority);
-        node = node->next;
-        length++;
-    }
-
-    printf("The total length of the list was: %d elements\n", length);
-}
-
-bool isEmpty(processPriorityQueue *queue){
-    bool empty = false;
-    Node *node = queue->first;
-
-    if(node == NULL){
-        empty = true;
-    }
-
-    return empty;
-}
-
-//int main(){
-//
-//    processPriorityQueue *priorityList_1 = initializeQueue();
-//    processPriorityQueue *priorityList_2 = initializeQueue();
-//
-//    printf("The list is empty at first: %d\n", isEmpty(priorityList_1));
-//    insertNodeIntoQueue(priorityList_1, 1, 1);
-//    insertNodeIntoQueue(priorityList_1, 2, 1);
-//    insertNodeIntoQueue(priorityList_1, 3, 1);
-//    insertNodeIntoQueue(priorityList_1, 4, 1);
-//    insertNodeIntoQueue(priorityList_1, 5, 1);
-//
-//
-//
-//    //Node *temp = lookAtFirstElement(priorityList_1);
-//    //printf("First processNode has pid of %d and priority of %d\n", temp->pid, temp->priority);
-//
-//    printQueue(priorityList_1);
-//    printQueue(priorityList_2);
-//}
+/* ------------------------------------------------------------------------
+   Name - peekAtHead
+   Purpose -
+   Parameters -
+   Returns -
+   Side Effects -
+   ------------------------------------------------------------------------ */
+procPtr  peekAtHead(processQueue* queue);
 
 
 
