@@ -9,7 +9,7 @@
    Returns -
    Side Effects -
    ------------------------------------------------------------------------ */
-void     initializeProcessQueue(processQueue* queue, int queueType){
+void initializeProcessQueue(processQueue* queue, int queueType){
     queue->headProcess  = NULL;
     queue->tailProcess  = NULL;
     queue->length       = 0;
@@ -23,7 +23,7 @@ void     initializeProcessQueue(processQueue* queue, int queueType){
    Returns -
    Side Effects -
    ------------------------------------------------------------------------ */
-void     appendProcessToQueue(processQueue* queue, procPtr process){
+void appendProcessToQueue(processQueue* queue, procPtr process){
 
     // If the list is empty, set the first and tail elements to the given process
     if(queue->headProcess == NULL && queue->tailProcess == NULL) {
@@ -47,8 +47,8 @@ void     appendProcessToQueue(processQueue* queue, procPtr process){
         queue->tailProcess = process;
     }
 
-    //increase the size of the queue
-    queue->length++;
+
+    queue->length++;        // Increase the size of the list
 }
 
 /* ------------------------------------------------------------------------
@@ -58,7 +58,7 @@ void     appendProcessToQueue(processQueue* queue, procPtr process){
    Returns -
    Side Effects -
    ------------------------------------------------------------------------ */
-procPtr   popFromQueue(processQueue* queue){
+procPtr popFromQueue(processQueue* queue){
 
     procPtr temp = queue->headProcess;
 
@@ -73,6 +73,27 @@ procPtr   popFromQueue(processQueue* queue){
         queue->tailProcess = NULL;
     }
 
+    /*
+     * Otherwise, we need to set our head element to the element following it
+     * Essentially: a->b->c->..... We return a, and our new list needs to look
+     *  like: b->c->....
+     */
+    else {
+        switch (queue->typeOfQueue){
+            case READYLIST :
+                queue->headProcess = queue->headProcess->nextProcPtr;
+            case CHILDRENLIST :
+                queue->headProcess = queue->headProcess->nextSiblingPtr;
+            case ZAPLIST :
+                queue->headProcess = queue->headProcess->nextZapPtr;
+            case DEADCHILDRENLIST :
+                queue->headProcess = queue->headProcess->nextDeadSibling;
+        }
+    }
+
+    queue->length--;    // Decrement the size of the list
+    return temp;        // Return the head of the list
+
 }
 
 /* ------------------------------------------------------------------------
@@ -82,7 +103,41 @@ procPtr   popFromQueue(processQueue* queue){
    Returns -
    Side Effects -
    ------------------------------------------------------------------------ */
-void     removeChildFromQueue(processQueue* queue, procPtr child);
+void removeChildFromQueue(processQueue* queue, procPtr child){
+
+    // If the list is empty return
+    if(queue->headProcess == NULL)
+        return;
+
+    // If the list is not of type children return
+    if(queue->typeOfQueue != CHILDRENLIST)
+        return;
+
+    // If the head element is the child we want to remove
+    if(queue->headProcess == child){
+        popFromQueue(queue);        // Call pop to remove the head of the queue
+        return;
+    }
+
+    procPtr temp = queue->headProcess;
+    procPtr tempSiblingPointer = queue->headProcess->nextSiblingPtr;
+
+    // Iterate through the queue
+    while (tempSiblingPointer != NULL){
+        if(tempSiblingPointer == child){
+            if(tempSiblingPointer == queue->tailProcess){
+                queue->tailProcess = temp;
+            }
+            else {
+                temp->nextSiblingPtr = tempSiblingPointer->nextSiblingPtr->nextSiblingPtr;
+            }
+            queue->length--;        // Decrement the size of the queue
+            return;
+        }
+        temp = tempSiblingPointer;
+        tempSiblingPointer = temp->nextSiblingPtr;
+    }
+}
 
 /* ------------------------------------------------------------------------
    Name - peekAtHead
@@ -91,7 +146,10 @@ void     removeChildFromQueue(processQueue* queue, procPtr child);
    Returns -
    Side Effects -
    ------------------------------------------------------------------------ */
-procPtr  peekAtHead(processQueue* queue);
+procPtr peekAtHead(processQueue* queue){
+
+    return queue->headProcess;      // There is the chance that the return will be NULL
+}
 
 
 
