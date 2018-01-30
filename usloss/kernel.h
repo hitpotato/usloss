@@ -47,4 +47,6 @@ union psrValues {
 #define BLOCKED = -1
 #define EMPTY -2
 
+#define NOPARENTPROCESS -1
+
 

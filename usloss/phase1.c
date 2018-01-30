@@ -243,6 +243,30 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     ProcTable[procSlot].priority = priority;
     ProcTable[procSlot].state = NULL;
 
+    //---------------Set the Parent ID-------------------/
+
+    //If this is either sentinenel or start1, there is no parent
+    if(strcmp("sentinel", name) == 0 || strcmp("start1", name) == 0)
+        ProcTable[procSlot].parentPID = NOPARENTPROCESS;
+
+    //Otherwise, need to find the parent ID
+    else{
+
+        //Set the Parent Id to the current Processes ID
+        ProcTable[procSlot].parentPID = Current->pid;
+
+        //Check if Current does not have a child aready
+        //If it does not, set this fork process as the child of current
+        if(Current->childProcPtr == NULL)
+            Current->childProcPtr = &ProcTable[procSlot];
+
+        //If Current DID have a child already, things get more complicated
+        else{
+            
+        }
+
+    }
+
     // Initialize context for this process, but use launch function pointer for
     // the initial value of the process's program counter (PC)
 
@@ -257,13 +281,17 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     p1_fork(ProcTable[procSlot].pid);
 
     // More stuff to do here...
-    nextPid += 1;
-    dispatcher();
-    unsigned int interrupt_bit = 1;
-    USLOSS_PsrSet(USLOSS_PsrGet() & (interrupt_bit << 1));
+
+    //If the process is not the sentinel, dispatch it
+    if(strcmp("sentinel", name) != 0){
+        dispatcher();
+    }
+
+    //Re-enable interrupts
+    enableInterrupts();
 
 
-    return nextPid - 1;  // -1 is not correct! Here to prevent warning.
+    return ProcTable[procSlot].pid;  // Return the PID of the newly slotted process
 } /* fork1 */
 
 /* ------------------------------------------------------------------------
