@@ -36,6 +36,8 @@ void enableInterrupts();
 void haltAndPrintKernelError();
 int findAvailableProcSlot();
 void insertInReadyList(procPtr process);
+int blockCurrentProcess(int updatedStatus);
+void removeFromProcessTable(int pid);
 
 //Interrupt Handlers
 void clockHandler(int dev, void *arg);
@@ -76,19 +78,14 @@ void startup(int argc, char *argv[])
     /* initialize the process table */
     if (debugEnabled())
         USLOSS_Console("startup(): initializing process table, ProcTable[]\n");
-
-
-    // Initialize the Process Table
     for(int i = 0; i < MAXPROC; i++){
         initializeProcessTableEntry(i); 
     }
 
-    // Initialize the Ready list, etc.
-    if (debugEnabled())
-        USLOSS_Console("startup(): initializing the Ready list\n");
-
     // Initialize ReadyList
     // For each element of ReadyList, turn it into a queue of type READYLISt
+    if (debugEnabled())
+        USLOSS_Console("startup(): initializing the Ready list\n");
     for(int i = 0; i < 6; i++){
         initializeProcessQueue(&ReadyList[i], READYLIST);
     }
@@ -99,8 +96,7 @@ void startup(int argc, char *argv[])
     // startup a sentinel process
     if (debugEnabled())
         USLOSS_Console("startup(): calling fork1() for sentinel\n");
-    result = fork1("sentinel", sentinel, NULL, USLOSS_MIN_STACK,
-                    SENTINELPRIORITY);
+    result = fork1("sentinel", sentinel, NULL, USLOSS_MIN_STACK, SENTINELPRIORITY);
     if (result < 0) {
         if (debugEnabled()) {
             USLOSS_Console("startup(): fork1 of sentinel returned error, ");
@@ -134,7 +130,10 @@ void startup(int argc, char *argv[])
    ----------------------------------------------------------------------- */
 void finish(int argc, char *argv[])
 {
-    if (DEBUG && debugflag)
+    if(!inKernelMode())
+        haltAndPrintKernelError();
+
+    if (debugEnabled())
         USLOSS_Console("in finish...\n");
 } /* finish */
 
@@ -201,6 +200,9 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
         USLOSS_Halt(1);
     }
 
+    if(debugEnabled())
+        USLOSS_Console("fork1(): Creating process with pid: %d in slot: %d\n", nextPid, procSlot);
+
     //Set proc name and startFunct
     strcpy(ProcTable[procSlot].name, name);
     ProcTable[procSlot].startFunc = startFunc;
@@ -219,7 +221,7 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     ProcTable[procSlot].stackSize = stacksize;
     ProcTable[procSlot].stack = (char*) malloc (stacksize);
 
-    //Verify that malloc worked
+    //Shouln't happen, but make sure that malloc is successful
     if(ProcTable[procSlot].stack == NULL){
         if(debugEnabled()) {
             USLOSS_Console("fork1(): Malloc failed when allocating stack size. Halting....\n");
@@ -227,16 +229,11 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
         USLOSS_Halt(1);
     }
 
-
-    ProcTable[procSlot].nextProcPtr = NULL;
-    ProcTable[procSlot].nextSiblingPtr = NULL;
-    ProcTable[procSlot].childProcPtr = NULL;
+    // Set the status, the pid and the priority
     ProcTable[procSlot].status = READY;
     ProcTable[procSlot].pid = nextPid;
     ProcTable[procSlot].priority = priority;
-    ProcTable[procSlot].state = NULL;
 
-    //---------------Set the Parent ID-------------------/
 
     //If this is either sentinenel or start1, there is no parent
     if(strcmp("sentinel", name) == 0 || strcmp("start1", name) == 0)
@@ -244,29 +241,12 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
 
     //Otherwise, need to find the parent ID
     else{
-
-        //Set the Parent Id to the current Processes ID
+        // Set the Parent Id to the current Processes ID
         ProcTable[procSlot].parentPID = Current->pid;
-
-        //Check if Current does not have a child aready
-        //If it does not, set this fork process as the child of current
-        if(Current->childProcPtr == NULL)
-            Current->childProcPtr = &ProcTable[procSlot];
-
-        //If Current DID have a child already, things get more complicated
-        else{
-            //Iterate through children until a child with a NULL sibling pointer is found
-            procPtr child;
-            for(child = Current->childProcPtr; child->nextSiblingPtr != NULL;
-                child = child->nextSiblingPtr){
-                ; //Do nothing except iteration
-            }
-
-            //Now that we've found the child with no next sibling, make its next sibling our
-            //  newly created process
-            child->nextSiblingPtr = &ProcTable[procSlot];
-        }
-
+        // Add this process to the Currents queue of children
+        appendProcessToQueue(&Current->childrenQueue, &ProcTable[procSlot]);
+        // Set the parentPtr to the Current process
+        ProcTable[procSlot].parentPtr = Current;
     }
 
     //If the parent is not null, increase the number of children it has
@@ -288,8 +268,6 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     p1_fork(ProcTable[procSlot].pid);
 
     // More stuff to do here...
-    //Add the Pid of the process
-
     //Add the process to the ready table
     insertInReadyList(&ProcTable[procSlot]);
 
@@ -300,7 +278,6 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
 
     //Re-enable interrupts
     enableInterrupts();
-
 
     return ProcTable[procSlot].pid;  // Return the PID of the newly slotted process
 } /* fork1 */
@@ -358,7 +335,7 @@ int join(int *status)
         USLOSS_Console("join(): In join, current has a pid of: %d\n", Current->pid);
 
     //Check if the process has any children
-    if(Current->numberOfChildren == 0){
+    if(Current->childrenQueue.length == 0 && Current->deadChildrenQueue.length == 0){
         if(debugEnabled())
             USLOSS_Console("join(): The process has no children\n");
         return -2;
@@ -368,11 +345,23 @@ int join(int *status)
     if(isZapped())
         return -1;
 
+    // If current has no children that are dead, block and wait
+    if(Current->deadChildrenQueue.length == 0){
+        blockCurrentProcess(blockedByJoin);
+    }
 
+    // Get the first dead child from the dead children queue
+    procPtr firstChild = popFromQueue(&Current->deadChildrenQueue);
+    *status = firstChild->quitReturnValue;
+    int pidOfChild = firstChild->pid;
+    initializeProcessTableEntry(pidOfChild);        // The initialization also wipes all existing info
 
+    //If the process has been zapped during this
+    if(Current->zappedProcessesQueue.length > 0){
+        return -1;
+    }
 
-
-    return -1;  // -1 is not correct! Here to prevent warning.
+    return pidOfChild;
 } /* join */
 
 
@@ -387,6 +376,14 @@ int join(int *status)
    ------------------------------------------------------------------------ */
 void quit(int status)
 {
+
+    if(!inKernelMode())
+        disableInterrupts();
+
+    if(debugEnabled())
+        USLOSS_Console("Quiting a process with pid: %d\n", Current->pid);
+
+    
     p1_quit(Current->pid);
 } /* quit */
 
@@ -422,7 +419,7 @@ void dispatcher(void)
    ----------------------------------------------------------------------- */
 int sentinel (char *dummy)
 {
-    if (DEBUG && debugflag)
+    if (debugEnabled())
         USLOSS_Console("sentinel(): called\n");
     while (1)
     {
@@ -495,6 +492,7 @@ void initializeProcessTableEntry(int entryNumber){
     ProcTable[i].status = EMPTY;
 
     // Set all the pointers to NULL
+    ProcTable[i].parentPtr = NULL;
     ProcTable[i].nextZapPtr = NULL;
     ProcTable[i].nextProcPtr = NULL;
     ProcTable[i].childProcPtr = NULL;
@@ -517,6 +515,7 @@ void initializeProcessTableEntry(int entryNumber){
     initializeProcessQueue(&ProcTable[i].deadChildrenQueue, DEADCHILDRENLIST);
     initializeProcessQueue(&ProcTable[i].zappedProcessesQueue, ZAPLIST);
 }
+
 
 /*
  * Interrupt handlers are passed two parameters
@@ -607,47 +606,76 @@ int debugEnabled(){
     return debug;
 }
 
-void insertInReadyList(procPtr process){
-    if(debugEnabled())
-        USLOSS_Console("Adding a process to the "
-                       "readly list with a pid %d and priority %d\n", process->pid, process->priority);
-
-    //Check if the list is empty
-    //If it is, simply add to the head of the list and return
-    if(ReadyList == NULL){
-        ReadyList = process;
-        return;
-    }
-
-    //If the new process has a priority that is greater than
-    //  that of the head nodes
-    if(process->priority < ReadyList->priority) {
-        process->nextProcPtr = ReadyList;
-        ReadyList = process;
-    }
-
-    //Otherwise, the process has a priority lower than the head
-    //Iterate through until we find the sport for proper insertion
-    else {
-
-        //Create a temp pointing to head
-        procPtr temp = ReadyList;
-
-        while(temp->nextProcPtr != NULL){
-            if(temp->nextProcPtr->priority > process->priority)
-                break;
-            temp = temp->nextProcPtr;
-        }
-
-        //Swap pointers to insert process into the list
-        process->nextProcPtr = temp->nextProcPtr;
-        temp->nextProcPtr = process;
-    }
-}
+//void insertInReadyList(procPtr process){
+//    if(debugEnabled())
+//        USLOSS_Console("Adding a process to the "
+//                       "readly list with a pid %d and priority %d\n", process->pid, process->priority);
+//
+//    //Check if the list is empty
+//    //If it is, simply add to the head of the list and return
+//    if(ReadyList == NULL){
+//        ReadyList = process;
+//        return;
+//    }
+//
+//    //If the new process has a priority that is greater than
+//    //  that of the head nodes
+//    if(process->priority < ReadyList->priority) {
+//        process->nextProcPtr = ReadyList;
+//        ReadyList = process;
+//    }
+//
+//    //Otherwise, the process has a priority lower than the head
+//    //Iterate through until we find the sport for proper insertion
+//    else {
+//
+//        //Create a temp pointing to head
+//        procPtr temp = ReadyList;
+//
+//        while(temp->nextProcPtr != NULL){
+//            if(temp->nextProcPtr->priority > process->priority)
+//                break;
+//            temp = temp->nextProcPtr;
+//        }
+//
+//        //Swap pointers to insert process into the list
+//        process->nextProcPtr = temp->nextProcPtr;
+//        temp->nextProcPtr = process;
+//    }
+//}
 
 //Returns 0/false if not zapped, 1 otherwise
 int isZapped() {
     return Current->zapStatus;
+}
+
+/* ------------------------------------------------------------------------
+   Name - blockCurrentProcess
+   Purpose - Blocks the current process
+   Parameters -
+   Returns - -1 if the process was zapped while it was blocked
+             0: in every other case
+   Side Effects -
+   ------------------------------------------------------------------------ */
+int blockCurrentProcess(int updatedStatus){
+    if(debugEnabled())
+        USLOSS_Console("Block has been called on process with pid:%d\n", Current->pid);
+
+    if(!inKernelMode())
+        haltAndPrintKernelError();
+
+    disableInterrupts();
+
+    Current->status = updatedStatus;
+    int ReadyListIndex = Current->priority - 1;
+    popFromQueue(&ReadyList[ReadyListIndex]);
+    dispatcher();
+
+    if(Current->zappedProcessesQueue.length > 0)
+        return -1;
+
+    return 0;
+
 }
 
 
