@@ -32,10 +32,14 @@ struct procStruct {
     int             numberOfChildren;   /* The number of children this process has */
     int             zapStatus;            /* 0 if not zapped. 1 if zapped */
     int             quitReturnValue;    /* The value the process returns after quiting */
-    int             deadStatus;
+    int             quitStatus;
+    int             timeInitialized;
+    int             totalTimeRunning;
+    int             totalSliceTime;
     processQueue    childrenQueue;
     processQueue    deadChildrenQueue;
     processQueue    zappedProcessesQueue;
+
 };
 
 struct psrBits {
@@ -64,10 +68,11 @@ union psrValues {
 #define BLOCKED = -1
 #define EMPTY -2
 
+#define MAXTIMEALLOTED 80000            // Reprents an 80ms max time in
 
 #define NOPARENTPROCESS -1
 
-#define blockedByJoin    11
-#define blockedByZap     12
+#define BLOCKEDBYJOIN    11
+#define BLOCKEDBYZAP     12
 
 

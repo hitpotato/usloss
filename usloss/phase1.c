@@ -153,7 +153,6 @@ void finish(int argc, char *argv[])
 int fork1(char *name, int (*startFunc)(char *), char *arg,
           int stacksize, int priority)
 {
-    int procSlot = -1;
 
     if (debugEnabled())
         USLOSS_Console("fork1(): creating process %s\n", name);
@@ -186,7 +185,7 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     }
 
     // Is there room in the process table? What is the next PID?
-    procSlot = findAvailableProcSlot();
+    int procSlot = findAvailableProcSlot();
 
     //If procSlot is -1, there was no available slot
     if(procSlot == -1){
@@ -232,7 +231,7 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
 
     // Set the status, the pid and the priority
     ProcTable[procSlot].status = READY;
-    ProcTable[procSlot].pid = nextPid;
+    ProcTable[procSlot].pid = (short) nextPid;
     ProcTable[procSlot].priority = priority;
 
 
@@ -304,7 +303,7 @@ void launch()
     // Call the function passed to fork1, and capture its return value
     result = Current->startFunc(Current->startArg);
 
-    if (DEBUG && debugflag)
+    if (debugEnabled())
         USLOSS_Console("Process %d returned to launch\n", Current->pid);
 
     quit(result);
@@ -385,6 +384,8 @@ void quit(int status)
     if(debugEnabled())
         USLOSS_Console("Quiting a process with pid: %d\n", Current->pid);
 
+    int priorityQueueSlot = Current->priority - 1;
+
 //    if(Current->childrenQueue.length > 0){
 //        USLOSS_Console("Quit was called when processing with children.\n");
 //        USLOSS_Halt(1);
@@ -403,12 +404,45 @@ void quit(int status)
         childOfCurrent = childOfCurrent->nextSiblingPtr;        // Iterate to the next sibling
     }
 
-    Current->deadStatus = status;
+    Current->status     = QUIT;
+    Current->quitStatus = status;
+    popFromQueue(&ReadyList[priorityQueueSlot]);
 
+    // If this process is a child of another, need to remove from parents Children queue
+    if(Current->parentPtr != NULL){
+        removeChildFromQueue(&Current->parentPtr->childrenQueue, Current);      // Remove self/Current from parent
+        appendProcessToQueue(&Current->parentPtr->deadChildrenQueue, Current);  // Append self to Dead Children queue
 
+        // If the Parent is blocked because it is waiting for us/Child to quit, go ahead and unblock it
+        // Also add the parent back to the Ready List
+        if(Current->parentPtr->status = BLOCKEDBYJOIN){
+            Current->parentPtr->status = READY;
+            appendProcessToQueue(&ReadyList[Current->parentPtr->priority - 1], Current->parentPtr);
+        }
+    }
 
+    // Remove dead children current has from process table
+    while (Current->deadChildrenQueue.length > 0){
+        procPtr child = popFromQueue(&Current->deadChildrenQueue);
+        initializeProcessTableEntry(child->pid);
+    }
+
+    // Unblock all processes that zap'd this one
+    // Then set them to ready, and add them back to priority list
+    while (Current->zappedProcessesQueue.length > 0){
+        procPtr zap = popFromQueue(&Current->zappedProcessesQueue);
+        zap->status = READY;
+        appendProcessToQueue(&ReadyList[zap->priority - 1], zap);
+    }
+
+    // If current has no parent, then delete it
+    if(Current->parentPtr == NULL){
+        initializeProcessTableEntry(Current->pid);
+    }
 
     p1_quit(Current->pid);
+
+    dispatcher(); // Run next process
 } /* quit */
 
 
@@ -567,27 +601,30 @@ void initializeProcessTableEntry(int entryNumber){
 
     // Set the PID to -1 to show it hasnt been assigned
     // Set status to empty
-    ProcTable[i].pid = -1;
-    ProcTable[i].status = EMPTY;
+    ProcTable[i].pid                = -1;
+    ProcTable[i].status             = EMPTY;
 
     // Set all the pointers to NULL
-    ProcTable[i].parentPtr = NULL;
-    ProcTable[i].nextZapPtr = NULL;
-    ProcTable[i].nextProcPtr = NULL;
-    ProcTable[i].childProcPtr = NULL;
-    ProcTable[i].quitChildPtr = NULL;
-    ProcTable[i].nextSiblingPtr = NULL;
-    ProcTable[i].nextDeadSibling = NULL;
+    ProcTable[i].parentPtr          = NULL;
+    ProcTable[i].nextZapPtr         = NULL;
+    ProcTable[i].nextProcPtr        = NULL;
+    ProcTable[i].childProcPtr       = NULL;
+    ProcTable[i].quitChildPtr       = NULL;
+    ProcTable[i].nextSiblingPtr     = NULL;
+    ProcTable[i].nextDeadSibling    = NULL;
 
     // Miscellaneous values
-    ProcTable[i].stack = NULL;
-    ProcTable[i].stackSize = -1;
-    ProcTable[i].priority = -1;
-    ProcTable[i].zapStatus = 0;
-    ProcTable[i].numberOfChildren = 0;
-    ProcTable[i].parentPID = -1;
-    ProcTable[i].name[0] = '\n';
-    ProcTable[i].deadStatus = -1;
+    ProcTable[i].stack              = NULL;
+    ProcTable[i].stackSize          = 1;
+    ProcTable[i].priority           = -1;
+    ProcTable[i].zapStatus          = 0;
+    ProcTable[i].numberOfChildren   = 0;
+    ProcTable[i].parentPID          = -1;
+    ProcTable[i].name[0]            = '\n';
+    ProcTable[i].quitStatus         = -1;
+    ProcTable[i].timeInitialized    = -1;
+    ProcTable[i].totalTimeRunning   = -1;
+    ProcTable[i].totalSliceTime     = -1;
 
 
     // Initialize the queues attatched to the process
@@ -604,6 +641,29 @@ void initializeProcessTableEntry(int entryNumber){
  *
  */
 void clockHandler(int dev, void *arg){
+
+    if(debugEnabled())
+        USLOSS_Console("clockHandler has been called\n");
+
+    if(!inKernelMode())
+        haltAndPrintKernelError();
+
+    disableInterrupts();
+
+    int statusFromDeviceInput = 0;
+    //USLOSS_DeviceInptu - >For the clock, the value will be the number of microseconds since USLOSS was started.
+    /*
+     * USLOSS_DeviceInput() takes three arguments.
+     * The first specifies the interrupt (the clock in this case).
+     * The second is the unit number -- for the clock, there is only one clock, so put in 0.
+     * The third is a value returned by USLOSS_DeviceInput().
+     */
+
+    //Your clockHandler code will call USLOSS_DeviceInput() each time the clock interrupt happens.
+    // It will compare the result with the time at which the currently running process began its current time slice.
+    // This implies that the start time was recorded when the process was selected to run (you have to do this...)
+    Current->totalSliceTime = USLOSS_DeviceInput(0, 0, &statusFromDeviceInput) - Current->timeInitialized;
+
 
 
 
