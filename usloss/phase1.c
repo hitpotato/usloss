@@ -38,6 +38,7 @@ int findAvailableProcSlot();
 void insertInReadyList(procPtr process);
 int blockCurrentProcess(int updatedStatus);
 void removeFromProcessTable(int pid);
+int countNumberOfProcessRunningAndActive();
 
 //Interrupt Handlers
 void clockHandler(int dev, void *arg);
@@ -383,10 +384,25 @@ void quit(int status)
 
     if(debugEnabled())
         USLOSS_Console("Quiting a process with pid: %d\n", Current->pid);
-    if(Current->childrenQueue.length > 0){
-        USLOSS_Console("Quit was called when processing with children.\n");
-        USLOSS_Halt(1);
+
+//    if(Current->childrenQueue.length > 0){
+//        USLOSS_Console("Quit was called when processing with children.\n");
+//        USLOSS_Halt(1);
+//    }
+
+    // Its possible the Children Queue was not properly cleared out
+    //  so, loop through the table, to find any processes that have a status
+    //      that isnt QUIT. If we find something, there is an active child
+    procPtr childOfCurrent = peekAtHead(&Current->childrenQueue);
+    while (childOfCurrent != NULL){
+        if(childOfCurrent->status != QUIT){
+            USLOSS_Console("Process with pid: %d has active children. Halting.\n", Current->pid);
+            USLOSS_Halt(1);
+        }
+
+        childOfCurrent = childOfCurrent->nextSiblingPtr;        // Iterate to the next sibling
     }
+
     Current->deadStatus = status;
 
 
@@ -445,7 +461,7 @@ void dispatcher(void)
 
     if(previousProcess != Current){
         // If the old Process had real contents ?
-        
+
 
     }
 
@@ -481,6 +497,15 @@ int sentinel (char *dummy)
 /* check to determine if deadlock has occurred... */
 static void checkDeadlock()
 {
+
+    int activeProcesses = countNumberOfProcessRunningAndActive();
+    if(activeProcesses > 1){
+        USLOSS_Console("There are more %d processes running. Only sentinel should be left\n", activeProcesses);
+        USLOSS_Halt(1);
+    }
+
+    USLOSS_Console("All processes completed!\n");
+    USLOSS_Halt(0);
 } /* checkDeadlock */
 
 
@@ -731,6 +756,20 @@ int blockCurrentProcess(int updatedStatus){
 
     return 0;
 
+}
+
+int countNumberOfProcessRunningAndActive(){
+
+    int runningAndActive = 0;
+
+    // Iterate through and count all processes that
+    //      have a status other than empty, meaning that
+    //      they are actually processes
+    for(int i = 0; i < MAXPROC){
+        if(ProcTable[i].status != EMPTY)
+            runningAndActive++;
+    }
+    return runningAndActive;
 }
 
 
