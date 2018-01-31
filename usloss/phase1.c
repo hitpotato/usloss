@@ -269,7 +269,8 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
 
     // More stuff to do here...
     //Add the process to the ready table
-    insertInReadyList(&ProcTable[procSlot]);
+    //
+    appendProcessToQueue(&ReadyList[priority-1], &ProcTable[procSlot]);
 
     //If the process is not the sentinel, dispatch it
     if(strcmp("sentinel", name) != 0){
@@ -294,7 +295,7 @@ void launch()
 {
     int result;
 
-    if (DEBUG && debugflag)
+    if (debugEnabled())
         USLOSS_Console("launch(): started\n");
 
     // Enable interrupts
@@ -378,12 +379,19 @@ void quit(int status)
 {
 
     if(!inKernelMode())
-        disableInterrupts();
+        haltAndPrintKernelError();
 
     if(debugEnabled())
         USLOSS_Console("Quiting a process with pid: %d\n", Current->pid);
+    if(Current->childrenQueue.length > 0){
+        USLOSS_Console("Quit was called when processing with children.\n");
+        USLOSS_Halt(1);
+    }
+    Current->deadStatus = status;
 
-    
+
+
+
     p1_quit(Current->pid);
 } /* quit */
 
@@ -402,7 +410,48 @@ void dispatcher(void)
 {
     procPtr nextProcess = NULL;
 
+    // Make sure we are in kernel mode
+    if(!inKernelMode())
+        haltAndPrintKernelError();
+
+    // Disable all interrupts
+    disableInterrupts();
+
+    // Check to see if Current is currently running
+    if(Current->status = RUNNING){
+        Current->status = READY;
+        int pos = Current->priority - 1;
+        appendProcessToQueue(&ReadyList[pos],popFromQueue(&ReadyList[pos])); // Removes from front. Places at back.
+    }
+
+
+    // Find the highest priority process
+    for(int i = 0; i < 6; i++ ){
+        if(ReadyList[i].length > 0){
+            nextProcess = peekAtHead(&ReadyList[i]);
+            break;
+        }
+    }
+
+    if(nextProcess == NULL){
+        if(debugEnabled())
+            USLOSS_Console("Ready list(s) are empty in dispatcher!\n");
+        return;
+    }
+
+    procPtr previousProcess = Current;
+    Current = nextProcess;
+    Current->status = RUNNING;
+
+    if(previousProcess != Current){
+        // If the old Process had real contents ?
+        
+
+    }
+
     p1_switch(Current->pid, nextProcess->pid);
+    enableInterrupts();
+    USLOSS_ContextSwitch(&previousProcess->state, &Current->state);
 } /* dispatcher */
 
 
@@ -434,6 +483,11 @@ static void checkDeadlock()
 {
 } /* checkDeadlock */
 
+
+
+//######################################################################################################################
+//######################################################################################################################
+//######################################################################################################################
 
 /*
  * Disables the interrupts.
@@ -508,6 +562,7 @@ void initializeProcessTableEntry(int entryNumber){
     ProcTable[i].numberOfChildren = 0;
     ProcTable[i].parentPID = -1;
     ProcTable[i].name[0] = '\n';
+    ProcTable[i].deadStatus = -1;
 
 
     // Initialize the queues attatched to the process
@@ -578,17 +633,17 @@ int findAvailableProcSlot() {
 
     //Need to loop between startPid and MAXPROC to find an empty slot
     for(i; i < MAXPROC; i++){
-        if(ProcTable[i].pid == EMPTY) {
+        if(ProcTable[i].status == EMPTY) {
             procSlot = i;
             nextPid++;
-            break;
+            return procSlot;
         }
     }
 
     //If nothing was found then look between 0 and startPid
     if(procSlot == -1){
         for(i = 0; i < startPid; i++){
-            if(ProcTable[i].pid == EMPTY){
+            if(ProcTable[i].status == EMPTY){
                 procSlot = i;
                 nextPid++;
                 break;

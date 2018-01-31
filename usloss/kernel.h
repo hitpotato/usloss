@@ -27,9 +27,12 @@ struct procStruct {
     procPtr         quitChildPtr;
     procPtr         nextZapPtr;
     procPtr         nextDeadSibling;
+    procPtr         parentPtr;
     short           parentPID;         /* parent process id */
     int             numberOfChildren;   /* The number of children this process has */
     int             zapStatus;            /* 0 if not zapped. 1 if zapped */
+    int             quitReturnValue;    /* The value the process returns after quiting */
+    int             deadStatus;
     processQueue    childrenQueue;
     processQueue    deadChildrenQueue;
     processQueue    zappedProcessesQueue;
@@ -57,9 +60,14 @@ union psrValues {
 
 #define QUIT 0
 #define READY 1
+#define RUNNING 2
 #define BLOCKED = -1
 #define EMPTY -2
 
+
 #define NOPARENTPROCESS -1
+
+#define blockedByJoin    11
+#define blockedByZap     12
 
 
