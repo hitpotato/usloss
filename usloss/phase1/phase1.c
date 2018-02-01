@@ -521,25 +521,37 @@ void dispatcher(void)
 
     if(nextProcess == NULL){
         if(debugEnabled())
-            USLOSS_Console("Ready list(s) are empty in dispatcher!\n");
+            USLOSS_Console("dispatcher(): Ready list(s) are empty in dispatcher!\n");
         return;
     }
 
     procPtr previousProcess = Current;
     Current = nextProcess;
+
     Current->status = RUNNING;
+
+    if(debugEnabled())
+        USLOSS_Console("dispatcher(): Current is now running\n");
 
     int deviceInputStatus = 0;
     if(previousProcess != Current){
         // If the old Process had real contents ?
-        if(previousProcess->pid != -1)
-            previousProcess->cpuTime += USLOSS_DeviceInput(0, 0, &deviceInputStatus)- previousProcess->timeInitialized;
+        //if(previousProcess->pid != -1)
+        //    previousProcess->cpuTime += USLOSS_DeviceInput(0, 0, &deviceInputStatus)- previousProcess->timeInitialized;
         Current->totalSliceTime = 0;
         Current->timeInitialized = USLOSS_DeviceInput(0, 0, &deviceInputStatus);
+        if(debugEnabled())
+            USLOSS_Console("dispatcher(): Currents time variables have now been initialized\n");
     }
 
     p1_switch(Current->pid, nextProcess->pid);
+
+    if(debugEnabled())
+        USLOSS_Console("dispatcher(): Switch has been made\n");
     enableInterrupts();
+    if(debugEnabled())
+        USLOSS_Console("dispatcher(): Interrupts have been enabled\n");
+
     USLOSS_ContextSwitch(&previousProcess->state, &Current->state);
 } /* dispatcher */
 
