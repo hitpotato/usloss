@@ -1,5 +1,5 @@
 
-#include "~/include/usloss.h"
+#include "usloss.h"
 #define DEBUG 0
 extern int debugflag;
 

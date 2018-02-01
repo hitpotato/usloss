@@ -1,5 +1,5 @@
 srcdir = .
-prefix = /Users/longchen
+prefix = /Users/rodrigo
 exec_prefix =   ${prefix}
 
 AC_FLAGS =              -DHAVE_CONFIG_H

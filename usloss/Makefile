@@ -1,44 +1,35 @@
+include ./version.mk
 
-PREFIX = ${HOME}
+SUBDIRS= src libuser libdisk pterm
+TARBALL=usloss-$(VERSION).tgz
 
-TARGET = libphase1.a
-ASSIGNMENT = 452phase1
-CC = gcc
-AR = ar
-
-COBJS = phase1.o
-CSRCS = ${COBJS:.o=.c}
-
-HDRS = kernel.h phase1.h
-
-INCLUDE = ${PREFIX}/include
-
-CFLAGS = -Wall -g -I${INCLUDE} -I. -std=gnu99
-
-UNAME := $(shell uname -s)
-
-ifeq ($(UNAME), Darwin)
-	CFLAGS += -D_XOPEN_SOURCE      # use for Mac, NOT for Linux!!
+ifeq ($(MAKECMDGOALS), tar)
+	SUBGOALS = distclean
+else
+	SUBGOALS = $(MAKECMDGOALS)
 endif
 
-LDFLAGS = -L. -L${PREFIX}/lib
+.PHONY: $(SUBDIRS) all tar clean install distclean subdirs
 
-TESTDIR = testcases
-TESTS = test00 test01 test02 test03 test04 test05 test06 test07 test08
+all: $(SUBDIRS)
 
-LIBS = -lphase1 -lusloss3.6
+subdirs: $(SUBDIRS)
 
-$(TARGET):	$(COBJS)
-		$(AR) -r $@ $(COBJS) 
+$(SUBDIRS):
+	$(MAKE) -C $@ $(SUBGOALS)
 
-$(TESTS):	$(TARGET) p1.o
-	$(CC) $(CFLAGS) -c $(TESTDIR)/$@.c
-	$(CC) $(LDFLAGS) -o $@ $@.o $(LIBS) p1.o
 
-clean:
-	rm -f $(COBJS) $(TARGET) p1.o test??.o test?? test??.txt core term*.out
+tar: $(TARBALL)
 
-phase1.o:	kernel.h
+$(TARBALL): distclean
+	rm -f $(TARBALL)
+	(cd ..; tar cvzf /tmp/$(TARBALL) --exclude=CVS --exclude="Mx.*" --exclude="*usloss*.tgz" --exclude=docs --exclude=tests --exclude=test --exclude=*.save --exclude=build --exclude=todo --exclude=.git --exclude=.gitignore usloss)
+	cp /tmp/$(TARBALL) .
 
-submit:	$(CSRCS) $(HDRS) Makefile
-	tar cvzf phase1.tgz $(CSRCS) $(HDRS) Makefile
+clean: $(SUBDIRS)
+
+install: $(SUBDIRS)
+
+distclean: subdirs
+	rm -f Makefile config.h config.log config.status config.mk *.tgz
+

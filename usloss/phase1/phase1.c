@@ -10,16 +10,9 @@
 
    ------------------------------------------------------------------------ */
 
-#include "phase1.h"
+#include "kernel.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <MacTypes.h>
-
-
-#include "kernel.h"
-#include "usloss.h"
-#include "queue.h"
 
 /* ------------------------- Prototypes ----------------------------------- */
 int sentinel (char *);
@@ -348,7 +341,7 @@ int join(int *status)
 
     // If current has no children that are dead, block and wait
     if(Current->deadChildrenQueue.length == 0){
-        blockCurrentProcess(blockedByJoin);
+        blockCurrentProcess(BLOCKEDBYJOIN);
     }
 
     // Get the first dead child from the dead children queue
@@ -415,7 +408,7 @@ void quit(int status)
 
         // If the Parent is blocked because it is waiting for us/Child to quit, go ahead and unblock it
         // Also add the parent back to the Ready List
-        if(Current->parentPtr->status = BLOCKEDBYJOIN){
+        if(Current->parentPtr->status == BLOCKEDBYJOIN){
             Current->parentPtr->status = READY;
             appendProcessToQueue(&ReadyList[Current->parentPtr->priority - 1], Current->parentPtr);
         }
@@ -468,7 +461,7 @@ void dispatcher(void)
     disableInterrupts();
 
     // Check to see if Current is currently running
-    if(Current->status = RUNNING){
+    if(Current->status == RUNNING){
         Current->status = READY;
         int pos = Current->priority - 1;
         appendProcessToQueue(&ReadyList[pos],popFromQueue(&ReadyList[pos])); // Removes from front. Places at back.
@@ -493,10 +486,13 @@ void dispatcher(void)
     Current = nextProcess;
     Current->status = RUNNING;
 
+    int deviceInputStatus = 0;
     if(previousProcess != Current){
         // If the old Process had real contents ?
-
-
+        if(previousProcess->pid != -1)
+            previousProcess->cpuTime += USLOSS_DeviceInput(0, 0, &deviceInputStatus)- previousProcess->timeInitialized;
+        Current->totalSliceTime = 0;
+        Current->timeInitialized = USLOSS_DeviceInput(0, 0, &deviceInputStatus);
     }
 
     p1_switch(Current->pid, nextProcess->pid);
@@ -714,10 +710,10 @@ void haltAndPrintKernelError(){
 int findAvailableProcSlot() {
     int procSlot = -1;
     int startPid = nextPid;
-    int i = startPid % MAXPROC;
+
 
     //Need to loop between startPid and MAXPROC to find an empty slot
-    for(i; i < MAXPROC; i++){
+    for(int i = startPid % MAXPROC; i < MAXPROC; i++){
         if(ProcTable[i].status == EMPTY) {
             procSlot = i;
             nextPid++;
@@ -727,7 +723,7 @@ int findAvailableProcSlot() {
 
     //If nothing was found then look between 0 and startPid
     if(procSlot == -1){
-        for(i = 0; i < startPid; i++){
+        for(int i = 0; i < startPid; i++){
             if(ProcTable[i].status == EMPTY){
                 procSlot = i;
                 nextPid++;
@@ -825,7 +821,7 @@ int countNumberOfProcessRunningAndActive(){
     // Iterate through and count all processes that
     //      have a status other than empty, meaning that
     //      they are actually processes
-    for(int i = 0; i < MAXPROC){
+    for(int i = 0; i < MAXPROC; i++){
         if(ProcTable[i].status != EMPTY)
             runningAndActive++;
     }
