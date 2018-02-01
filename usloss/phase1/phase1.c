@@ -841,37 +841,43 @@ void initializeAndEmptyProcessSlot(int pid) {
    ----------------------------------------------------------------------- */
 void dumpProcesses()
 {
-    const char *statusNames[7];
-    statusNames[EMPTY] = "EMPTY";
-    statusNames[READY] = "READY";
-    statusNames[RUNNING] = "RUNNING";
-    statusNames[JOINBLOCKED] = "JOIN_BLOCK";
-    statusNames[QUIT] = "QUIT";
-    statusNames[ZAPBLOCKED] = "ZAP_BLOCK";
+    // Instead of coverting int into its corresponding string in each
+    // iteration of the loop, create an array that maps the int to the string
+    const char *statusString[7];
+    statusString[EMPTY] = "EMPTY";
+    statusString[READY] = "READY";
+    statusString[RUNNING] = "RUNNING";
+    statusString[JOINBLOCKED] = "JOIN_BLOCK";
+    statusString[QUIT] = "QUIT";
+    statusString[ZAPBLOCKED] = "ZAP_BLOCK";
 
-    //PID Parent  Priority  Status    # Kids  CPUtime Name
-    int i;
+    // The form of the Table looks as below
+    // PID  Parent  Priority    Status  #Kids  CPUtime Name
+
+    // Print out the Process Table Header
     USLOSS_Console("%-6s%-8s%-16s%-16s%-8s%-8s%s\n", "PID", "Parent",
            "Priority", "Status", "# Kids", "CPUtime", "Name");
-    for (i = 0; i < MAXPROC; i++) {
-    int p;
-    char s[20];
 
-    if (ProcTable[i].parentPtr != NULL) {
-        p = ProcTable[i].parentPtr->pid;
+    // Loop through  the process table
+    for (int i = 0; i < MAXPROC; i++) {
+        int p;
+        char s[20];
+
+        if (ProcTable[i].parentPtr != NULL) {
+            p = ProcTable[i].parentPtr->pid;
+            if (ProcTable[i].status > 10)
+                sprintf(s, "%d", ProcTable[i].status);
+        }
+        else
+            p = -1;
         if (ProcTable[i].status > 10)
-            sprintf(s, "%d", ProcTable[i].status);
-    }
-    else
-        p = -1;
-    if (ProcTable[i].status > 10)
-        USLOSS_Console(" %-7d%-9d%-13d%-18s%-9d%-5d%s\n", ProcTable[i].pid, p,
-            ProcTable[i].priority, s, ProcTable[i].childrenQueue.length, ProcTable[i].cpuTime,
-            ProcTable[i].name);
-    else
-        USLOSS_Console(" %-7d%-9d%-13d%-18s%-9d%-5d%s\n", ProcTable[i].pid, p,
-            ProcTable[i].priority, statusNames[ProcTable[i].status],
-            ProcTable[i].childrenQueue.length, ProcTable[i].cpuTime, ProcTable[i].name);
+            USLOSS_Console(" %-7d%-9d%-13d%-18s%-9d%-5d%s\n", ProcTable[i].pid, p,
+                ProcTable[i].priority, s, ProcTable[i].childrenQueue.length, ProcTable[i].cpuTime,
+                ProcTable[i].name);
+        else
+            USLOSS_Console(" %-7d%-9d%-13d%-18s%-9d%-5d%s\n", ProcTable[i].pid, p,
+                ProcTable[i].priority, statusString[ProcTable[i].status],
+                ProcTable[i].childrenQueue.length, ProcTable[i].cpuTime, ProcTable[i].name);
     }
 }
 
