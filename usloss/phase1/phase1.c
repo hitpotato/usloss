@@ -194,7 +194,8 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     }
 
     if(debugEnabled())
-        USLOSS_Console("fork1(): Creating process with pid: %d in slot: %d\n", nextPid, procSlot);
+        USLOSS_Console("fork1(): Creating process with pid: %d in slot: %d with priority"
+                               ": %d\n", nextPid, procSlot, priority);
 
     //Set proc name and startFunct
     strcpy(ProcTable[procSlot].name, name);
@@ -250,6 +251,8 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     // Initialize context for this process, but use launch function pointer for
     // the initial value of the process's program counter (PC)
 
+
+
     USLOSS_ContextInit(&(ProcTable[procSlot].state),
                        ProcTable[procSlot].stack,
                        ProcTable[procSlot].stackSize,
@@ -260,18 +263,32 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     // for future phase(s)
     p1_fork(ProcTable[procSlot].pid);
 
+    if(debugEnabled())
+        USLOSS_Console("fork1(): Just called p1_fork\n");
+
     // More stuff to do here...
     //Add the process to the ready table
     //
     appendProcessToQueue(&ReadyList[priority-1], &ProcTable[procSlot]);
+
+    if(debugEnabled())
+        USLOSS_Console("fork1(): Appended new process to the list\n");
 
     //If the process is not the sentinel, dispatch it
     if(strcmp("sentinel", name) != 0){
         dispatcher();
     }
 
+
+    if(debugEnabled())
+        USLOSS_Console("fork1(): Finished called the dispatcher for non-sentinel processes\n");
+
     //Re-enable interrupts
     enableInterrupts();
+
+
+    if(debugEnabled())
+        USLOSS_Console("fork1(): Re-enabled interrupts\n");
 
     return ProcTable[procSlot].pid;  // Return the PID of the newly slotted process
 } /* fork1 */
@@ -460,21 +477,37 @@ void dispatcher(void)
     // Disable all interrupts
     disableInterrupts();
 
+
+    if(debugEnabled())
+        USLOSS_Console("dispatcher(): In dispatcher(). Checked for kernel mode and disabled interrupts\n");
+
+    if(debugEnabled())
+        USLOSS_Console("dispatcher(): Current->pid is: %d\n", Current->pid);
+
     // Check to see if Current is currently running
     if(Current->status == RUNNING){
+        if(debugEnabled())
+            USLOSS_Console("dispatcher(): Current->status is RUNNING\n");
         Current->status = READY;
         int pos = Current->priority - 1;
         appendProcessToQueue(&ReadyList[pos],popFromQueue(&ReadyList[pos])); // Removes from front. Places at back.
     }
 
+    if(debugEnabled())
+        USLOSS_Console("dispatcher(): Are we failing here?\n");
 
     // Find the highest priority process
     for(int i = 0; i < 6; i++ ){
         if(ReadyList[i].length > 0){
+            if(debugEnabled())
+                USLOSS_Console("dispatcher(): Found a ready list with length greater than 0\n");
             nextProcess = peekAtHead(&ReadyList[i]);
             break;
         }
     }
+
+    if(debugEnabled())
+        USLOSS_Console("dispatcher(): Found the next process with highest priority. Name: %s\n", nextProcess->name);
 
     if(nextProcess == NULL){
         if(debugEnabled())
