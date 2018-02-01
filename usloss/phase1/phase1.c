@@ -863,12 +863,14 @@ void dumpProcesses()
         int p;
         char s[20];
 
+        // Check if the process has parents
         if (ProcTable[i].parentPtr != NULL) {
             p = ProcTable[i].parentPtr->pid;
             if (ProcTable[i].status > 10)
                 sprintf(s, "%d", ProcTable[i].status);
         }
-        else
+        // If the process has no parents, the parendPID is -1
+        else if(strcmp("s"))
             p = -1;
         if (ProcTable[i].status > 10)
             USLOSS_Console(" %-7d%-9d%-13d%-18s%-9d%-5d%s\n", ProcTable[i].pid, p,
