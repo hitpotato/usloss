@@ -48,7 +48,10 @@ procStruct ProcTable[MAXPROC];
 static processQueue ReadyList[6];        // Create a ReadyList for each priority
 
 // current process ID
-procPtr Current;
+// It should always point to the entry in the process table of
+// the currently executing process.
+procPtr Current = NULL;
+
 
 // the next pid to be assigned
 unsigned int nextPid = SENTINELPID;
@@ -201,6 +204,9 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     strcpy(ProcTable[procSlot].name, name);
     ProcTable[procSlot].startFunc = startFunc;
 
+    if(debugEnabled())
+        USLOSS_Console("fork1(): Newly created process name is: %s\n", ProcTable[procSlot].name);
+
     //Set process starting argument
     if ( arg == NULL )
         ProcTable[procSlot].startArg[0] = '\0';
@@ -243,6 +249,10 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
         ProcTable[procSlot].parentPtr = Current;
     }
 
+    if(debugEnabled())
+        USLOSS_Console("fork1(): %s has a parentPID of %d\n", ProcTable[procSlot].name, ProcTable[procSlot].parentPID);
+
+
     //If the parent is not null, increase the number of children it has
     if(Current != NULL){
         Current->numberOfChildren++;
@@ -278,6 +288,7 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
     if(strcmp("sentinel", name) != 0){
         dispatcher();
     }
+
 
 
     if(debugEnabled())
@@ -481,11 +492,12 @@ void dispatcher(void)
     if(debugEnabled())
         USLOSS_Console("dispatcher(): In dispatcher(). Checked for kernel mode and disabled interrupts\n");
 
-    if(debugEnabled())
-        USLOSS_Console("dispatcher(): Current->pid is: %d\n", Current->pid);
+    if(Current != NULL){
+        USLOSS_Console("dispatcher(): Current is not equal to null\n");
+    }
 
     // Check to see if Current is currently running
-    if(Current->status == RUNNING){
+    if(Current != NULL && Current->status == RUNNING){
         if(debugEnabled())
             USLOSS_Console("dispatcher(): Current->status is RUNNING\n");
         Current->status = READY;
@@ -493,14 +505,12 @@ void dispatcher(void)
         appendProcessToQueue(&ReadyList[pos],popFromQueue(&ReadyList[pos])); // Removes from front. Places at back.
     }
 
-    if(debugEnabled())
-        USLOSS_Console("dispatcher(): Are we failing here?\n");
 
     // Find the highest priority process
     for(int i = 0; i < 6; i++ ){
         if(ReadyList[i].length > 0){
             if(debugEnabled())
-                USLOSS_Console("dispatcher(): Found a ready list with length greater than 0\n");
+                USLOSS_Console("dispatcher(): ReadyList of priority: %d has the next process\n", i+1);
             nextProcess = peekAtHead(&ReadyList[i]);
             break;
         }
@@ -744,6 +754,8 @@ int findAvailableProcSlot() {
     int procSlot = -1;
     int startPid = nextPid;
 
+    if(debugEnabled())
+        USLOSS_Console("findAvailableProcSlot(): nextPid is: %d\n", startPid);
 
     //Need to loop between startPid and MAXPROC to find an empty slot
     for(int i = startPid % MAXPROC; i < MAXPROC; i++){
