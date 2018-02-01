@@ -23,7 +23,7 @@ int start1(char *arg)
     USLOSS_Console("start1(): after fork of child %d\n", pid1);
     USLOSS_Console("start1(): performing join\n");
     kidpid = join(&status);
-    sprintf(buf,"start1(): exit status for child %d is %d\n", kidpid, status); 
+    sprintf(buf,"start1(): exit status for child %d is %d\n", kidpid, status);
     USLOSS_Console("%s", buf);
     quit(0);
     return 0; /* so gcc will not complain about its absence... */

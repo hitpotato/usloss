@@ -10,82 +10,87 @@
 
    ------------------------------------------------------------------------ */
 
-#include "kernel.h"
+#include "phase1.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+
+#include "kernel.h"
 
 /* ------------------------- Prototypes ----------------------------------- */
 int sentinel (char *);
+extern int start1 (char *);
 void dispatcher(void);
 void launch();
 static void checkDeadlock();
-
-//Our functions
-void initializeProcessTableEntry(int entryNumber);
-int inKernelMode();
+void enableInterrupts(void);
+void makeSureCurrentFunctionIsInKernelMode(char *);
+void clockHandler();
+int readtime();
+void initializeAndEmptyProcessSlot(int);
+int block(int);
 int debugEnabled();
-void disableInterrupts();
-void enableInterrupts();
-void haltAndPrintKernelError();
 int findAvailableProcSlot();
-void insertInReadyList(procPtr process);
-int blockCurrentProcess(int updatedStatus);
-void removeFromProcessTable(int pid);
-int countNumberOfProcessRunningAndActive();
-
-//Interrupt Handlers
-void clockHandler(int dev, void *arg);
+int inKernelMode();
+void  disableInterrupts(void);
 
 /* -------------------------- Globals ------------------------------------- */
 
 // Patrick's debugging global variable...
-int debugflag = 1;
+int debugflag = 0;
 
 // the process table
 procStruct ProcTable[MAXPROC];
 
 // Process lists
-static processQueue ReadyList[6];        // Create a ReadyList for each priority
+processQueue ReadyList[SENTINELPRIORITY];
+
+// The number of process table spots taken
+int numProcs;
 
 // current process ID
-// It should always point to the entry in the process table of
-// the currently executing process.
-procPtr Current = NULL;
+procPtr Current;
 
+// Int used to store the returns from USLOSS_DEVICEINPUT calls
+int status = 0;
 
 // the next pid to be assigned
 unsigned int nextPid = SENTINELPID;
 
-
-// Some ints for the clock
 
 /* -------------------------- Functions ----------------------------------- */
 /* ------------------------------------------------------------------------
    Name - startup
    Purpose - Initializes process lists and clock interrupt vector.
              Start up sentinel process and the test process.
-   Parameters - argc and argv passed in by USLOSS
+   Parameters - none, called by USLOSS
    Returns - nothing
    Side Effects - lots, starts the whole thing
    ----------------------------------------------------------------------- */
-void startup(int argc, char *argv[])
+void startup()
 {
-    int result;             /* value returned by call to fork1() */
+    // Require kernel mode 
+    makeSureCurrentFunctionIsInKernelMode("startup()");
 
-    /* initialize the process table */
+    int result; // value returned by call to fork1()
+
+    //--------------------------- Initialize process Table -------------//
     if (debugEnabled())
         USLOSS_Console("startup(): initializing process table, ProcTable[]\n");
-    for(int i = 0; i < MAXPROC; i++){
-        initializeProcessTableEntry(i); 
+    for (int i = 0; i < MAXPROC; i++) {
+        initializeAndEmptyProcessSlot(i);
     }
 
-    // Initialize ReadyList
-    // For each element of ReadyList, turn it into a queue of type READYLISt
+    //--------------------------- Initialize ReadyList -------------//
     if (debugEnabled())
         USLOSS_Console("startup(): initializing the Ready list\n");
-    for(int i = 0; i < 6; i++){
+
+    for (int i = 0; i < SENTINELPRIORITY; i++) {
         initializeProcessQueue(&ReadyList[i], READYLIST);
     }
+
+    numProcs = 0;                       // Set the number of processes to 0
+    Current = &ProcTable[MAXPROC-1];    // Make sure current is initialized
 
     // Initialize the clock interrupt handler
     USLOSS_IntVec[USLOSS_CLOCK_INT] = clockHandler;
@@ -93,7 +98,8 @@ void startup(int argc, char *argv[])
     // startup a sentinel process
     if (debugEnabled())
         USLOSS_Console("startup(): calling fork1() for sentinel\n");
-    result = fork1("sentinel", sentinel, NULL, USLOSS_MIN_STACK, SENTINELPRIORITY);
+    result = fork1("sentinel", sentinel, NULL, USLOSS_MIN_STACK,
+                    SENTINELPRIORITY);
     if (result < 0) {
         if (debugEnabled()) {
             USLOSS_Console("startup(): fork1 of sentinel returned error, ");
@@ -101,7 +107,7 @@ void startup(int argc, char *argv[])
         }
         USLOSS_Halt(1);
     }
-  
+
     // start the test process
     if (debugEnabled())
         USLOSS_Console("startup(): calling fork1() for start1\n");
@@ -119,27 +125,41 @@ void startup(int argc, char *argv[])
 } /* startup */
 
 /* ------------------------------------------------------------------------
-   Name - finish
-   Purpose - Required by USLOSS
-   Parameters - none
-   Returns - nothing
-   Side Effects - none
-   ----------------------------------------------------------------------- */
-void finish(int argc, char *argv[])
+   Name -           launch
+   Purpose -        Dummy function to enable interrupts and launch a given process
+                    upon startup.
+   Parameters -     none
+   Returns -        nothing
+   Side Effects -   enable interrupts
+   ------------------------------------------------------------------------ */
+void launch()
 {
-    if(!inKernelMode())
-        haltAndPrintKernelError();
+    // Require kernel mode
+    makeSureCurrentFunctionIsInKernelMode("launch()");
+    disableInterrupts();
 
     if (debugEnabled())
-        USLOSS_Console("in finish...\n");
-} /* finish */
+        USLOSS_Console("launch(): starting current process: %d\n\n", Current->pid);
+
+    // Enable interrupts
+    enableInterrupts();
+
+    // Call the function passed to fork1, and capture its return value
+    int result = Current->startFunc(Current->startArg);
+
+    if (debugEnabled())
+        USLOSS_Console("Process %d returned to launch\n", Current->pid);
+
+    quit(result);
+} /* launch */
+
 
 /* ------------------------------------------------------------------------
    Name - fork1
    Purpose - Gets a new process from the process table and initializes
              information of the process.  Updates information in the
              parent process to reflect this child process creation.
-   Parameters - the process procedure address, the size of the stack and
+   Parameters - the process procedure address, the length of the stack and
                 the priority to be assigned to the child process.
    Returns - the process id of the created child or -1 if no child could
              be created or if priority is not between max and min priority.
@@ -150,425 +170,477 @@ int fork1(char *name, int (*startFunc)(char *), char *arg,
           int stacksize, int priority)
 {
 
+    // Require kernel mode
+    makeSureCurrentFunctionIsInKernelMode("fork1()");
+    disableInterrupts();
+
+
+    int procSlot = -1;
+
+    // If there is not empty spot on the table, return with error
+    if (numProcs >= MAXPROC) {
+        if (debugEnabled())
+            USLOSS_Console("fork1(): No empty slot on the process table.\n");
+        return -1;
+    }
+
     if (debugEnabled())
         USLOSS_Console("fork1(): creating process %s\n", name);
 
-    /*
-     * Ask if we are in kernal mode
-     * If we are not, halt USLOSS
-     */
-    if(!inKernelMode()){
-        haltAndPrintKernelError();
+    // Return if startFunc is null
+    if (startFunc == NULL) {
+        if (debugEnabled())
+            USLOSS_Console("fork1(): Start function is null.\n");
+        return -1;
     }
 
-    //Make sure that interrupts are disabled during the fork process
-    disableInterrupts();
+    // Return if name is null
+    if (name == NULL) {
+        if (debugEnabled())
+            USLOSS_Console("fork1(): Process name is null.\n");
+        return -1;
+    }
 
-    //Error check the priority
-    // MAXPRIORITY = 1
-    // MINPRIORITY = 5
-    if(priority < MAXPRIORITY || priority > MINPRIORITY)
-        //Make sure that that we are not forking sentinenl,
-        //Which has a priority of 6
-        if(strcmp("sentinel", name) != 0)
+    // Return if stacksize is too small
+    if (stacksize < USLOSS_MIN_STACK) { // found in usloss.h
+        if (debugEnabled())
+            USLOSS_Console("fork1(): Stack length too small.\n");
+        return -2;
+    }
+
+    // Return if priority is too big or to small
+    if ((priority > MINPRIORITY || priority < MAXPRIORITY)){
+        // Ignore the case where sentinel has priority 6
+        if( startFunc != sentinel) {
+            if (debugEnabled())
+                USLOSS_Console("fork1(): Priority is out of range.\n");
             return -1;
-
-    // Return if stack size is too small
-    if (stacksize < USLOSS_MIN_STACK) {
-        if(debugEnabled())
-            USLOSS_Console("Stack size passed to fork1() too small\n");
-        return -1;
-    }
-
-    // Is there room in the process table? What is the next PID?
-    int procSlot = findAvailableProcSlot();
-
-    //If procSlot is -1, there was no available slot
-    if(procSlot == -1){
-        if(debugEnabled())
-            USLOSS_Console("ProcTable is full!\n");
-        return -1;
+        }
     }
 
     // fill-in entry in process table */
     if ( strlen(name) >= (MAXNAME - 1) ) {
-        USLOSS_Console("fork1(): Process name is too long.  Halting...\n");
+        if (debugEnabled())
+            USLOSS_Console("fork1(): Process name is too long.  Halting...\n");
         USLOSS_Halt(1);
     }
 
-    if(debugEnabled())
-        USLOSS_Console("fork1(): Creating process with pid: %d in slot: %d with priority"
-                               ": %d\n", nextPid, procSlot, priority);
 
-    //Set proc name and startFunct
+    // If all the above checks were fine, find a slot where this process fits
+    procSlot = findAvailableProcSlot();
+
+    // Let the debugger know
+    if (debugEnabled())
+        USLOSS_Console("fork1(): Creating process pid %d in slot %d, slot status %d\n", nextPid, procSlot, ProcTable[procSlot].status);
+
+
+    //---------------------------- Fill in values for process --------------------------//
+
     strcpy(ProcTable[procSlot].name, name);
     ProcTable[procSlot].startFunc = startFunc;
+    ProcTable[procSlot].pid = nextPid++;
+    ProcTable[procSlot].priority = priority;
+    ProcTable[procSlot].status = READY;
 
-    if(debugEnabled())
-        USLOSS_Console("fork1(): Newly created process name is: %s\n", ProcTable[procSlot].name);
+    numProcs++;     // Increment the number of process
 
-    //Set process starting argument
+    // Error check and fill in the starting argument
     if ( arg == NULL )
         ProcTable[procSlot].startArg[0] = '\0';
     else if ( strlen(arg) >= (MAXARG - 1) ) {
-        USLOSS_Console("fork1(): argument too long.  Halting...\n");
+        if (debugEnabled())
+            USLOSS_Console("fork1(): argument too long.  Halting...\n");
         USLOSS_Halt(1);
     }
     else
         strcpy(ProcTable[procSlot].startArg, arg);
 
-    //Set the process stack and stacksize
+    // Set the stack
     ProcTable[procSlot].stackSize = stacksize;
     ProcTable[procSlot].stack = (char*) malloc (stacksize);
 
-    //Shouln't happen, but make sure that malloc is successful
-    if(ProcTable[procSlot].stack == NULL){
-        if(debugEnabled()) {
-            USLOSS_Console("fork1(): Malloc failed when allocating stack size. Halting....\n");
-        }
+    // Check to make sure the malloc call did not fail
+    if (ProcTable[procSlot].stack == NULL) {
+        if (debugEnabled())
+            USLOSS_Console("fork1(): Malloc failed.  Halting...\n");
         USLOSS_Halt(1);
     }
 
-    // Set the status, the pid and the priority
-    ProcTable[procSlot].status = READY;
-    ProcTable[procSlot].pid = (short) nextPid;
-    ProcTable[procSlot].priority = priority;
-
-
-    //If this is either sentinenel or start1, there is no parent
-    if(strcmp("sentinel", name) == 0 || strcmp("start1", name) == 0)
-        ProcTable[procSlot].parentPID = NOPARENTPROCESS;
-
-    //Otherwise, need to find the parent ID
-    else{
-        // Set the Parent Id to the current Processes ID
-        ProcTable[procSlot].parentPID = Current->pid;
-        // Add this process to the Currents queue of children
-        appendProcessToQueue(&Current->childrenQueue, &ProcTable[procSlot]);
-        // Set the parentPtr to the Current process
-        ProcTable[procSlot].parentPtr = Current;
-    }
-
-    if(debugEnabled())
-        USLOSS_Console("fork1(): %s has a parentPID of %d\n", ProcTable[procSlot].name, ProcTable[procSlot].parentPID);
-
-
-    //If the parent is not null, increase the number of children it has
-    if(Current != NULL){
-        Current->numberOfChildren++;
-    }
 
     // Initialize context for this process, but use launch function pointer for
     // the initial value of the process's program counter (PC)
-
-
-
     USLOSS_ContextInit(&(ProcTable[procSlot].state),
                        ProcTable[procSlot].stack,
                        ProcTable[procSlot].stackSize,
                        NULL,
                        launch);
 
-
     // for future phase(s)
     p1_fork(ProcTable[procSlot].pid);
 
-    if(debugEnabled())
-        USLOSS_Console("fork1(): Just called p1_fork\n");
-
     // More stuff to do here...
-    //Add the process to the ready table
-    //
-    appendProcessToQueue(&ReadyList[priority-1], &ProcTable[procSlot]);
+    // Add this(fork1()) process to the list of children of the parent who called fork1()
+    if (Current->pid > -1) {
+        appendProcessToQueue(&Current->childrenQueue, &ProcTable[procSlot]);
+        ProcTable[procSlot].parentPtr = Current; // set parent pointer
+    }
 
-    if(debugEnabled())
-        USLOSS_Console("fork1(): Appended new process to the list\n");
+    // Add the process to the correct priority list
+    int priorityListNumber = priority - 1;
+    appendProcessToQueue(&ReadyList[priorityListNumber], &ProcTable[procSlot]);
 
-    //If the process is not the sentinel, dispatch it
-    if(strcmp("sentinel", name) != 0){
+
+    // Call the dispatcher to decide which process runs next
+    // Make sure that this is not the sentinel
+    if (startFunc != sentinel) {
         dispatcher();
     }
 
 
+    enableInterrupts();         // Re-enable interrupts
 
-    if(debugEnabled())
-        USLOSS_Console("fork1(): Finished called the dispatcher for non-sentinel processes\n");
-
-    //Re-enable interrupts
-    enableInterrupts();
-
-
-    if(debugEnabled())
-        USLOSS_Console("fork1(): Re-enabled interrupts\n");
-
-    return ProcTable[procSlot].pid;  // Return the PID of the newly slotted process
+    return ProcTable[procSlot].pid;  // return child's pid
 } /* fork1 */
 
-/* ------------------------------------------------------------------------
-   Name - launch
-   Purpose - Dummy function to enable interrupts and launch a given process
-             upon startup.
-   Parameters - none
-   Returns - nothing
-   Side Effects - enable interrupts
-   ------------------------------------------------------------------------ */
-void launch()
-{
-    int result;
-
-    if (debugEnabled())
-        USLOSS_Console("launch(): started\n");
-
-    // Enable interrupts
-
-    // Call the function passed to fork1, and capture its return value
-    result = Current->startFunc(Current->startArg);
-
-    if (debugEnabled())
-        USLOSS_Console("Process %d returned to launch\n", Current->pid);
-
-    quit(result);
-
-} /* launch */
-
 
 /* ------------------------------------------------------------------------
-   Name - join
-   Purpose - Wait for a child process (if one has been forked) to quit.  If 
-             one has already quit, don't wait.
-   Parameters - a pointer to an int where the termination code of the 
-                quitting process is to be stored.
-   Returns - the process id of the quitting child joined on.
-             -1 if the process was zapped in the join
-             -2 if the process has no children
-   Side Effects - If no child process has quit before join is called, the 
-                  parent is removed from the ready list and blocked.
-   ------------------------------------------------------------------------ */
-int join(int *status)
-{
-    //Check to make sure kernel mode is enabled
-    if(!inKernelMode())
-        haltAndPrintKernelError();
-
-    //Halt interrupts
-    disableInterrupts();
-
-    if(debugEnabled())
-        USLOSS_Console("join(): In join, current has a pid of: %d\n", Current->pid);
-
-    //Check if the process has any children
-    if(Current->childrenQueue.length == 0 && Current->deadChildrenQueue.length == 0){
-        if(debugEnabled())
-            USLOSS_Console("join(): The process has no children\n");
-        return -2;
-    }
-
-    //Make sure the process has not been zapped
-    if(isZapped())
-        return -1;
-
-    // If current has no children that are dead, block and wait
-    if(Current->deadChildrenQueue.length == 0){
-        blockCurrentProcess(BLOCKEDBYJOIN);
-    }
-
-    // Get the first dead child from the dead children queue
-    procPtr firstChild = popFromQueue(&Current->deadChildrenQueue);
-    *status = firstChild->quitReturnValue;
-    int pidOfChild = firstChild->pid;
-    initializeProcessTableEntry(pidOfChild);        // The initialization also wipes all existing info
-
-    //If the process has been zapped during this
-    if(Current->zappedProcessesQueue.length > 0){
-        return -1;
-    }
-
-    return pidOfChild;
-} /* join */
-
-
-/* ------------------------------------------------------------------------
-   Name - quit
-   Purpose - Stops the child process and notifies the parent of the death by
-             putting child quit info on the parents child completion code
-             list.
-   Parameters - the code to return to the grieving parent
-   Returns - nothing
-   Side Effects - changes the parent of pid child completion status list.
-   ------------------------------------------------------------------------ */
-void quit(int status)
-{
-
-    if(!inKernelMode())
-        haltAndPrintKernelError();
-
-    if(debugEnabled())
-        USLOSS_Console("Quiting a process with pid: %d\n", Current->pid);
-
-    int priorityQueueSlot = Current->priority - 1;
-
-//    if(Current->childrenQueue.length > 0){
-//        USLOSS_Console("Quit was called when processing with children.\n");
-//        USLOSS_Halt(1);
-//    }
-
-    // Its possible the Children Queue was not properly cleared out
-    //  so, loop through the table, to find any processes that have a status
-    //      that isnt QUIT. If we find something, there is an active child
-    procPtr childOfCurrent = peekAtHead(&Current->childrenQueue);
-    while (childOfCurrent != NULL){
-        if(childOfCurrent->status != QUIT){
-            USLOSS_Console("Process with pid: %d has active children. Halting.\n", Current->pid);
-            USLOSS_Halt(1);
-        }
-
-        childOfCurrent = childOfCurrent->nextSiblingPtr;        // Iterate to the next sibling
-    }
-
-    Current->status     = QUIT;
-    Current->quitStatus = status;
-    popFromQueue(&ReadyList[priorityQueueSlot]);
-
-    // If this process is a child of another, need to remove from parents Children queue
-    if(Current->parentPtr != NULL){
-        removeChildFromQueue(&Current->parentPtr->childrenQueue, Current);      // Remove self/Current from parent
-        appendProcessToQueue(&Current->parentPtr->deadChildrenQueue, Current);  // Append self to Dead Children queue
-
-        // If the Parent is blocked because it is waiting for us/Child to quit, go ahead and unblock it
-        // Also add the parent back to the Ready List
-        if(Current->parentPtr->status == BLOCKEDBYJOIN){
-            Current->parentPtr->status = READY;
-            appendProcessToQueue(&ReadyList[Current->parentPtr->priority - 1], Current->parentPtr);
-        }
-    }
-
-    // Remove dead children current has from process table
-    while (Current->deadChildrenQueue.length > 0){
-        procPtr child = popFromQueue(&Current->deadChildrenQueue);
-        initializeProcessTableEntry(child->pid);
-    }
-
-    // Unblock all processes that zap'd this one
-    // Then set them to ready, and add them back to priority list
-    while (Current->zappedProcessesQueue.length > 0){
-        procPtr zap = popFromQueue(&Current->zappedProcessesQueue);
-        zap->status = READY;
-        appendProcessToQueue(&ReadyList[zap->priority - 1], zap);
-    }
-
-    // If current has no parent, then delete it
-    if(Current->parentPtr == NULL){
-        initializeProcessTableEntry(Current->pid);
-    }
-
-    p1_quit(Current->pid);
-
-    dispatcher(); // Run next process
-} /* quit */
-
-
-/* ------------------------------------------------------------------------
-   Name - dispatcher
-   Purpose - dispatches ready processes.  The process with the highest
-             priority (the first on the ready list) is scheduled to
-             run.  The old process is swapped out and the new process
-             swapped in.
-   Parameters - none
-   Returns - nothing
-   Side Effects - the context of the machine is changed
+   Name -           dispatcher
+   Purpose -        dispatches ready processes.  The process with the highest
+                    priority (the first on the ready list) is scheduled to
+                    run.  The old process is swapped out and the new process
+                    swapped in.
+   Parameters -     none
+   Returns -        nothing
+   Side Effects -   the context of the machine is changed
    ----------------------------------------------------------------------- */
 void dispatcher(void)
 {
-    procPtr nextProcess = NULL;
-
-    // Make sure we are in kernel mode
-    if(!inKernelMode())
-        haltAndPrintKernelError();
-
-    // Disable all interrupts
+    // Require kernel mode and disable interrupts
+    makeSureCurrentFunctionIsInKernelMode("dispatcher()");
     disableInterrupts();
 
+    procPtr nextProcess = NULL;
 
-    if(debugEnabled())
-        USLOSS_Console("dispatcher(): In dispatcher(). Checked for kernel mode and disabled interrupts\n");
-
-    if(Current != NULL){
-        USLOSS_Console("dispatcher(): Current is not equal to null\n");
-    }
-
-    // Check to see if Current is currently running
-    if(Current != NULL && Current->status == RUNNING){
-        if(debugEnabled())
-            USLOSS_Console("dispatcher(): Current->status is RUNNING\n");
+    // if current is still running, remove it from ready list and put it back on the end
+    if (Current->status == RUNNING) {
         Current->status = READY;
-        int pos = Current->priority - 1;
-        appendProcessToQueue(&ReadyList[pos],popFromQueue(&ReadyList[pos])); // Removes from front. Places at back.
+        int currentPriorityListSpt = Current->priority - 1;
+        popFromQueue(&ReadyList[currentPriorityListSpt]);
+        appendProcessToQueue(&ReadyList[currentPriorityListSpt], Current);
     }
 
-
-    // Find the highest priority process
-    for(int i = 0; i < 6; i++ ){
-        if(ReadyList[i].length > 0){
-            if(debugEnabled())
-                USLOSS_Console("dispatcher(): ReadyList of priority: %d has the next process\n", i+1);
+    // Loop through the ques, and in the highest non empty one, set nextProcess
+    //      to the head element of that queue
+    for (int i = 0; i < SENTINELPRIORITY; i++) {
+        if (ReadyList[i].length > 0) {
             nextProcess = peekAtHead(&ReadyList[i]);
             break;
         }
     }
 
-    if(debugEnabled())
-        USLOSS_Console("dispatcher(): Found the next process with highest priority. Name: %s\n", nextProcess->name);
-
-    if(nextProcess == NULL){
-        if(debugEnabled())
-            USLOSS_Console("dispatcher(): Ready list(s) are empty in dispatcher!\n");
+    // Print message and return if the ready list is empty
+    if (nextProcess == NULL) {
+        if (debugEnabled())
+            USLOSS_Console("dispatcher(): ready list is empty!\n");
         return;
     }
 
+    if (debugEnabled())
+        USLOSS_Console("dispatcher(): next process is %s\n", nextProcess->name);
+
+    // Update the Current process pointer
     procPtr previousProcess = Current;
     Current = nextProcess;
+    Current->status = RUNNING; // set status to RUNNING
 
-    Current->status = RUNNING;
-
-    if(debugEnabled())
-        USLOSS_Console("dispatcher(): Current is now running\n");
-
-    int deviceInputStatus = 0;
-    if(previousProcess != Current){
-        // If the old Process had real contents ?
-        //if(previousProcess->pid != -1)
-        //    previousProcess->cpuTime += USLOSS_DeviceInput(0, 0, &deviceInputStatus)- previousProcess->timeInitialized;
-        Current->totalSliceTime = 0;
-        Current->timeInitialized = USLOSS_DeviceInput(0, 0, &deviceInputStatus);
-        if(debugEnabled())
-            USLOSS_Console("dispatcher(): Currents time variables have now been initialized\n");
+    // Set time variables
+    if (previousProcess != Current) {
+        if (previousProcess->pid > -1)
+            previousProcess->cpuTime += USLOSS_DeviceInput(0, 0, &status) - previousProcess->timeInitialized;
+        Current->sliceTime = 0;
+        Current->timeInitialized = USLOSS_DeviceInput(0, 0, &status);
     }
 
-    p1_switch(Current->pid, nextProcess->pid);
-
-    if(debugEnabled())
-        USLOSS_Console("dispatcher(): Switch has been made\n");
+    // Switch, re-enable interrupts and call USLOSS_ContextSwitch
+    p1_switch(previousProcess->pid, Current->pid);
     enableInterrupts();
-    if(debugEnabled())
-        USLOSS_Console("dispatcher(): Interrupts have been enabled\n");
-
     USLOSS_ContextSwitch(&previousProcess->state, &Current->state);
 } /* dispatcher */
 
 
 /* ------------------------------------------------------------------------
-   Name - sentinel
-   Purpose - The purpose of the sentinel routine is two-fold.  One
-             responsibility is to keep the system going when all other
-             processes are blocked.  The other is to detect and report
-             simple deadlock states.
-   Parameters - none
-   Returns - nothing
+   Name -           join
+   Purpose -        Wait for a child process (if one has been forked) to quit.  If
+                    one has already quit, don't wait.
+   Parameters -     a pointer to an int where the termination code of the
+                    quitting process is to be stored.
+   Returns -        the process id of the quitting child joined on.
+                    -1 if the process was zapped in the join
+                    -2 if the process has no children
+   Side Effects -   If no child process has quit before join is called, the
+                    parent is removed from the ready list and blocked.
+   ------------------------------------------------------------------------ */
+int join(int *status)
+{
+    // Require kernel mode and disable interrupts
+    makeSureCurrentFunctionIsInKernelMode("join()");
+    disableInterrupts();
+
+    if (debugEnabled())
+        USLOSS_Console("join(): In join, pid = %d\n", Current->pid);
+
+    // If the current process does not have any children, return -2
+    if (Current->childrenQueue.length == 0 && Current->deadChildrenQueue.length == 0) {
+        if (debugEnabled())
+            USLOSS_Console("join(): No children\n");
+        return -2;
+    }
+
+    // if current has children, but non are dead, block itself and wait
+    if (Current->deadChildrenQueue.length == 0) {
+        block(JOINBLOCKED);
+        if (debugEnabled())
+            USLOSS_Console("pid %d blocked at priority %d \n" , Current->pid, Current->priority - 1);
+    }
+
+    // get the first dead child
+    procPtr child = popFromQueue(&Current->deadChildrenQueue);
+    *status = child->quitStatus;
+    int childPid = child->pid;
+
+
+    // Blank out the childs slot in the process table
+    initializeAndEmptyProcessSlot(childPid);
+
+
+    if (Current->zapQueue.length != 0 ) {
+        childPid = -1;
+    }
+    return childPid;
+} /* join */
+
+
+/* ------------------------------------------------------------------------
+   Name -           quit
+   Purpose -        Stops the child process and notifies the parent of the death by
+                    putting child quit info on the parents child completion code
+                    list.
+   Parameters -     the code to return to the grieving parent
+   Returns -        nothing
+   Side Effects - changes the parent of pid child completion status list.
+   ------------------------------------------------------------------------ */
+void quit(int status)
+{
+    // Require kernel mode and disable interrupts
+    makeSureCurrentFunctionIsInKernelMode("quit()");
+    disableInterrupts();
+
+    if (debugEnabled())
+        USLOSS_Console("quit(): quitting process pid = %d\n", Current->pid);
+
+    // Make sure that the process has no active children
+    procPtr childPtr = peekAtHead(&Current->childrenQueue);
+    while (childPtr != NULL) {
+        if (childPtr->status != QUIT) {
+            USLOSS_Console("quit(): process %d, '%s', has active children. Halting...\n", Current->pid, Current->name);
+            USLOSS_Halt(1);
+        }
+        childPtr = childPtr->nextSiblingPtr;
+    }
+
+    Current->status = QUIT;                              // change process status to QUIT
+    Current->quitStatus = status;                       // store the given quit status
+    popFromQueue(&ReadyList[Current->priority - 1]);    // remove self from ready list
+
+
+    // If this process has a parent, we need to delete "ourselves" from the parents queue of children
+    //  And after deletion, add oursleves to the DEAD children queue
+    if (Current->parentPtr != NULL) {
+        removeChildFromQueue(&Current->parentPtr->childrenQueue, Current);
+        appendProcessToQueue(&Current->parentPtr->deadChildrenQueue, Current);
+
+        // If the parent was blocked because it was waiting for "us" to die, unblock it
+        //  then add it to the list of processes that are ready to run
+        if (Current->parentPtr->status == JOINBLOCKED) {
+            Current->parentPtr->status = READY;
+            appendProcessToQueue(&ReadyList[Current->parentPtr->priority - 1], Current->parentPtr);
+        }
+    }
+
+    // If this process had any dead children, loop through the dead children queue
+    //      and remove them from the dead children queue as well as the process table
+    while (Current->deadChildrenQueue.length > 0) {
+        procPtr child = popFromQueue(&Current->deadChildrenQueue);
+        initializeAndEmptyProcessSlot(child->pid);
+    }
+
+    // If this process was zapped by others, unblock them and add them back to the ready list
+    //      for all processe that were zapped
+    while (Current->zapQueue.length > 0) {
+        procPtr processThatZappedCurrent = popFromQueue(&Current->zapQueue);
+        processThatZappedCurrent->status = READY;
+        appendProcessToQueue(&ReadyList[processThatZappedCurrent->priority - 1], processThatZappedCurrent);
+    }
+
+    // If current has no parent, remove it from the process table list
+    if (Current->parentPtr == NULL)
+        initializeAndEmptyProcessSlot(Current->pid);
+
+    // Call the p1_quit function
+    p1_quit(Current->pid);
+
+    dispatcher(); // call dispatcher and let it decide what to run next
+} /* quit */
+
+
+/* ------------------------------------------------------------------------
+   Name -       zap
+   Purpose -
+   Parameters -
+   Returns -  -1: the calling process itself was zapped while in zap.
+               0: the zapped process has called quit.
+   Side Effects -
+   ----------------------------------------------------------------------- */
+int zap(int pid) {
+    if (debugEnabled())
+        USLOSS_Console("zap(): called\n");
+
+    // Require kernel mode and disable interrupts
+    makeSureCurrentFunctionIsInKernelMode("zap()");
+    disableInterrupts();
+
+    procPtr process = &ProcTable[pid % MAXPROC];
+
+    if (Current->pid == pid) {
+        USLOSS_Console("zap(): process %d tried to zap itself.  Halting...\n", pid);
+        USLOSS_Halt(1);
+    }
+
+
+    if (process->status == EMPTY || process->pid != pid) {
+        USLOSS_Console("zap(): process being zapped does not exist.  Halting...\n");
+        USLOSS_Halt(1);
+    }
+
+    if (process->status == QUIT) {
+        if (Current->zapQueue.length > 0)
+            return -1;
+        else
+            return 0;
+    }
+
+    appendProcessToQueue(&process->zapQueue, Current);
+    block(ZAPBLOCKED);
+
+    if (Current->zapQueue.length > 0)
+        return -1;
+
+
+    return 0;
+}
+
+
+/* ------------------------------------------------------------------------
+   Name -           block
+   Purpose -        blocks the current process
+   Parameters -     new status
+   Returns -            -1: if process was zapped while blocked.
+                        0: otherwise.
+   Side Effects -   blocks/changes ready list/calls dispatcher
+   ----------------------------------------------------------------------- */
+int block(int newStatus) {
+    if (debugEnabled())
+        USLOSS_Console("block(): called\n");
+
+    // Require kernel mode 
+    makeSureCurrentFunctionIsInKernelMode("block()");
+    disableInterrupts();
+
+    Current->status = newStatus;
+    popFromQueue(&ReadyList[(Current->priority - 1)]);
+    dispatcher();
+
+    if (Current->zapQueue.length > 0) {
+        return -1;
+    }
+
+    return 0;
+}
+
+
+/* ------------------------------------------------------------------------
+   Name -           blockMe(int newStatus)
+   Purpose -        Blocks the calling process.
+   Parameters -     pid of the process to unblock
+   Returns -           -1: if the process was zapped while blocked
+                        0: if otherwise
+   Side Effects -   Calls block, which blocks this process
+   ----------------------------------------------------------------------- */
+int blockMe(int newStatus) {
+    if (debugEnabled())
+        USLOSS_Console("blockMe(): called\n");
+
+    // Require kernel mode 
+    makeSureCurrentFunctionIsInKernelMode("blockMe()");
+    disableInterrupts();
+
+    if (newStatus < 10) {
+        USLOSS_Console("newStatus < 10 \n");
+        USLOSS_Halt(1);
+    }
+
+    return block(newStatus);
+}
+
+
+/* ------------------------------------------------------------------------
+   Name -           unblockProc
+   Purpose -        unblocks the given process
+   Parameters -     pid of the process to unblock
+   Returns -           -2: if the indicated process was not blocked, does not exist,
+                        is the current process, or is blocked on a status less than
+                        or equal to 10. Thus, a process that is zap-blocked
+                        or join-blocked cannot be unblocked with this function call.
+                       -1:        if the calling process was zapped.
+                        0:         otherwise
+   Side Effects -   calls dispatcher
+   ----------------------------------------------------------------------- */
+int unblockProc(int pid) {
+    // Require kernel mode 
+    makeSureCurrentFunctionIsInKernelMode("unblockProc(): called\n");
+    disableInterrupts();
+
+    int i = pid % MAXPROC; // get process
+    if (ProcTable[i].pid != pid || ProcTable[i].status <= 10) // check that it exists
+        return -2;
+
+    // unblock
+    ProcTable[i].status = READY;
+    appendProcessToQueue(&ReadyList[ProcTable[i].priority - 1], &ProcTable[i]);
+    dispatcher();
+
+    if (Current->zapQueue.length > 1) // return -1 if we were zapped
+        return -1;
+    return 0;
+}
+
+
+/* ------------------------------------------------------------------------
+   Name -           sentinel
+   Purpose -        The purpose of the sentinel routine is two-fold.  One
+                    responsibility is to keep the system going when all other
+                    processes are blocked.  The other is to detect and report
+                    simple deadlock states.
+   Parameters -     none
+   Returns -        nothing
    Side Effects -  if system is in deadlock, print appropriate error
                    and halt.
    ----------------------------------------------------------------------- */
 int sentinel (char *dummy)
 {
+    // Require kernel mode 
+    makeSureCurrentFunctionIsInKernelMode("sentinel()");
+
     if (debugEnabled())
         USLOSS_Console("sentinel(): called\n");
     while (1)
@@ -579,152 +651,260 @@ int sentinel (char *dummy)
 } /* sentinel */
 
 
-/* check to determine if deadlock has occurred... */
+/* ------------------------------------------------------------------------
+   Name -       checkDeadlock
+   Purpose -    Checks to determine whether deadlock occured
+   Parameters - None
+   Returns -    Nothing
+   Side Effects - Halts USLOSS if deadlock did occur
+   ------------------------------------------------------------------------ */
 static void checkDeadlock()
 {
-
-    int activeProcesses = countNumberOfProcessRunningAndActive();
-    if(activeProcesses > 1){
-        USLOSS_Console("There are more %d processes running. Only sentinel should be left\n", activeProcesses);
+    // If there are more processes than just the sentinel running, print error and halt
+    if (numProcs > 1) {
+        USLOSS_Console("checkDeadlock(): numProc = %d. Only Sentinel should be left. Halting...\n", numProcs);
         USLOSS_Halt(1);
     }
 
-    USLOSS_Console("All processes completed!\n");
+    USLOSS_Console("All processes completed.\n");
     USLOSS_Halt(0);
 } /* checkDeadlock */
 
 
-
-//######################################################################################################################
-//######################################################################################################################
-//######################################################################################################################
-
-/*
- * Disables the interrupts.
- */
-void disableInterrupts()
+/* ------------------------------------------------------------------------
+   Name - readtime
+   Purpose - Returns the CPU time (in milliseconds) stored in Current
+   Parameters - none
+   Returns - nothing
+   Side Effects -
+   ----------------------------------------------------------------------- */
+int readtime()
 {
-    // turn the interrupts OFF iff we are in kernel mode
-    // if not in kernel mode, print an error message and
-    // halt USLOSS
-    if(!inKernelMode()){
-        //Display an error message to console
-        USLOSS_Console("Kernel Error: Not in kernel mode, interrupts cannot be disabled\n");
-        //Halt process with an non-zero argument, this dumps a core file
-        USLOSS_Halt(1);
-    }
-    else {
-        //Set the current enable bit to 0, which disables interrupts
-        USLOSS_PsrSet(USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_INT);
-    }
+    return Current->cpuTime/1000;
+} /* readtime */
 
-} /* disableInterrupts */
+/* ------------------------------------------------------------------------
+   Name - finish
+   Purpose - Required by USLOSS
+   Parameters - none
+   Returns - nothing
+   Side Effects - none
+   ----------------------------------------------------------------------- */
+void finish()
+{
+    // Require kernel mode
+    makeSureCurrentFunctionIsInKernelMode("finish()");
 
-void enableInterrupts(){
+    if (debugEnabled())
+        USLOSS_Console("in finish...\n");
+} /* finish */
 
-    //We can only turn interrupts on if we are in kernal mode, so do that first
-    if(!inKernelMode()){
-        //Display an error message to console
-        USLOSS_Console("Kernel Error: Not in kernel mode, interrupts cannot be enabled\n");
-        //Halt process with an non-zero argument, this dumps a core file
-        USLOSS_Halt(1);
-    }
-    else{
-        //This sets the current enable interrupt bit to 1, enabling interrupts
-        USLOSS_PsrSet(USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT);
-    }
+
+//------------------------------------------- Helper Functions-------------------------------------/
+
+
+/* ------------------------------------------------------------------------
+   Name -           isZapped
+   Purpose -        Checks whether the current process is zapped or not
+   Parameters -     None
+   Returns -        Zapstatus
+   Side Effects -   None
+   ----------------------------------------------------------------------- */
+int isZapped() {
+    // If the process has a list of people that zapped it thats not empty
+    //  it is, by definition, zapped
+    return (Current->zapQueue.length > 0);
+}
+
+
+/* ------------------------------------------------------------------------
+   Name -           getpid
+   Purpose -        return the pid of the Current process
+   Parameters -     None
+   Returns -        current process pid
+   Side Effects -   None
+   ----------------------------------------------------------------------- */
+int getpid() {
+    return Current->pid;
 }
 
 /* ------------------------------------------------------------------------
- * Name - initializeProcessTableEntry 
- * Purpose - The singular purpose of this function is to 
- *              initialize every variable contained within 
- *              the procStruct that acts as the Process Table
- *              for each element of the process table. 
- * Parameters - The index of the entry to be initialized 
- * Returns - nothing 
- * Side effects - If called on an existing indice, 
- *                  it will erease all data. 
+   Name - readCurStartTime
+   Purpose - returns the time (in microseconds) at which the currently
+                executing process began its current time slice
+   Parameters - none
+   Returns - ^
+   Side Effects - none
    ----------------------------------------------------------------------- */
-void initializeProcessTableEntry(int entryNumber){
-
-    int i = entryNumber % MAXPROC;
-
-    // Set the PID to -1 to show it hasnt been assigned
-    // Set status to empty
-    ProcTable[i].pid                = -1;
-    ProcTable[i].status             = EMPTY;
-
-    // Set all the pointers to NULL
-    ProcTable[i].parentPtr          = NULL;
-    ProcTable[i].nextZapPtr         = NULL;
-    ProcTable[i].nextProcPtr        = NULL;
-    ProcTable[i].childProcPtr       = NULL;
-    ProcTable[i].quitChildPtr       = NULL;
-    ProcTable[i].nextSiblingPtr     = NULL;
-    ProcTable[i].nextDeadSibling    = NULL;
-
-    // Miscellaneous values
-    ProcTable[i].stack              = NULL;
-    ProcTable[i].stackSize          = 1;
-    ProcTable[i].priority           = -1;
-    ProcTable[i].zapStatus          = 0;
-    ProcTable[i].numberOfChildren   = 0;
-    ProcTable[i].parentPID          = -1;
-    ProcTable[i].name[0]            = '\n';
-    ProcTable[i].quitStatus         = -1;
-    ProcTable[i].timeInitialized    = -1;
-    ProcTable[i].totalTimeRunning   = -1;
-    ProcTable[i].totalSliceTime     = -1;
-
-
-    // Initialize the queues attatched to the process
-    initializeProcessQueue(&ProcTable[i].childrenQueue, CHILDRENLIST);
-    initializeProcessQueue(&ProcTable[i].deadChildrenQueue, DEADCHILDRENLIST);
-    initializeProcessQueue(&ProcTable[i].zappedProcessesQueue, ZAPLIST);
+int readCurStartTime() {
+    return Current->timeInitialized/1000;
 }
 
 
-/*
- * Interrupt handlers are passed two parameters
- * The first parameter indicates the type of argument,
- * the second parameter varies depending on the type of interrupt
- *
- */
-void clockHandler(int dev, void *arg){
+/* ------------------------------------------------------------------------
+   Name - clockHandler
+   Purpose - Checks if the current process has exceeded its time slice.
+            Calls dispatcher() if necessary.
+   Parameters - the typeOfQueue of interrupt
+   Returns - nothing
+   Side Effects - may call dispatcher()
+   ----------------------------------------------------------------------- */
+void clockHandler(int dev, int unit)
+{
+    timeSlice();
+} /* clockHandler */
 
-    if(debugEnabled())
-        USLOSS_Console("clockHandler has been called\n");
 
-    if(!inKernelMode())
-        haltAndPrintKernelError();
+/* ------------------------------------------------------------------------
+   Name - timeSlice
+   Purpose - This operation calls the dispatcher if the currently executing
+            process has exceeded its time slice; otherwise, it simply returns.
+   Parameters - none
+   Returns - nothing
+   Side Effects - may call dispatcher
+   ----------------------------------------------------------------------- */
+void timeSlice() {
+    if (debugEnabled())
+        USLOSS_Console("timeSlice(): called\n");
 
+    // Require kernel mode 
+    makeSureCurrentFunctionIsInKernelMode("timeSlice()");
     disableInterrupts();
 
-    int statusFromDeviceInput = 0;
-    //USLOSS_DeviceInptu - >For the clock, the value will be the number of microseconds since USLOSS was started.
-    /*
-     * USLOSS_DeviceInput() takes three arguments.
-     * The first specifies the interrupt (the clock in this case).
-     * The second is the unit number -- for the clock, there is only one clock, so put in 0.
-     * The third is a value returned by USLOSS_DeviceInput().
-     */
+    Current->sliceTime = USLOSS_DeviceInput(0, 0, &status) - Current->timeInitialized;
+    if (Current->sliceTime > TIMESLICE) { // current has exceeded its timeslice
+        if (debugEnabled())
+            USLOSS_Console("timeSlice(): time slicing\n");
+        // popFromQueue(&ReadyList[Current->priority-1]); // remove current from ready list
+        // Current->status = READY;
+        Current->sliceTime = 0; // reset slice time
+        // appendProcessToQueue(&ReadyList[Current->priority-1], Current); // add to the back of the list
+        dispatcher();
+    }
+    else
+        enableInterrupts(); // re-enable interrupts
+} /* timeSlice */
 
-    //Your clockHandler code will call USLOSS_DeviceInput() each time the clock interrupt happens.
-    // It will compare the result with the time at which the currently running process began its current time slice.
-    // This implies that the start time was recorded when the process was selected to run (you have to do this...)
-    Current->totalSliceTime = USLOSS_DeviceInput(0, 0, &statusFromDeviceInput) - Current->timeInitialized;
+
+/* ------------------------------------------------------------------------
+   Name - initializeAndEmptyProcessSlot
+   Purpose - Cleans out the ProcTable entry of the given process.
+   Parameters - pid of process to remove
+   Returns - nothing
+   Side Effects - changes ProcTable
+   ----------------------------------------------------------------------- */
+void initializeAndEmptyProcessSlot(int pid) {
+
+    makeSureCurrentFunctionIsInKernelMode("initializeAndEmptyProcessSlot()");
+    disableInterrupts();
+
+    int i = pid % MAXPROC;
+
+    ProcTable[i].status = EMPTY;
+    ProcTable[i].pid = -1;              // Set the PID to -1 to show that it hasnt been assigned
+
+    //-------------------- Set pointers to NULL ---------------------------//
+    ProcTable[i].nextProcPtr = NULL;
+    ProcTable[i].nextSiblingPtr = NULL;
+    ProcTable[i].nextDeadSiblingPtr = NULL;
+    ProcTable[i].startFunc = NULL;
+    ProcTable[i].parentPtr = NULL;
 
 
+    //------------------ Miscellaneous Values  ----------------------------//
+    ProcTable[i].zapStatus = 0;
+    ProcTable[i].timeInitialized = -1;
+    ProcTable[i].cpuTime = -1;
+    ProcTable[i].sliceTime = 0;
+    ProcTable[i].name[0] = 0;
+    ProcTable[i].priority = -1;
+    ProcTable[i].stack = NULL;
+    ProcTable[i].stackSize = -1;
 
+    //------------------ Initialize the processQueus ---------------------//
+    initializeProcessQueue(&ProcTable[i].childrenQueue, CHILDRENLIST);
+    initializeProcessQueue(&ProcTable[i].deadChildrenQueue, DEADCHILDRENLIST);
+    initializeProcessQueue(&ProcTable[i].zapQueue, ZAPLIST);
+
+    // Decrease the number of processes.
+    numProcs--;
+}
+
+
+/* ------------------------------------------------------------------------
+   Name - dumpProcesses
+   Purpose - Prints information about each process on the process table,
+             Test 10 calls it
+   Parameters - none
+   Returns - nothing
+   Side Effects - none
+   ----------------------------------------------------------------------- */
+void dumpProcesses()
+{
+    const char *statusNames[7];
+    statusNames[EMPTY] = "EMPTY";
+    statusNames[READY] = "READY";
+    statusNames[RUNNING] = "RUNNING";
+    statusNames[JOINBLOCKED] = "JOIN_BLOCK";
+    statusNames[QUIT] = "QUIT";
+    statusNames[ZAPBLOCKED] = "ZAP_BLOCK";
+
+    //PID Parent  Priority  Status    # Kids  CPUtime Name
+    int i;
+    USLOSS_Console("%-6s%-8s%-16s%-16s%-8s%-8s%s\n", "PID", "Parent",
+           "Priority", "Status", "# Kids", "CPUtime", "Name");
+    for (i = 0; i < MAXPROC; i++) {
+    int p;
+    char s[20];
+
+    if (ProcTable[i].parentPtr != NULL) {
+        p = ProcTable[i].parentPtr->pid;
+        if (ProcTable[i].status > 10)
+            sprintf(s, "%d", ProcTable[i].status);
+    }
+    else
+        p = -1;
+    if (ProcTable[i].status > 10)
+        USLOSS_Console(" %-7d%-9d%-13d%-18s%-9d%-5d%s\n", ProcTable[i].pid, p,
+            ProcTable[i].priority, s, ProcTable[i].childrenQueue.length, ProcTable[i].cpuTime,
+            ProcTable[i].name);
+    else
+        USLOSS_Console(" %-7d%-9d%-13d%-18s%-9d%-5d%s\n", ProcTable[i].pid, p,
+            ProcTable[i].priority, statusNames[ProcTable[i].status],
+            ProcTable[i].childrenQueue.length, ProcTable[i].cpuTime, ProcTable[i].name);
+    }
+}
+
+
+/* ------------------------------------------------------------------------
+   Name -           findAvailableProcSlot
+   Purpose -        Finds the next available processTable slot
+   Parameters -     none
+   Returns -        an int that represents a slot on the table
+   Side Effects -   The table slot at that int will be subsequently filled
+   ----------------------------------------------------------------------- */
+int findAvailableProcSlot(){
+    // find an empty slot in the process table
+    int procSlot = -1;
+    procSlot = nextPid % MAXPROC;
+    while (ProcTable[procSlot].status != EMPTY) {
+        nextPid++;
+        procSlot = nextPid % MAXPROC;
+    }
+
+    return procSlot;
 
 }
 
-/*
- * Checks whether we are currently in kernel mode
- * Returns true if we are
- * False otherwise
- */
+/* ------------------------------------------------------------------------
+   Name -           inKernelMode
+   Purpose -        Checks to see whether we are in kernel mode or not
+   Parameters -     none
+   Returns -
+                    1/True if we are kernel mode
+                    0/false if we are not in kernel mode
+   Side Effects -   Some functions may not run if they are not in kernel mode
+   ----------------------------------------------------------------------- */
 int inKernelMode(){
     int kernelMode = 0;
 
@@ -740,58 +920,29 @@ int inKernelMode(){
 }
 
 /* ------------------------------------------------------------------------
- * Name:            haltAndPrintKernelError
- * Purpose:         Print an error to console, and halt USLOSS
- * Parameter:       None
- * Returns:         Nothing
- * Side Effects:    USLOSS is Halted and Error is printed to console
- * ------------------------------------------------------------------------ */
-void haltAndPrintKernelError(){
-    USLOSS_Console("ERROR: Not in kernel mode!\n");
-    USLOSS_Halt(1);
-}
+   Name - makeSureCurrentFunctionIsInKernelMode
+   Purpose - Checks if we are in kernel mode and prints an error messages
+              and halts USLOSS if not.
+              It should be called by every function in phase 1.
+   Parameters - The name of the function calling it, for the error message.
+   Side Effects - Prints and halts if we are not in kernel mode
+   ------------------------------------------------------------------------ */
+void makeSureCurrentFunctionIsInKernelMode(char *name)
+{
+    if(!inKernelMode()) {
+        USLOSS_Console("%s: called while in user mode, by process %d. Halting...\n",
+                       name, Current->pid);
+        USLOSS_Halt(1);
+    }
+} /* makeSureCurrentFunctionIsInKernelMode */
 
 /* ------------------------------------------------------------------------
- * Name:            findAvailableProcSlot
- * Purpose:         Look through the proc table, find an empty slot and
- *                      return the index of said slot. Return -1 if there
- *                      is no empty slot found
- *                  Also iterate nextPid so that it matches the resulting
- *                      number of Processes
- * Parameter:       None
- * Returns:         index in table (int) or -1
- * Side Effects:    If -1 is returned, fork1() is stopped
- * ------------------------------------------------------------------------ */
-int findAvailableProcSlot() {
-    int procSlot = -1;
-    int startPid = nextPid;
-
-    if(debugEnabled())
-        USLOSS_Console("findAvailableProcSlot(): nextPid is: %d\n", startPid);
-
-    //Need to loop between startPid and MAXPROC to find an empty slot
-    for(int i = startPid % MAXPROC; i < MAXPROC; i++){
-        if(ProcTable[i].status == EMPTY) {
-            procSlot = i;
-            nextPid++;
-            return procSlot;
-        }
-    }
-
-    //If nothing was found then look between 0 and startPid
-    if(procSlot == -1){
-        for(int i = 0; i < startPid; i++){
-            if(ProcTable[i].status == EMPTY){
-                procSlot = i;
-                nextPid++;
-                break;
-            }
-        }
-    }
-
-    return procSlot;
-}
-
+   Name - debugEnabled
+   Purpose - Checks to see if the debug flasgs are turned on
+   Parameters - none
+   Returns - nothing
+   Side Effects - When test cases are run, debug info is printed
+   ----------------------------------------------------------------------- */
 int debugEnabled(){
     int debug = 0;
     if(DEBUG && debugflag)
@@ -799,91 +950,40 @@ int debugEnabled(){
     return debug;
 }
 
-//void insertInReadyList(procPtr process){
-//    if(debugEnabled())
-//        USLOSS_Console("Adding a process to the "
-//                       "readly list with a pid %d and priority %d\n", process->pid, process->priority);
-//
-//    //Check if the list is empty
-//    //If it is, simply add to the head of the list and return
-//    if(ReadyList == NULL){
-//        ReadyList = process;
-//        return;
-//    }
-//
-//    //If the new process has a priority that is greater than
-//    //  that of the head nodes
-//    if(process->priority < ReadyList->priority) {
-//        process->nextProcPtr = ReadyList;
-//        ReadyList = process;
-//    }
-//
-//    //Otherwise, the process has a priority lower than the head
-//    //Iterate through until we find the sport for proper insertion
-//    else {
-//
-//        //Create a temp pointing to head
-//        procPtr temp = ReadyList;
-//
-//        while(temp->nextProcPtr != NULL){
-//            if(temp->nextProcPtr->priority > process->priority)
-//                break;
-//            temp = temp->nextProcPtr;
-//        }
-//
-//        //Swap pointers to insert process into the list
-//        process->nextProcPtr = temp->nextProcPtr;
-//        temp->nextProcPtr = process;
-//    }
-//}
+/* ------------------------------------------------------------------------
+   Name -       disableInterrupts
+   Purpose -    Disables the OS device interrupts
+   Parameters - None
+   Returns -    Nothing
+   Side Effects - Disables interrupts, modifies psr bits
+   ------------------------------------------------------------------------ */
+void disableInterrupts()
+{
+    // Check to make sure we are in kernel mode first
+    if(!inKernelMode()) {
+        USLOSS_Console("Kernel Error: Not in kernel mode, cannot disable interrupts\n");
+        USLOSS_Halt(1);
+    }
+    else
+        USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_INT );
+} /* disableInterrupts */
 
-//Returns 0/false if not zapped, 1 otherwise
-int isZapped() {
-    return Current->zapStatus;
-}
 
 /* ------------------------------------------------------------------------
-   Name - blockCurrentProcess
-   Purpose - Blocks the current process
-   Parameters -
-   Returns - -1 if the process was zapped while it was blocked
-             0: in every other case
-   Side Effects -
+   Name -       enableInterrupts
+   Purpose -    Enables the OS device interrupts
+   Parameters - None
+   Returns -    Nothing
+   Side Effects - Enables interrupts, modifies psr bits
    ------------------------------------------------------------------------ */
-int blockCurrentProcess(int updatedStatus){
-    if(debugEnabled())
-        USLOSS_Console("Block has been called on process with pid:%d\n", Current->pid);
-
-    if(!inKernelMode())
-        haltAndPrintKernelError();
-
-    disableInterrupts();
-
-    Current->status = updatedStatus;
-    int ReadyListIndex = Current->priority - 1;
-    popFromQueue(&ReadyList[ReadyListIndex]);
-    dispatcher();
-
-    if(Current->zappedProcessesQueue.length > 0)
-        return -1;
-
-    return 0;
-
-}
-
-int countNumberOfProcessRunningAndActive(){
-
-    int runningAndActive = 0;
-
-    // Iterate through and count all processes that
-    //      have a status other than empty, meaning that
-    //      they are actually processes
-    for(int i = 0; i < MAXPROC; i++){
-        if(ProcTable[i].status != EMPTY)
-            runningAndActive++;
+void enableInterrupts()
+{
+    // turn the interrupts ON iff we are in kernel mode
+    if(!inKernelMode()) {
+        //not in kernel mode
+        USLOSS_Console("Kernel Error: Not in kernel mode, cannot disable interrupts\n ");
+        USLOSS_Halt(1);
     }
-    return runningAndActive;
-}
-
-
-
+    else
+        USLOSS_PsrSet( USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT );
+} /* enableInterrupts */

@@ -1,10 +1,5 @@
 /* Patrick's DEBUG printing constant... */
-#ifndef _KERNEL_H
-#define _KERNEL_H
-
-#include "phase1.h"
-#include <stdlib.h>
-#define DEBUG 1
+#define DEBUG 0
 
 typedef struct procStruct procStruct;
 
@@ -13,225 +8,38 @@ typedef struct procStruct * procPtr;
 typedef struct processQueue processQueue;
 
 struct processQueue {
-    procPtr headProcess;
-    procPtr tailProcess;
-    int     length;
-    int     typeOfQueue;
+	procPtr headProcess;
+	procPtr tailProcess;
+	int 	length;
+	int 	typeOfQueue;
 };
 
-#define READYLIST           0
-#define CHILDRENLIST        1
-#define DEADCHILDRENLIST    2
-#define ZAPLIST             3
-
-/* -------------------------- Function Prototypes ---------------------------------- */
-
-void     initializeProcessQueue(processQueue* queue, int queueType);
-void     appendProcessToQueue(processQueue* queue, procPtr process);
-procPtr  popFromQueue(processQueue* queue);
-void     removeChildFromQueue(processQueue* queue, procPtr child);
-procPtr  peekAtHead(processQueue* queue);
-
-
-
+/* Process struct */
 struct procStruct {
-    procPtr         nextProcPtr;
-    procPtr         childProcPtr;
-    procPtr         nextSiblingPtr;
-    char            name[MAXNAME];     /* process's name */
-    char            startArg[MAXARG];  /* args passed to process */
-    USLOSS_Context  state;             /* current context for process */
-    short           pid;               /* process id */
-    int             priority;
-    int (* startFunc) (char *);         /* function where process begins -- launch */
-    char           *stack;
-    unsigned int    stackSize;
-    int             status;             /* READY, BLOCKED, QUIT, etc. */
-
-    /* other fields as needed... */
-    procPtr         quitChildPtr;
-    procPtr         nextZapPtr;
-    procPtr         nextDeadSibling;
-    procPtr         parentPtr;
-    short           parentPID;         /* parent process id */
-    int             numberOfChildren;   /* The number of children this process has */
-    int             zapStatus;            /* 0 if not zapped. 1 if zapped */
-    int             quitReturnValue;    /* The value the process returns after quiting */
-    int             quitStatus;
-    int             timeInitialized;
-    int             totalTimeRunning;
-    int             totalSliceTime;
-    int             cpuTime;
-    processQueue    childrenQueue;
-    processQueue    deadChildrenQueue;
-    processQueue    zappedProcessesQueue;
-
+	procPtr         nextProcPtr;
+	procPtr         nextSiblingPtr;
+	char            name[MAXNAME];     /* process's name */
+	char            startArg[MAXARG];  /* args passed to process */
+	USLOSS_Context  state;             /* current context for process */
+	short           pid;               /* process id */
+	int             priority;
+	int (* startFunc) (char *);         /* function where process begins -- launch */
+	char           *stack;
+	unsigned int    stackSize;
+	int             status;             /* READY, BLOCKED, QUIT, etc. */
+	/* other fields as needed... */
+	procPtr         parentPtr;
+	procPtr 		nextDeadSiblingPtr;
+	procPtr			nextZapPtr;
+	processQueue 	childrenQueue;      /* queue of the process's children */
+	processQueue	deadChildrenQueue;	/* list of children who have quit in the order they have quit*/
+	processQueue	zapQueue;
+ 	int 			quitStatus;		    /* whatever the process returns when it quits */
+	int				zapStatus;          // 1 zapped; 0 not zapped
+	int 			timeInitialized;    // the time the current time slice started
+	int 			cpuTime;            // the total amount of time the process has been running
+	int 			sliceTime;          // how long the process has been running in the current time slice
 };
-
-struct psrBits {
-    unsigned int curMode:1;
-    unsigned int curIntEnable:1;
-    unsigned int prevMode:1;
-    unsigned int prevIntEnable:1;
-    unsigned int unused:28;
-};
-
-union psrValues {
-   struct psrBits bits;
-   unsigned int integerPart;
-};
-
-
-//##################################################################################################
-
-/* ------------------------------------------------------------------------
-   Name - initializeProcessQueue
-   Purpose -
-   Parameters -
-   Returns -
-   Side Effects -
-   ------------------------------------------------------------------------ */
-void initializeProcessQueue(processQueue* queue, int queueType){
-    queue->headProcess  = NULL;
-    queue->tailProcess  = NULL;
-    queue->length       = 0;
-    queue->typeOfQueue  = queueType;
-}
-
-/* ------------------------------------------------------------------------
-   Name - appendProcessToQueue
-   Purpose -
-   Parameters -
-   Returns -
-   Side Effects -
-   ------------------------------------------------------------------------ */
-void appendProcessToQueue(processQueue* queue, procPtr process){
-
-    // If the list is empty, set the first and tail elements to the given process
-    if(queue->headProcess == NULL && queue->tailProcess == NULL) {
-        queue->headProcess = process;
-        queue->tailProcess = process;
-    }
-
-        // If the list is not empty
-    else{
-        //Check the type of the list before deciding what to do
-        switch(queue->typeOfQueue){
-            case READYLIST :
-                queue->tailProcess->nextProcPtr = process;
-            case CHILDRENLIST :
-                queue->tailProcess->nextSiblingPtr = process;
-            case ZAPLIST :
-                queue->tailProcess->nextZapPtr = process;
-            case DEADCHILDRENLIST :
-                queue->tailProcess->nextDeadSibling = process;
-        }
-        queue->tailProcess = process;
-    }
-
-
-    queue->length++;        // Increase the size of the list
-}
-
-/* ------------------------------------------------------------------------
-   Name - popFromQueue
-   Purpose -
-   Parameters -
-   Returns -
-   Side Effects -
-   ------------------------------------------------------------------------ */
-procPtr popFromQueue(processQueue* queue){
-
-    procPtr temp = queue->headProcess;
-
-    // Check to make sure the queue is not empty
-    if(temp == NULL)
-        return NULL;
-
-    // If the queue is only of length 1, return
-    // the head and set the head and tail to null
-    if(queue->headProcess == queue->tailProcess) {
-        queue->headProcess = NULL;
-        queue->tailProcess = NULL;
-    }
-
-        /*
-         * Otherwise, we need to set our head element to the element following it
-         * Essentially: a->b->c->..... We return a, and our new list needs to look
-         *  like: b->c->....
-         */
-    else {
-        switch (queue->typeOfQueue){
-            case READYLIST :
-                queue->headProcess = queue->headProcess->nextProcPtr;
-            case CHILDRENLIST :
-                queue->headProcess = queue->headProcess->nextSiblingPtr;
-            case ZAPLIST :
-                queue->headProcess = queue->headProcess->nextZapPtr;
-            case DEADCHILDRENLIST :
-                queue->headProcess = queue->headProcess->nextDeadSibling;
-        }
-    }
-
-    queue->length--;    // Decrement the size of the list
-    return temp;        // Return the head of the list
-
-}
-
-/* ------------------------------------------------------------------------
-   Name - removeChildFromQueue
-   Purpose -
-   Parameters -
-   Returns -
-   Side Effects -
-   ------------------------------------------------------------------------ */
-void removeChildFromQueue(processQueue* queue, procPtr child){
-
-    // If the list is empty return
-    if(queue->headProcess == NULL)
-        return;
-
-    // If the list is not of type children return
-    if(queue->typeOfQueue != CHILDRENLIST)
-        return;
-
-    // If the head element is the child we want to remove
-    if(queue->headProcess == child){
-        popFromQueue(queue);        // Call pop to remove the head of the queue
-        return;
-    }
-
-    procPtr temp = queue->headProcess;
-    procPtr tempSiblingPointer = queue->headProcess->nextSiblingPtr;
-
-    // Iterate through the queue
-    while (tempSiblingPointer != NULL){
-        if(tempSiblingPointer == child){
-            if(tempSiblingPointer == queue->tailProcess){
-                queue->tailProcess = temp;
-            }
-            else {
-                temp->nextSiblingPtr = tempSiblingPointer->nextSiblingPtr->nextSiblingPtr;
-            }
-            queue->length--;        // Decrement the size of the queue
-            return;
-        }
-        temp = tempSiblingPointer;
-        tempSiblingPointer = temp->nextSiblingPtr;
-    }
-}
-
-/* ------------------------------------------------------------------------
-   Name - peekAtHead
-   Purpose -
-   Parameters -
-   Returns -
-   Side Effects -
-   ------------------------------------------------------------------------ */
-procPtr peekAtHead(processQueue* queue){
-
-    return queue->headProcess;      // There is the chance that the return will be NULL
-}
 
 /* Some useful constants.  Add more as needed... */
 #define NO_CURRENT_PROCESS NULL
@@ -240,19 +48,187 @@ procPtr peekAtHead(processQueue* queue){
 #define SENTINELPID 1
 #define SENTINELPRIORITY (MINPRIORITY + 1)
 
+// Constants to determine what kind of readylist was used
+#define READYLIST 0
+#define CHILDRENLIST 1
+#define DEADCHILDRENLIST 2
+#define ZAPLIST 3
+
 #define TIMESLICE 80000
 
-#define QUIT 0
+/* process statuses */
+#define EMPTY 0
 #define READY 1
 #define RUNNING 2
-#define BLOCKED = -1
-#define EMPTY -2
+#define TIMESLICED 3
+#define QUIT 4
+#define JOINBLOCKED 5
+#define ZAPBLOCKED 6
 
-#define MAXTIMEALLOTED 80000            // Reprents an 80ms max time in
+struct psrBits {
+	unsigned int curMode:1;
+	unsigned int curIntEnable:1;
+	unsigned int prevMode:1;
+	unsigned int prevIntEnable:1;
+	unsigned int unused:28;
+};
 
-#define NOPARENTPROCESS -1
+union psrValues {
+	struct psrBits bits;
+	unsigned int integerPart;
+};
 
-#define BLOCKEDBYJOIN    11
-#define BLOCKEDBYZAP     12
+/* ------------------------------------------------------------------------
+   Name -           initializeProcessQueue
+   Purpose -        Just initialize a ready list
+   Parameters -
+                    processQueue* queue:
+                        Pointer to queue to be initialized
+                    queueType
+                        An int specifying what the queue is to be used for
+   Returns -        Nothing
+   Side Effects -   The passed queue is now no longer NULL
+   ------------------------------------------------------------------------ */
+void initializeProcessQueue(processQueue* queue, int queueType) {
+	queue->headProcess = NULL;
+	queue->tailProcess = NULL;
+	queue->length = 0;
+	queue->typeOfQueue = queueType;
+}
 
-#endif
+/* ------------------------------------------------------------------------
+   Name -           appendProcessToQueue
+   Purpose -        Adds a process to the end of a queue
+   Parameters -
+                    processQueue* queue:
+                        Pointer to queue to be added to
+                    procPty process
+                        Pointer to the process that will be added
+   Returns -        Nothing
+   Side Effects -   The length of the queue increases by 1.
+   ------------------------------------------------------------------------ */
+void appendProcessToQueue(processQueue *queue, procPtr process) {
+
+	if (queue->headProcess == NULL && queue->tailProcess == NULL) {
+		queue->headProcess = queue->tailProcess = process;
+	}
+
+    else {
+		if (queue->typeOfQueue == READYLIST)
+			queue->tailProcess->nextProcPtr = process;
+		else if (queue->typeOfQueue == CHILDRENLIST)
+			queue->tailProcess->nextSiblingPtr = process;
+		else if (queue->typeOfQueue == ZAPLIST)
+			queue->tailProcess->nextZapPtr = process;
+		else
+			queue->tailProcess->nextDeadSiblingPtr = process;
+		queue->tailProcess = process;
+	}
+
+	queue->length++;
+}
+
+/* ------------------------------------------------------------------------
+   Name -           popFromQueue
+   Purpose -        Remove and return the first element from the queue
+   Parameters -
+                    processQueue *queue
+                        A pointer to the queue who we want to modify
+   Returns -
+                    procPtr:
+                        Pointer to the element that we want
+   Side Effects -   Length of queue is decreased by 1
+   ------------------------------------------------------------------------ */
+procPtr popFromQueue(processQueue *queue) {
+
+	procPtr temp = queue->headProcess;
+
+	// If there is no head element, return null
+	if (queue->headProcess == NULL) {
+		return NULL;
+	}
+
+	//  If the list is of size 1, set the first and last nodes
+	// 		equal to null to ensure that the list is represented as empty
+	if (queue->headProcess == queue->tailProcess) {
+		queue->headProcess = queue->tailProcess = NULL;
+	}
+
+	else {
+		if (queue->typeOfQueue == READYLIST)
+			queue->headProcess = queue->headProcess->nextProcPtr;
+		else if (queue->typeOfQueue == CHILDRENLIST)
+			queue->headProcess = queue->headProcess->nextSiblingPtr;
+		else if (queue->typeOfQueue == ZAPLIST)
+			queue->headProcess = queue->headProcess->nextZapPtr;
+		else 
+			queue->headProcess = queue->headProcess->nextDeadSiblingPtr;
+	}
+
+	// Decrease the length of the list  and return the head element
+	queue->length--;
+	return temp;
+}
+
+/* ------------------------------------------------------------------------
+   Name -           removeChildFromQueue
+   Purpose -        Removes a specified node/child from the queue of children
+   Parameters -
+                    processQueue* queue:
+                        Pointer to queue to be modified
+                    procPty process
+                        Pointer to the process that will be removed
+   Returns -        Nothing
+   Side Effects -   Length of queue decreases by 1
+   ------------------------------------------------------------------------ */
+void removeChildFromQueue(processQueue *queue, procPtr childProcess) {
+
+    // If the given queue is NULL or is not of type CHILDRENLIST, return
+    //      without doing anything
+    if (queue->headProcess == NULL || queue->typeOfQueue != CHILDRENLIST)
+		return;
+
+    // If the very first element is the element we want, simply pop it
+	if (queue->headProcess == childProcess) {
+        popFromQueue(queue);
+		return;
+	}
+
+    // Create pointers that will be used to iterate from the list
+	procPtr temp = queue->headProcess;
+	procPtr tempsNextSibling = queue->headProcess->nextSiblingPtr;
+
+    // Iterate through the list while not null
+	while (tempsNextSibling != NULL) {
+        // If the nextSibling is the child we want to remove
+		if (tempsNextSibling == childProcess) {
+			if (tempsNextSibling == queue->tailProcess)
+				queue->tailProcess = temp;
+			else
+				temp->nextSiblingPtr = tempsNextSibling->nextSiblingPtr->nextSiblingPtr;
+			queue->length--;
+		}
+		temp = tempsNextSibling;
+		tempsNextSibling = tempsNextSibling->nextSiblingPtr;
+	}
+}
+
+/* ------------------------------------------------------------------------
+   Name -           peekAtHead
+   Purpose -        Returns a pointer to the first element in queue
+   Parameters -
+                    processQueue *queue
+                        The queue we want to look at the first element of
+   Returns -        A pointer to the head of the given queue
+   Side Effects -   None
+   ------------------------------------------------------------------------ */
+/* Return the headProcess of the given queue. */
+procPtr peekAtHead(processQueue *queue) {
+
+    // Check to make sure that the list is not empty
+    if (queue->headProcess == NULL) {
+		return NULL;
+	}
+
+	return queue->headProcess;
+}

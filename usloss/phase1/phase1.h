@@ -36,7 +36,6 @@
  * Function prototypes for this phase.
  */
 
-extern int   start1(char *arg);
 extern int   fork1(char *name, int(*func)(char *), char *arg,
                    int stacksize, int priority);
 extern int   join(int *status);
@@ -51,7 +50,6 @@ extern int   readCurStartTime(void);
 extern void  timeSlice(void);
 extern void  dispatcher(void);
 extern int   readtime(void);
-
 extern void  p1_fork(int pid);
 extern void  p1_quit(int pid);
 extern void  p1_switch(int old, int new);
