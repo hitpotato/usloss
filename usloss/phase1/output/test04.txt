@@ -11,8 +11,8 @@ start1(): after join of child 3, status = -3
 XXp1(): XXp3, started, pid = 4
 PID   Parent  Priority        Status          # Kids  CPUtime Name
  -1     -1       -1           EMPTY             0        -1   
- 1      -1       6            READY             0        -1   sentinel
- 2      -1       1            JOIN_BLOCK        2        -1   start1
+ 1      -2       6            READY             0        -1   sentinel
+ 2      -2       1            JOIN_BLOCK        2        -1   start1
  -1     -1       -1           EMPTY             0        -1   
  4      2        3            RUNNING           0        -1   XXp1
  5      2        3            READY             0        -1   XXp1
@@ -77,8 +77,8 @@ start1(): after join of child 6, status = -6
 XXp1(): XXp3, started, pid = 7
 PID   Parent  Priority        Status          # Kids  CPUtime Name
  -1     -1       -1           EMPTY             0        -1   
- 1      -1       6            READY             0        -1   sentinel
- 2      -1       1            JOIN_BLOCK        2        -1   start1
+ 1      -2       6            READY             0        -1   sentinel
+ 2      -2       1            JOIN_BLOCK        2        -1   start1
  -1     -1       -1           EMPTY             0        -1   
  -1     -1       -1           EMPTY             0        -1   
  -1     -1       -1           EMPTY             0        -1   

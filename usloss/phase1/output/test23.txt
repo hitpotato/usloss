@@ -5,8 +5,8 @@ XXp2(): started, pid = 5, calling blockMe
 XXp2(): started, pid = 6, calling blockMe
 PID   Parent  Priority        Status          # Kids  CPUtime Name
  -1     -1       -1           EMPTY             0        -1   
- 1      -1       6            READY             0        -1   sentinel
- 2      -1       1            JOIN_BLOCK        1        -1   start1
+ 1      -2       6            READY             0        -1   sentinel
+ 2      -2       1            JOIN_BLOCK        1        -1   start1
  3      2        5            RUNNING           3        -1   XXp1
  4      3        3            13                0        -1   XXp2
  5      3        3            14                0        -1   XXp2

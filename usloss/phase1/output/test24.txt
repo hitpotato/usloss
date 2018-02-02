@@ -7,8 +7,8 @@ XXp1(): creating zapper child
 XXp3(): started, pid = 7, calling zap on pid 5
 PID   Parent  Priority        Status          # Kids  CPUtime Name
  -1     -1       -1           EMPTY             0        -1   
- 1      -1       6            READY             0        -1   sentinel
- 2      -1       1            JOIN_BLOCK        1        -1   start1
+ 1      -2       6            READY             0        -1   sentinel
+ 2      -2       1            JOIN_BLOCK        1        -1   start1
  3      2        5            RUNNING           4        -1   XXp1
  4      3        3            11                0        -1   XXp2
  5      3        3            11                0        -1   XXp2

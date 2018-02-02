@@ -25,7 +25,7 @@ void launch();
 static void checkDeadlock();
 void enableInterrupts(void);
 void makeSureCurrentFunctionIsInKernelMode(char *);
-void clockHandler();
+void clockHandler(int dev, void *arg);
 int readtime();
 void initializeAndEmptyProcessSlot(int);
 int block(int);
@@ -44,6 +44,7 @@ procStruct ProcTable[MAXPROC];
 
 // Process lists
 processQueue ReadyList[SENTINELPRIORITY];
+
 
 // The number of process table spots taken
 int numProcs;
@@ -745,12 +746,15 @@ int readCurStartTime() {
    Name - clockHandler
    Purpose - Checks if the current process has exceeded its time slice.
             Calls dispatcher() if necessary.
-   Parameters - the typeOfQueue of interrupt
+   Parameters -
    Returns - nothing
    Side Effects - may call dispatcher()
    ----------------------------------------------------------------------- */
-void clockHandler(int dev, int unit)
+void clockHandler(int dev, void *arg)
 {
+    if(debugEnabled())
+        USLOSS_Console("clockHandler(): Inside clock handler\n");
+
     timeSlice();
 } /* clockHandler */
 
@@ -767,19 +771,18 @@ void timeSlice() {
     if (debugEnabled())
         USLOSS_Console("timeSlice(): called\n");
 
-    // Require kernel mode 
+    // Require kernel mode and disable interrupts
     makeSureCurrentFunctionIsInKernelMode("timeSlice()");
     disableInterrupts();
 
     Current->sliceTime = USLOSS_DeviceInput(0, 0, &status) - Current->timeInitialized;
+
     if (Current->sliceTime > TIMESLICE) { // current has exceeded its timeslice
         if (debugEnabled())
             USLOSS_Console("timeSlice(): time slicing\n");
-        // popFromQueue(&ReadyList[Current->priority-1]); // remove current from ready list
-        // Current->status = READY;
         Current->sliceTime = 0; // reset slice time
-        // appendProcessToQueue(&ReadyList[Current->priority-1], Current); // add to the back of the list
         dispatcher();
+
     }
     else
         enableInterrupts(); // re-enable interrupts
@@ -870,7 +873,13 @@ void dumpProcesses()
                 sprintf(s, "%d", ProcTable[i].status);
         }
         // If the process has no parents, the parendPID is -1
-        else if(strcmp("s"))
+        else if(strcmp("sentinel", ProcTable[i].name) == 0){
+            p = -2;
+        }
+        else if(strcmp("start1", ProcTable[i].name) == 0){
+            p = -2;
+        }
+        else
             p = -1;
         if (ProcTable[i].status > 10)
             USLOSS_Console(" %-7d%-9d%-13d%-18s%-9d%-5d%s\n", ProcTable[i].pid, p,
@@ -972,6 +981,7 @@ void disableInterrupts()
         USLOSS_Console("Kernel Error: Not in kernel mode, cannot disable interrupts\n");
         USLOSS_Halt(1);
     }
+
     else
         USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_INT );
 } /* disableInterrupts */

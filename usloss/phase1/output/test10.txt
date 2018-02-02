@@ -3,8 +3,8 @@ start1(): after fork of child 3
 start1(): performing join
 PID   Parent  Priority        Status          # Kids  CPUtime Name
  -1     -1       -1           EMPTY             0        -1   
- 1      -1       6            READY             0        -1   sentinel
- 2      -1       1            RUNNING           1        -1   start1
+ 1      -2       6            READY             0        -1   sentinel
+ 2      -2       1            RUNNING           1        -1   start1
  3      2        3            READY             0        -1   XXp1
  -1     -1       -1           EMPTY             0        -1   
  -1     -1       -1           EMPTY             0        -1   

@@ -12,8 +12,8 @@ XXp2(): zap'ing child with pid_e = 5
 XXp3(): started
 PID   Parent  Priority        Status          # Kids  CPUtime Name
  -1     -1       -1           EMPTY             0        -1   
- 1      -1       6            READY             0        -1   sentinel
- 2      -1       1            JOIN_BLOCK        2        -1   start1
+ 1      -2       6            READY             0        -1   sentinel
+ 2      -2       1            JOIN_BLOCK        2        -1   start1
  3      2        3            JOIN_BLOCK        1        -1   XXp1
  4      2        4            ZAP_BLOCK         0        -1   XXp2
  5      3        5            RUNNING           0        -1   XXp3

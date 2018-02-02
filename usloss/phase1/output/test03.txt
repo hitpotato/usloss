@@ -49,8 +49,8 @@ start1(): after fork of child 49
 start1(): after fork of child 50
 PID   Parent  Priority        Status          # Kids  CPUtime Name
  50     2        3            READY             0        -1   XXp1
- 1      -1       6            READY             0        -1   sentinel
- 2      -1       1            RUNNING           48       -1   start1
+ 1      -2       6            READY             0        -1   sentinel
+ 2      -2       1            RUNNING           48       -1   start1
  3      2        3            READY             0        -1   XXp1
  4      2        3            READY             0        -1   XXp1
  5      2        3            READY             0        -1   XXp1
@@ -244,8 +244,8 @@ start1(): after fork of child 99
 start1(): after fork of child 100
 PID   Parent  Priority        Status          # Kids  CPUtime Name
  100    2        3            READY             0        -1   XXp1
- 1      -1       6            READY             0        -1   sentinel
- 2      -1       1            RUNNING           48       -1   start1
+ 1      -2       6            READY             0        -1   sentinel
+ 2      -2       1            RUNNING           48       -1   start1
  53     2        3            READY             0        -1   XXp1
  54     2        3            READY             0        -1   XXp1
  55     2        3            READY             0        -1   XXp1
