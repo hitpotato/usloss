@@ -15,7 +15,7 @@
 typedef struct {
     int				fd;		// Open fd for disk file. 
     int				tracks;		// # tracks in the disk.
-    int				currentTrack;	// head position
+    int				currentTrack;	// headProcess position
     int				status;		// Disk's status
     USLOSS_DeviceRequest	request;	// Current request
 } DiskInfo;

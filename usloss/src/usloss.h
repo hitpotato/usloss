@@ -78,7 +78,7 @@ extern void (*USLOSS_IntVec[USLOSS_NUM_INTS])(int dev, void *arg);
 #define USLOSS_TERM_DEV		USLOSS_TERM_INT
 
 /*
- * # of units of each device type
+ * # of units of each device typeOfQueue
  */
 
 #define USLOSS_CLOCK_UNITS	1
@@ -124,7 +124,7 @@ typedef struct USLOSS_DeviceRequest
  * USLOSS_DeviceOutput() and USLOSS_DeviceInput() will return DEV_OK if their 
  * arguments were valid and the device is ready, DEV_BUSY if the arguments were valid
  * but the device is busy, and DEV_INVALID otherwise. By valid, the device 
- * type and unit must correspond to a device that exists. 
+ * typeOfQueue and unit must correspond to a device that exists.
  */
 
 #define USLOSS_DEV_OK		USLOSS_DEV_READY
@@ -194,7 +194,7 @@ typedef struct USLOSS_DeviceRequest
 #define USLOSS_CLOCK_MS	20
 
 /*
- * Minimum stack size. 
+ * Minimum stack length.
  */
 
 #define USLOSS_MIN_STACK (80 * 1024)

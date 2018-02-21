@@ -22,7 +22,7 @@
  *  Description: This is the call entry point for terminal input.
  *
  *  Arguments:    char *buff    -- pointer to the input buffer
- *                int   bsize   -- maximum size of the buffer
+ *                int   bsize   -- maximum length of the buffer
  *                int   unit_id -- terminal unit number
  *                int  *nread      -- pointer to output value
  *                (output value: number of characters actually read)
@@ -243,7 +243,7 @@ int Sys_DiskRead(void *dbuff, int track, int first, int sectors, int unit, int *
 /*
  *  Routine:  Sys_DiskSize
  *
- *  Description: Return information about the size of the disk.
+ *  Description: Return information about the length of the disk.
  *
  *  Arguments:    int   unit  -- the unit number of the disk 
  *                int   *sector -- bytes in a sector
@@ -632,7 +632,7 @@ int Sys_HeapFree(void *ptr)
  *  Description: This is the call entry point to create a new mail box.
  *
  *  Arguments:    int   numslots -- number of mailbox slots
- *                int   slotsize -- size of the mailbox buffer
+ *                int   slotsize -- length of the mailbox buffer
  *                int  *mid      -- pointer to output value
  *                (output value: id of created mailbox)
  *
@@ -681,7 +681,7 @@ int Sys_MboxRelease(int mbox)
  *
  *  Arguments:    int mbox -- id of the mailbox to send to
  *                void* msg  -- message to send
- *		  int *size -- size of message 
+ *		  int *length -- length of message
  *
  *  Return Value: 0 means success, -1 means error occurs
  *
@@ -707,9 +707,9 @@ int Sys_MboxSend(int mbox, void *msg, int *size)
  *
  *  Arguments:    int mbox -- id of the mailbox to receive from
  *                void* msg  -- location to receive message
- *		  int *size -- size of message 
+ *		  int *length -- length of message
  *
- *  Return Value: -1 if an error occurred, otherwise the size of the received message 
+ *  Return Value: -1 if an error occurred, otherwise the length of the received message
  *
  */
 int Sys_MboxReceive(int mbox, void *msg, int *size)
@@ -733,7 +733,7 @@ int Sys_MboxReceive(int mbox, void *msg, int *size)
  *
  *  Arguments:    int mbox -- id of the mailbox to send to
  *                void* msg  -- message to send
- *		  int *size -- size of message 
+ *		  int *length -- length of message
  *
  *  Return Value: 0 means success, -1 means error occurs, 1 means mailbox is full
  *
@@ -759,9 +759,9 @@ int Sys_MboxCondSend(int mbox, void *msg, int *size)
  *
  *  Arguments:    int mbox -- id of the mailbox to receive from
  *                void* msg  -- message to send
- *		  int *size -- size of message 
+ *		  int *length -- length of message
  *
- *  Return Value: -1 if an error occurred, otherwise the size of the received message 
+ *  Return Value: -1 if an error occurred, otherwise the length of the received message
  *
  */
 int Sys_MboxCondReceive(int mbox, void *msg, int *size)

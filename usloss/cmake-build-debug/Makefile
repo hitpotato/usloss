@@ -48,10 +48,10 @@ RM = /Applications/CLion.app/Contents/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/USLOSS_Project/usloss"
+CMAKE_SOURCE_DIR = /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug"
+CMAKE_BINARY_DIR = /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/CMakeFiles" "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/CMakeFiles /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/rodrigo/Documents/University of Arizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -257,60 +257,6 @@ phase1/phase1.s: phase1/phase1.c.s
 phase1/phase1.c.s:
 	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/phase1/phase1.c.s
 .PHONY : phase1/phase1.c.s
-
-phase1/queue.o: phase1/queue.c.o
-
-.PHONY : phase1/queue.o
-
-# target to build an object file
-phase1/queue.c.o:
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/phase1/queue.c.o
-.PHONY : phase1/queue.c.o
-
-phase1/queue.i: phase1/queue.c.i
-
-.PHONY : phase1/queue.i
-
-# target to preprocess a source file
-phase1/queue.c.i:
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/phase1/queue.c.i
-.PHONY : phase1/queue.c.i
-
-phase1/queue.s: phase1/queue.c.s
-
-.PHONY : phase1/queue.s
-
-# target to generate assembly for a file
-phase1/queue.c.s:
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/phase1/queue.c.s
-.PHONY : phase1/queue.c.s
-
-phase1/skeleton.o: phase1/skeleton.c.o
-
-.PHONY : phase1/skeleton.o
-
-# target to build an object file
-phase1/skeleton.c.o:
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/phase1/skeleton.c.o
-.PHONY : phase1/skeleton.c.o
-
-phase1/skeleton.i: phase1/skeleton.c.i
-
-.PHONY : phase1/skeleton.i
-
-# target to preprocess a source file
-phase1/skeleton.c.i:
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/phase1/skeleton.c.i
-.PHONY : phase1/skeleton.c.i
-
-phase1/skeleton.s: phase1/skeleton.c.s
-
-.PHONY : phase1/skeleton.s
-
-# target to generate assembly for a file
-phase1/skeleton.c.s:
-	$(MAKE) -f CMakeFiles/usloss.dir/build.make CMakeFiles/usloss.dir/phase1/skeleton.c.s
-.PHONY : phase1/skeleton.c.s
 
 phase1/testcases/test00.o: phase1/testcases/test00.c.o
 
@@ -1605,12 +1551,6 @@ help:
 	@echo "... phase1/phase1.o"
 	@echo "... phase1/phase1.i"
 	@echo "... phase1/phase1.s"
-	@echo "... phase1/queue.o"
-	@echo "... phase1/queue.i"
-	@echo "... phase1/queue.s"
-	@echo "... phase1/skeleton.o"
-	@echo "... phase1/skeleton.i"
-	@echo "... phase1/skeleton.s"
 	@echo "... phase1/testcases/test00.o"
 	@echo "... phase1/testcases/test00.i"
 	@echo "... phase1/testcases/test00.s"

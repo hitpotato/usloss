@@ -27,7 +27,7 @@ uname -v = Darwin Kernel Version 17.3.0: Thu Nov  9 18:09:22 PST 2017; root:xnu-
 Kernel configured for up to 4 processors.
 2 processors are physically available.
 4 processors are logically available.
-Processor type: x86_64h (Intel x86-64h Haswell)
+Processor typeOfQueue: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3
 Primary memory available: 16.00 gigabytes
 Default processor set: 319 tasks, 1331 threads, 4 processors
@@ -252,7 +252,7 @@ configure:3715: gcc -o conftest -g -O2   conftest.c  >&5
 conftest.c:54:6: warning: incompatible redeclaration of library function 'memset' [-Wincompatible-library-redeclaration]
 char memset ();
      ^
-conftest.c:54:6: note: 'memset' is a builtin with type 'void *(void *, int, unsigned long)'
+conftest.c:54:6: note: 'memset' is a builtin with typeOfQueue 'void *(void *, int, unsigned long)'
 1 warning generated.
 configure:3715: $? = 0
 configure:3715: result: yes

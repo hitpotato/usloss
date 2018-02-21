@@ -41,8 +41,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/usloss.dir/phase1/testcases/test36.c.o"
   "CMakeFiles/usloss.dir/phase1/p1.c.o"
   "CMakeFiles/usloss.dir/phase1/phase1.c.o"
-  "CMakeFiles/usloss.dir/phase1/queue.c.o"
-  "CMakeFiles/usloss.dir/phase1/skeleton.c.o"
   "CMakeFiles/usloss.dir/pterm/pterm.c.o"
   "CMakeFiles/usloss.dir/src/dev_alarm.c.o"
   "CMakeFiles/usloss.dir/src/dev_clock.c.o"

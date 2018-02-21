@@ -946,7 +946,7 @@ SetTag(new)
  *
  * USLOSS_MmuPageSize
  *
- *      Returns the page size.
+ *      Returns the page length.
  *
  * Results:
  *      Number of bytes in a page.

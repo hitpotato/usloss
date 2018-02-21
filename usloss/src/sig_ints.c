@@ -121,7 +121,7 @@ static void sighandler(int sig, siginfo_t *sigstuff, void *oldcontext)
     current_psr = USLOSS_PSR_MAGIC | ((current_psr & USLOSS_PSR_CURRENT_MASK) << 2);
     current_psr |= USLOSS_PSR_CURRENT_MODE;
     check_interrupts();
-    /*  Switch depending upon what type of signal this is - SIGUSR1 is used
+    /*  Switch depending upon what typeOfQueue of signal this is - SIGUSR1 is used
         for system calls, SIG_ALARM is used for devices */
     switch(sig)
     {
