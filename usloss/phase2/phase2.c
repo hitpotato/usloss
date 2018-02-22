@@ -29,21 +29,25 @@ int     start1 (char *);
 int     inKernelMode();
 void    initializeBox(int i);
 void    initializeSlot(int i);
-int     checkmbox_id(int mbox_id);
-
-
+int     isBadMBoxID(int mbox_id);
+int     send(int mbox_id, void *msg_ptr, int msg_size, int condSend);
+int     receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve);
+int     sendMessageToProcess(mboxProcPtr process, void *msg_ptr, int msg_length);
+int     findAndInitializeFreeMailSlot(void *msg_ptr, int msg_size);
 
 /* -------------------------- Globals ------------------------------------- */
 
 int debugflag2 = 0;
 
+// Tables of mailBoxes, mailSlots and Processes
+mailbox     MailBoxTable[MAXMBOX];
+mailSlot    MailSlotTable[MAXSLOTS];
+mboxProc    mboxProcTable[MAXPROC];
 
-mailbox     MailBoxTable[MAXMBOX];  // mail box
-mailSlot    MailSlotTable[MAXSLOTS]; // mail slots
-mboxProc    mboxProcTable[MAXPROC];  // the processes
-
+// Keep track of the total of boxes and slots used
 int numBoxes, numSlots;
 
+// Keep track of the ID's to be used for the next thing
 int nextMboxID = 0, nextSlotID = 0, nextProc = 0;
 
 void (*systemCallVec[MAXSYSCALLS])(USLOSS_Sysargs *args);
@@ -83,9 +87,6 @@ int start1(char *arg)
     // Initialize the number of slots and boxes
     numBoxes = 0, numSlots = 0;
 
-
-    // Initialize the mail box table, slots, & other data structures.
-
     // Initialize USLOSS_IntVec and system call handlers,
     USLOSS_IntVec[USLOSS_CLOCK_INT] = clockHandler2;
     USLOSS_IntVec[USLOSS_DISK_UNITS] = diskHandler;
@@ -106,7 +107,7 @@ int start1(char *arg)
         systemCallVec[i] = nullsys;
     }
 
-    enableInterrupts();
+    enableInterrupts();     // Re-enable interrupts
 
     // Create a process for start2, then block on a join until start2 quits
     if (DEBUG2 && debugflag2)
@@ -152,29 +153,156 @@ int MboxCreate(int slots, int slot_size)
         }
     }
 
-    // Get mailbox
-    mailbox *box = &MailBoxTable[nextMboxID];
+    // Get mailbox with corresponding ID
+    mailbox *mailbox = &MailBoxTable[nextMboxID];
 
     // Initialize the fields of the box
-    box->mboxID = nextMboxID++;
-    box->totalSlots = slots;
-    box->slotSize = slot_size;
-    box->status = ACTIVE;
-    initializeQueue(&box->slots, SLOTQUEUE);
-    initializeQueue(&box->blockedProcsSend, PROCQUEUE);
-    initializeQueue(&box->blockedProcsRecieve, PROCQUEUE);
+    mailbox->mboxID = nextMboxID++;
+    mailbox->totalSlots = slots;
+    mailbox->slotSize = slot_size;
+    mailbox->status = ACTIVE;
+    initializeQueue(&mailbox->slots, SLOTQUEUE);
+    initializeQueue(&mailbox->blockedProcsSend, PROCQUEUE);
+    initializeQueue(&mailbox->blockedProcsRecieve, PROCQUEUE);
 
-    numBoxes++;
+
+    numBoxes++;     // Increase the number of active boxes
 
     if(debugEnabled())
         USLOSS_Console("MboxCreate(): Created mailbox with id: %d, totalSlots: %d, slot_size: %d, "
-                               "numBoxes: %d\n", box->mboxID, box->totalSlots, box->slotSize, numBoxes);
+                               "numBoxes: %d\n", mailbox->mboxID, mailbox->totalSlots, mailbox->slotSize, numBoxes);
 
     enableInterrupts();
-    return box->mboxID;
+    return mailbox->mboxID;
 } /* MboxCreate */
 
 
+/* ------------------------------------------------------------------------
+   Name - MboxSend
+   Purpose - Put a message into a slot for the indicated mailbox.
+             Block the sending process if no slot available.
+   Parameters - mailbox id, pointer to data of msg, # of bytes in msg.
+   Returns - zero if successful, -1 if invalid args.
+   Side Effects - none.
+   ----------------------------------------------------------------------- */
+int MboxSend(int mbox_id, void *msg_ptr, int msg_size)
+{
+    return send(mbox_id, msg_ptr, msg_size, 0);
+} /* MboxSend */
+
+
+/* ------------------------------------------------------------------------
+   Name - MboxCondSend
+   Purpose - Put a message into a slot for the indicated mailbox.
+   Parameters - mailbox id, pointer to data of msg, # of bytes in msg.
+   Returns - zero if successful, -1 if invalid args, -2 if message not sent
+   Side Effects - none.
+   ----------------------------------------------------------------------- */
+int MboxCondSend(int mbox_id, void *msg_ptr, int msg_size)
+{
+    return send(mbox_id, msg_ptr, msg_size, 1);
+} /* MboxCondSend */
+
+
+/* ------------------------------------------------------------------------
+   Name - MboxReceive
+   Purpose - Get a msg from a slot of the indicated mailbox.
+             Block the receiving process if no msg available.
+   Parameters - mailbox id, pointer to put data of msg, max # of bytes that
+                can be received.
+   Returns - actual length of msg if successful, -1 if invalid args.
+   Side Effects - none.
+   ----------------------------------------------------------------------- */
+int MboxReceive(int mbox_id, void *msg_ptr, int msg_size)
+{
+    return receive(mbox_id, msg_ptr, msg_size, 0);
+} /* MboxReceive */
+
+/* ------------------------------------------------------------------------
+   Name - MboxCondReceive
+   Purpose - Get a msg from a slot of the indicated mailbox.
+   Parameters - mailbox id, pointer to put data of msg, max # of bytes that
+                can be received.
+   Returns - actual size of msg if successful, -1 if invalid args,
+                -2 if receive failed.
+   Side Effects - none.
+   ----------------------------------------------------------------------- */
+int MboxCondReceive(int mbox_id, void *msg_ptr, int msg_size)
+{
+    return receive(mbox_id, msg_ptr, msg_size, 1);
+} /* MboxCondReceive */
+
+/* ------------------------------------------------------------------------
+   Name - MboxRelease
+   Purpose - Release a mailbox
+   Parameters - id of the mailbox that needs to be released
+   Returns - -1 if the mbox_id is invalid, -3 if called was zap'd,
+                0 otherwise
+   Side Effects - Zaps any processes that are blocked on the mailbox
+   ----------------------------------------------------------------------- */
+int MboxRelease(int mbox_id){
+
+    disableInterrupts();
+    makeSureCurrentFunctionIsInKernelMode("MboxRelease():");
+
+    // Check if the mailboxID is invalid
+    if(isBadMBoxID(mbox_id)){
+        if(debugEnabled())
+            USLOSS_Console("MboxRelease(): Called with invalid m_boxID: %d, returning -1\n",
+                           mbox_id);
+        return -1;
+    }
+
+    // Get the mailbox
+    mailbox *mailbox = &MailBoxTable[mbox_id];
+
+    // Check if the mailbox is in use
+    if(mailbox == NULL || mailbox->status == INACTIVE){
+        if (debugEnabled())
+            USLOSS_Console("MboxRelease(): Mailbox %d is already released, returning -1\n",
+                           mbox_id);
+        return -1;
+    }
+
+    // Empty all the slots in the mailbox
+    while (mailbox->slots.length > 0){
+        slotPtr slot = (slotPtr)popFromQueue(&mailbox->slots);
+        initializeSlot(slot->slotID);
+    }
+
+    // Empty the mailbox itself
+    initializeBox(mbox_id);
+
+    if (debugEnabled())
+        USLOSS_Console("MboxRelease: realsed mailbox %d\n", mbox_id);
+
+    // Unblock any processes that were blocked on a send
+    while (mailbox->blockedProcsSend.length > 0){
+        mboxProcPtr blockedProcess = (mboxProcPtr)popFromQueue(&mailbox->blockedProcsSend);
+        unblockProc(blockedProcess->pid);
+        disableInterrupts();
+    }
+
+    // Unblock any processes that were blocked on a recieve
+    while (mailbox->blockedProcsRecieve.length > 0){
+        mboxProcPtr blockedProcess = (mboxProcPtr)popFromQueue(&mailbox->blockedProcsRecieve);
+        unblockProc(blockedProcess->pid);
+        disableInterrupts();
+    }
+
+    enableInterrupts();
+    return 0;
+
+}
+
+
+/* ------------------------------------------------------------------------
+   Name - findAndInitializeFreeMailSlot
+   Purpose - gets a free slot from the table of mail slots and initializes it
+   Parameters - pointer to the message to be placed in the slot and the message size.
+   Returns - ID of the new slot.
+   Side Effects - initializes a single element of the mail slot array.
+   ----------------------------------------------------------------------- */
 int findAndInitializeFreeMailSlot(void *msg_ptr, int msg_size){
 
     disableInterrupts();
@@ -190,38 +318,46 @@ int findAndInitializeFreeMailSlot(void *msg_ptr, int msg_size){
         }
     }
 
-    slotPtr slot = &MailSlotTable[nextSlotID];
-    slot->slotID = nextSlotID++;
-    slot->status = USED;
-    slot->messageSize = msg_size;
+    slotPtr newSlot = &MailSlotTable[nextSlotID];
+    newSlot->slotID = nextSlotID++;
+    newSlot->status = USED;
+    newSlot->messageSize = msg_size;
     numSlots++;
 
-    memcpy(slot->message, msg_ptr, msg_size);
+    memcpy(newSlot->message, msg_ptr, msg_size);        // Copy the message into the slot
 
     if(debugEnabled())
         USLOSS_Console("createSlot(): Created new slot for message size: %d, slotID: %d, total slots: %d\n",
-                        msg_size, slot->slotID, numSlots);
+                        msg_size, newSlot->slotID, numSlots);
 
-    return slot->slotID;
+    return newSlot->slotID;
 }
 
 
-int sendMessageToProcess(mboxProcPtr proc, void *msg_ptr, int msg_length){
+/* ------------------------------------------------------------------------
+   Name - sendMessageToProcess
+   Purpose - sends a message directly to a process
+   Parameters - pointer to the process, message to put in the slot,
+                and the message size.
+   Returns - 0 for success or -1 for failure
+   Side Effects - A process now contains a new message
+   ----------------------------------------------------------------------- */
+int sendMessageToProcess(mboxProcPtr process, void *msg_ptr, int msg_length){
 
     // Check for error cases
-    if(proc == NULL || proc->msg_ptr == NULL || proc->msg_length < msg_length){
+    if(process == NULL || process->msg_ptr == NULL || process->msg_length < msg_length){
         if(debugEnabled())
             USLOSS_Console("sendMessageToProcess(): Invalid arguments, returning -1\n");
-        proc->msg_length = -1;
+        process->msg_length = -1;
         return -1;
     }
 
     // Copy the message
-    memcpy(proc->msg_ptr, msg_ptr, msg_length);
-    proc->msg_length = msg_length;
+    memcpy(process->msg_ptr, msg_ptr, msg_length);
+    process->msg_length = msg_length;
 
     if(debugEnabled())
-        USLOSS_Console("sendToProc(): Gave message size %d to process %d\n", msg_length, proc->pid);
+        USLOSS_Console("sendToProc(): Gave message size %d to process %d\n", msg_length, process->pid);
 
     return 0;
 }
@@ -236,7 +372,7 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int condSend){
                         mbox_id, msg_ptr, msg_size, condSend);
 
     // Check for invalid mbox_id
-    if(checkmbox_id(mbox_id)){
+    if(isBadMBoxID(mbox_id)){
         if(debugEnabled())
             USLOSS_Console("MboxSend(): Called with invalid mbox_id: %d, returning -1\n", mbox_id);
         enableInterrupts();
@@ -244,19 +380,19 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int condSend){
     }
 
     // Get the mailbox
-    mailbox *box = &MailBoxTable[mbox_id];
+    mailbox *mailbox = &MailBoxTable[mbox_id];
 
     // Check for Invalid Arguments
-    if(box->status == INACTIVE || msg_size < 0 || msg_size > box->slotSize){
+    if(mailbox->status == INACTIVE || msg_size < 0 || msg_size > mailbox->slotSize){
         if(debugEnabled())
             USLOSS_Console("MboxSend(): Called with an invalid argument, returning -1\n", mbox_id);
         enableInterrupts();
         return -1;
     }
 
-    // Handle blocked reciever
-    if(box->blockedProcsRecieve.length > 0 && (box->slots.length < box->totalSlots || box->totalSlots == 0)){
-        mboxProcPtr proc = (mboxProcPtr)popFromQueue(&box->blockedProcsRecieve);
+    // Figure out what to do with a blocked reciever
+    if(mailbox->blockedProcsRecieve.length > 0 && (mailbox->slots.length < mailbox->totalSlots || mailbox->totalSlots == 0)){
+        mboxProcPtr proc = (mboxProcPtr)popFromQueue(&mailbox->blockedProcsRecieve);
 
         // Give the message to the sender
         int result = sendMessageToProcess(proc, msg_ptr, msg_size);
@@ -270,7 +406,7 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int condSend){
     }
 
     // If all the slots are taken, block caller until slots are avaialable
-    if(box->slots.length == box->totalSlots){
+    if(mailbox->slots.length == mailbox->totalSlots){
         if(condSend){
             if(debugEnabled())
                 USLOSS_Console("MboxSend(): Conditional send failed, returning -2\n");
@@ -279,25 +415,25 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int condSend){
         }
 
         // Initialize process details
-        mboxProc mproc;
-        mproc.nextMboxProc = NULL;
-        mproc.pid = getpid();
-        mproc.msg_ptr = msg_ptr;
-        mproc.msg_length = msg_size;
+        mboxProc mailboxProcess;
+        mailboxProcess.nextMboxProc = NULL;
+        mailboxProcess.pid = getpid();
+        mailboxProcess.msg_ptr = msg_ptr;
+        mailboxProcess.msg_length = msg_size;
 
         if(debugEnabled())
-            USLOSS_Console("MboxSend(): All slots are full, blocking pid %d\n", mproc.pid);
+            USLOSS_Console("MboxSend(): All slots are full, blocking pid %d\n", mailboxProcess.pid);
 
-        appendProcessToQueue(&box->blockedProcsSend, &mproc);
+        appendProcessToQueue(&mailbox->blockedProcsSend, &mailboxProcess);
 
         blockMe(FULL_BOX);
         disableInterrupts();
 
         // Return -3 if the process zap'd or the mailbox released whil blocked on the mailbox
-        if(isZapped() || box->status == INACTIVE){
+        if(isZapped() || mailbox->status == INACTIVE){
             if(debugEnabled())
                 USLOSS_Console("MboxSend(): process %d was zapped while blocked on a send, returning -3\n",
-                               mproc.pid);
+                               mailboxProcess.pid);
             enableInterrupts();
             return -3;
         }
@@ -319,8 +455,8 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int condSend){
 
     // Create a new slot and add message to it
     int slotId = findAndInitializeFreeMailSlot(msg_ptr, msg_size);
-    slotPtr slot = &MailSlotTable[slotId];
-    appendProcessToQueue(&box->slots, slot);    // Add the slot to the mailbox
+    slotPtr newSlot = &MailSlotTable[slotId];
+    appendProcessToQueue(&mailbox->slots, newSlot);    // Add the slot to the mailbox
 
     enableInterrupts();
     return 0;
@@ -487,128 +623,7 @@ int receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve){
 }
 
 
-
-/* ------------------------------------------------------------------------
-   Name - MboxSend
-   Purpose - Put a message into a slot for the indicated mailbox.
-             Block the sending process if no slot available.
-   Parameters - mailbox id, pointer to data of msg, # of bytes in msg.
-   Returns - zero if successful, -1 if invalid args.
-   Side Effects - none.
-   ----------------------------------------------------------------------- */
-int MboxSend(int mbox_id, void *msg_ptr, int msg_size)
-{
-    return send(mbox_id, msg_ptr, msg_size, 0);
-} /* MboxSend */
-
-
-/* ------------------------------------------------------------------------
-   Name - MboxCondSend
-   Purpose - Put a message into a slot for the indicated mailbox.
-   Parameters - mailbox id, pointer to data of msg, # of bytes in msg.
-   Returns - zero if successful, -1 if invalid args, -2 if message not sent
-   Side Effects - none.
-   ----------------------------------------------------------------------- */
-int MboxCondSend(int mbox_id, void *msg_ptr, int msg_size)
-{
-    return send(mbox_id, msg_ptr, msg_size, 1);
-} /* MboxCondSend */
-
-
-/* ------------------------------------------------------------------------
-   Name - MboxReceive
-   Purpose - Get a msg from a slot of the indicated mailbox.
-             Block the receiving process if no msg available.
-   Parameters - mailbox id, pointer to put data of msg, max # of bytes that
-                can be received.
-   Returns - actual length of msg if successful, -1 if invalid args.
-   Side Effects - none.
-   ----------------------------------------------------------------------- */
-int MboxReceive(int mbox_id, void *msg_ptr, int msg_size)
-{
-    return receive(mbox_id, msg_ptr, msg_size, 0);
-} /* MboxReceive */
-
-/* ------------------------------------------------------------------------
-   Name - MboxCondReceive
-   Purpose - Get a msg from a slot of the indicated mailbox.
-   Parameters - mailbox id, pointer to put data of msg, max # of bytes that
-                can be received.
-   Returns - actual size of msg if successful, -1 if invalid args,
-                -2 if receive failed.
-   Side Effects - none.
-   ----------------------------------------------------------------------- */
-int MboxCondReceive(int mbox_id, void *msg_ptr, int msg_size)
-{
-    return receive(mbox_id, msg_ptr, msg_size, 1);
-} /* MboxCondReceive */
-
-
-/* ------------------------------------------------------------------------
-   Name - MboxRelease
-   Purpose - Release a mailbox
-   Parameters - id of the mailbox that needs to be released
-   Returns - -1 if the mbox_id is invalid, -3 if called was zap'd,
-                0 otherwise
-   Side Effects - Zaps any processes that are blocked on the mailbox
-   ----------------------------------------------------------------------- */
-int MboxRelease(int mbox_id){
-
-    disableInterrupts();
-    makeSureCurrentFunctionIsInKernelMode("MboxRelease():");
-
-    // Check if the mailboxID is invalid
-    if(mbox_id < 0 || mbox_id >= MAXMBOX){
-        if(debugEnabled())
-            USLOSS_Console("MboxRelease(): Called with invalid m_boxID: %d, returning -1\n",
-                            mbox_id);
-        return -1;
-    }
-
-    // Get the mailbox
-    mailbox *box = &MailBoxTable[mbox_id];
-
-    // Check if the mailbox is in use
-    if(box == NULL || box->status == INACTIVE){
-        if (debugEnabled())
-            USLOSS_Console("MboxRelease(): Mailbox %d is already released, returning -1\n",
-                            mbox_id);
-        return -1;
-    }
-
-    // Empty all the slots in the mailbox
-    while (box->slots.length > 0){
-        slotPtr slot = (slotPtr)popFromQueue(&box->slots);
-        initializeSlot(slot->slotID);
-    }
-
-    // Empty the mailbox itself
-    initializeBox(mbox_id);
-
-    if (debugEnabled())
-        USLOSS_Console("MboxRelease: realsed mailbox %d\n", mbox_id);
-
-    // Unblock any processes that were blocked on a send
-    while (box->blockedProcsSend.length > 0){
-        mboxProcPtr proc = (mboxProcPtr)popFromQueue(&box->blockedProcsSend);
-        unblockProc(proc->pid);
-        disableInterrupts();
-    }
-
-    // Unblock any processes that were blocked on a recieve
-    while (box->blockedProcsRecieve.length > 0){
-        mboxProcPtr proc = (mboxProcPtr)popFromQueue(&box->blockedProcsRecieve);
-        unblockProc(proc->pid);
-        disableInterrupts();
-    }
-
-    enableInterrupts();
-    return 0;
-
-}
-
-
-int checkmbox_id(int mbox_id){
+int isBadMBoxID(int mbox_id){
     return (mbox_id < 0 || mbox_id >= MAXMBOX);
 }
 

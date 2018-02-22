@@ -182,6 +182,11 @@ void* peekAtHead(processQueue *queue) {
     return queue->headProcess;
 }
 
+extern void disableInterrupts(void);
+extern void enableInterrupts(void);
+extern void makeSureCurrentFunctionIsInKernelMode(char *);
+extern int debugEnabled();
+
 #endif /* GRANDPARENT_H */
 
 

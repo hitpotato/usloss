@@ -6,10 +6,7 @@
 
 
 extern int debugflag2;
-extern void disableInterrupts(void);
-extern void enableInterrupts(void);
-extern void makeSureCurrentFunctionIsInKernelMode(char *);
-extern int debugEnabled();
+
 
 #define CLOCKBOX 0
 #define DISKBOX 1
@@ -37,7 +34,7 @@ extern int waitDevice(int type, int unit, int *status){
         USLOSS_Console("waitDevice(): Invalid device type: %d. Halting...\n", type);
         USLOSS_Halt(1);
     }
-    
+
 
     IOblocked++;
     MboxReceive(IOmailboxes[box+unit], status, sizeof(int));
