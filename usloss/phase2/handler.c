@@ -37,8 +37,7 @@ extern int waitDevice(int type, int unit, int *status){
         USLOSS_Console("waitDevice(): Invalid device type: %d. Halting...\n", type);
         USLOSS_Halt(1);
     }
-
-    USLOSS_Console("Bos is: %d, unit is: %d\n", box, unit);
+    
 
     IOblocked++;
     MboxReceive(IOmailboxes[box+unit], status, sizeof(int));
