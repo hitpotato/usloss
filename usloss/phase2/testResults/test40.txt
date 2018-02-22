@@ -2,7 +2,7 @@ start2(): started
 start2(): MboxCreate returned id = 7
 start2(): Attempting to receive message from mailbox 7, but it is blocked
           because the slots are empty.
-          Later, it should fail due to the buffer size being too small.
+          Later, it should fail due to the buffer length being too small.
 
 XXp1(): started
 XXp1(): arg = `'

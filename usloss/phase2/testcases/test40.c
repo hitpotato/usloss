@@ -1,8 +1,8 @@
 
-/* Another test of receive buffer size being too small.  In this case,
+/* Another test of receive buffer length being too small.  In this case,
  * the receiving process is blocked first since there are no messages.
  * When the message is sent later, the receiver should get the return
- * result that indicates the receive buffer size is too small.
+ * result that indicates the receive buffer length is too small.
  */
 
 #include <stdio.h>
@@ -38,7 +38,7 @@ int start2(char *arg)
                    mbox_id);
     USLOSS_Console("but it is blocked\n");
     USLOSS_Console("          because the slots are empty.\n");
-    USLOSS_Console("          Later, it should fail due to the buffer size ");
+    USLOSS_Console("          Later, it should fail due to the buffer length ");
     USLOSS_Console("being too small.\n");
 
     result = MboxReceive(mbox_id, buffer, sizeof(buffer));

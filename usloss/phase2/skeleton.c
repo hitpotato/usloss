@@ -74,7 +74,7 @@ int start1(char *arg)
 /* ------------------------------------------------------------------------
    Name - MboxCreate
    Purpose - gets a free mailbox from the table of mailboxes and initializes it 
-   Parameters - maximum number of slots in the mailbox and the max size of a msg
+   Parameters - maximum number of slots in the mailbox and the max length of a msg
                 sent to the mailbox.
    Returns - -1 to indicate that no mailbox was created, or a value >= 0 as the
              mailbox id.
@@ -106,7 +106,7 @@ int MboxSend(int mbox_id, void *msg_ptr, int msg_size)
              Block the receiving process if no msg available.
    Parameters - mailbox id, pointer to put data of msg, max # of bytes that
                 can be received.
-   Returns - actual size of msg if successful, -1 if invalid args.
+   Returns - actual length of msg if successful, -1 if invalid args.
    Side Effects - none.
    ----------------------------------------------------------------------- */
 int MboxReceive(int mbox_id, void *msg_ptr, int msg_size)

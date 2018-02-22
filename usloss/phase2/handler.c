@@ -5,6 +5,13 @@
 
 extern int debugflag2;
 
+#define CLOCKBOX 0
+#define DISKBOX 1
+#define TERMBOX 3
+
+int IOmailboxes[7];     // mboxIDs for the IO devices
+int IOblocked = 0;      // number of processes blocked on IO mailboxes
+
 /* an error method to handle invalid syscalls */
 void nullsys(USLOSS_Sysargs *args)
 {

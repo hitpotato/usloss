@@ -1,6 +1,6 @@
 
 /* Send to a mailbox a message that is exactly equal to the max
- * message size specified for that mailbox when it was created.
+ * message length specified for that mailbox when it was created.
  * Then receive that message.
  */
 

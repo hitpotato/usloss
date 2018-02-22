@@ -1,8 +1,8 @@
-start2(): started, creating with size of slot too big
+start2(): started, creating with length of slot too big
 start2(): MailBoxCreate returned id = -1
 start2(): passed...
 
-start2(): creating with size of slot = -1
+start2(): creating with length of slot = -1
 start2(): MailBoxCreate returned id = -1
 start2(): passed...
 
@@ -10,7 +10,7 @@ start2(): creating with number of slots = -1
 start2(): MailBoxCreate returned id = -1
 start2(): passed...
 
-start2(): creating with number of slots = 2 and size of slots = 0
+start2(): creating with number of slots = 2 and length of slots = 0
 start2(): MailBoxCreate returned id = 7
 start2(): passed...
 
