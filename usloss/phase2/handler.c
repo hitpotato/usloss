@@ -2,9 +2,13 @@
 #include <phase1.h>
 #include <phase2.h>
 #include "message.h"
-#include "phase2.c"
+
 
 extern int debugflag2;
+extern void disableInterrupts(void);
+extern void enableInterrupts(void);
+extern void makeSureCurrentFunctionIsInKernelMode(char *);
+extern int debugEnabled();
 
 #define CLOCKBOX 0
 #define DISKBOX 1
@@ -19,7 +23,7 @@ extern int waitDevice(int type, int unit, int *status){
     disableInterrupts();
     makeSureCurrentFunctionIsInKernelMode("waitDevice()");
 
-    int box;
+    int box = -1;
     if(type == USLOSS_CLOCK_DEV)
         box = CLOCKBOX;
     else if(type == USLOSS_DISK_DEV)
@@ -122,10 +126,30 @@ void termHandler(int dev, void *arg)
 {
 
     disableInterrupts();
-    makeSureCurrentFunctionIsInKernelMode("termHandler()"); 
+    makeSureCurrentFunctionIsInKernelMode("termHandler()");
    if (DEBUG2 && debugflag2)
       USLOSS_Console("termHandler(): called\n");
 
+    // Make sure this is the terminal device
+    if(dev != USLOSS_TERM_DEV){
+        if(debugEnabled())
+            USLOSS_Console("termHandler(): Called by other device, returning\n");
+        return;
+    }
+
+    long unit = (long)arg;
+    int status;
+    int valid = USLOSS_DeviceInput(dev, unit, &status);
+
+    // Make sure the unit number is valid
+    if( valid == USLOSS_DEV_INVALID){
+        if(debugEnabled())
+            USLOSS_Console("termHandler(): Unit number invalid, returning\n");
+        return;
+    }
+
+    MboxCondSend(IOmailboxes[TERMBOX+unit], &status, sizeof(int));
+    enableInterrupts();
 
 } /* termHandler */
 
@@ -133,8 +157,26 @@ void termHandler(int dev, void *arg)
 void syscallHandler(int dev, void *arg)
 {
 
+    disableInterrupts();
+    makeSureCurrentFunctionIsInKernelMode("syscallHandler()");
    if (DEBUG2 && debugflag2)
       USLOSS_Console("syscallHandler(): called\n");
 
+    // Make Sure this is the system call device
+    if(dev != USLOSS_SYSCALL_INT){
+        if(debugEnabled())
+            USLOSS_Console("syscallHandler(): Called by other device.Returning\n");
+        return;
+    }
 
+    USLOSS_Sysargs *sysptr = (USLOSS_Sysargs*) arg;
+
+    // Check for correct system call number
+    if(sysptr->number < 0 || sysptr->number >= MAXSYSCALLS){
+        USLOSS_Console("syscallHandler(): Sys number is not valid. Halting\n", sysptr->number);
+        USLOSS_Halt(1);
+    }
+
+    nullsys((USLOSS_Sysargs*)arg);
+    enableInterrupts();
 } /* syscallHandler */

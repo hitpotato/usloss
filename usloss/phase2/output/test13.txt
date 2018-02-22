@@ -1,0 +1,4 @@
+start2(): at beginning, pid = 3
+start2(): fork'd child 4
+XXp1(): started, calling waitDevice for clock
+checkDeadlock(): numProc = 4. Only Sentinel should be left. Halting...

@@ -1,0 +1,4 @@
+start2(): started
+start2(): calling USLOSS_DeviceOutput to enable receive interrupts, control = 2
+XXp1(): started, calling waitDevice for terminal 1
+checkDeadlock(): numProc = 4. Only Sentinel should be left. Halting...

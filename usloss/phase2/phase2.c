@@ -28,10 +28,6 @@
 
 /* ------------------------- Prototypes ----------------------------------- */
 int     start1 (char *);
-void    enableInterrupts();
-void    disableInterrupts();
-int     debugEnabled();
-void    makeSureCurrentFunctionIsInKernelMode(char *name);
 int     inKernelMode();
 void    initializeBox(int i);
 void    initializeSlot(int i);
