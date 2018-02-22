@@ -2,6 +2,7 @@
 #include <phase1.h>
 #include <phase2.h>
 #include "message.h"
+#include "usyscall.h"
 
 
 extern int debugflag2;
@@ -23,7 +24,9 @@ extern int waitDevice(int type, int unit, int *status){
     disableInterrupts();
     makeSureCurrentFunctionIsInKernelMode("waitDevice()");
 
-    int box = -1;
+
+
+    int box = -10;
     if(type == USLOSS_CLOCK_DEV)
         box = CLOCKBOX;
     else if(type == USLOSS_DISK_DEV)
@@ -31,18 +34,18 @@ extern int waitDevice(int type, int unit, int *status){
     else if(type == USLOSS_TERM_DEV)
         box = TERMBOX;
     else{
-        USLOSS_Console("waitDevice(): Invalid device type: %d. Halting.\n", type);
+        USLOSS_Console("waitDevice(): Invalid device type: %d. Halting...\n", type);
         USLOSS_Halt(1);
     }
+
+    USLOSS_Console("Bos is: %d, unit is: %d\n", box, unit);
 
     IOblocked++;
     MboxReceive(IOmailboxes[box+unit], status, sizeof(int));
     IOblocked--;
 
-    enableInterrupts();
-
-    // Return -1 if we were zapped while waiting
-    if (isZapped())
+    enableInterrupts(); // re-enable interrupts
+    if(isZapped())
         return -1;
 
     return 0;
@@ -51,7 +54,7 @@ extern int waitDevice(int type, int unit, int *status){
 /* an error method to handle invalid syscalls */
 void nullsys(USLOSS_Sysargs *args)
 {
-    USLOSS_Console("nullsys(): Invalid syscall. Halting...\n");
+    USLOSS_Console("nullsys(): Invalid syscall %d. Halting...\n", args->number);
     USLOSS_Halt(1);
 } /* nullsys */
 
@@ -72,11 +75,12 @@ void clockHandler2(int dev, void *arg)
     }
 
     // Send message at intervals of 5
+    int whatever;
     static int count = 0;
     count++;
     if (count == 5){
         int status;
-        USLOSS_DeviceInput(dev, 0, &status);    // Get the status
+        whatever = USLOSS_DeviceInput(dev, 0, &status);    // Get the status
         MboxCondSend(IOmailboxes[CLOCKBOX], &status, sizeof(int));
         count = 0;      // Reset the count
     }
@@ -173,10 +177,31 @@ void syscallHandler(int dev, void *arg)
 
     // Check for correct system call number
     if(sysptr->number < 0 || sysptr->number >= MAXSYSCALLS){
-        USLOSS_Console("syscallHandler(): Sys number is not valid. Halting\n", sysptr->number);
+        USLOSS_Console("syscallHandler(): sys number %d is wrong.  Halting...\n", sysptr->number);
         USLOSS_Halt(1);
     }
 
     nullsys((USLOSS_Sysargs*)arg);
     enableInterrupts();
 } /* syscallHandler */
+
+/* ------------------------------------------------------------------------
+   Name - check_io
+   Purpose - Determine if there any processes blocked on any of the
+             interrupt mailboxes.
+   Returns - 1 if one (or more) processes are blocked; 0 otherwise
+   Side Effects - none.
+
+   Note: Do nothing with this function until you have successfully completed
+   work on the interrupt handlers and their associated mailboxes.
+   ------------------------------------------------------------------------ */
+int check_io(void)
+{
+    if (debugEnabled())
+        USLOSS_Console("check_io(): called\n");
+
+    if(IOblocked > 0)
+        return 1;
+
+    return 0;
+} /* check_io */

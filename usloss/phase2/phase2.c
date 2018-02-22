@@ -15,15 +15,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <message.h>
+#include <handler.c>
 
 //For cLion
 
 
-#include "handler.c"
-#include "phase1.h"
-#include "usyscall.h"
-#include "usloss.h"
 
 
 /* ------------------------- Prototypes ----------------------------------- */
@@ -614,22 +612,6 @@ int checkmbox_id(int mbox_id){
     return (mbox_id < 0 || mbox_id >= MAXMBOX);
 }
 
-/* ------------------------------------------------------------------------
-   Name - check_io
-   Purpose - Determine if there any processes blocked on any of the
-             interrupt mailboxes.
-   Returns - 1 if one (or more) processes are blocked; 0 otherwise
-   Side Effects - none.
-
-   Note: Do nothing with this function until you have successfully completed
-   work on the interrupt handlers and their associated mailboxes.
-   ------------------------------------------------------------------------ */
-int check_io(void)
-{
-    if (DEBUG2 && debugflag2)
-        USLOSS_Console("check_io(): called\n");
-    return 0;
-} /* check_io */
 
 /* ------------------------------------------------------------------------
    Name -           initializeBox
@@ -725,6 +707,7 @@ int debugEnabled(){
    ------------------------------------------------------------------------ */
 void disableInterrupts()
 {
+    int whatever;
     // Check to make sure we are in kernel mode first
     if(!inKernelMode()) {
         USLOSS_Console("Kernel Error: Not in kernel mode, cannot disable interrupts\n");
@@ -732,7 +715,7 @@ void disableInterrupts()
     }
 
     else
-        USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_INT );
+        whatever = USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_INT );
 } /* disableInterrupts */
 
 /* ------------------------------------------------------------------------
@@ -744,6 +727,7 @@ void disableInterrupts()
    ------------------------------------------------------------------------ */
 void enableInterrupts()
 {
+    int whatever;
     // turn the interrupts ON iff we are in kernel mode
     if(!inKernelMode()) {
         //not in kernel mode
@@ -751,5 +735,5 @@ void enableInterrupts()
         USLOSS_Halt(1);
     }
     else
-        USLOSS_PsrSet( USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT );
+        whatever = USLOSS_PsrSet( USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT );
 } /* enableInterrupts */
