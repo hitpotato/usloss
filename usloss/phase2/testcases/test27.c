@@ -39,7 +39,7 @@ int start2(char *arg)
     kidpid = fork1("XXp2a", XXp2, "XXp2a", 2 * USLOSS_MIN_STACK, 4); //5
     kidpid = fork1("XXp2b", XXp2, "XXp2b", 2 * USLOSS_MIN_STACK, 3); //6
     kidpid = fork1("XXp2c", XXp2, "XXp2c", 2 * USLOSS_MIN_STACK, 2); //7
-    /* mailbox queue -> 7 -> ->6 ->5 -> 4 when released they all get released
+    /* mailbox processQueue -> 7 -> ->6 ->5 -> 4 when released they all get released
      * then dispatcher called will run again in order 7, 6, 5, 4
      */
     pausepid = fork1("XXp4",  XXp4, "XXp4",  2 * USLOSS_MIN_STACK, 5);

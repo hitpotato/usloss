@@ -175,6 +175,49 @@ int MboxCreate(int slots, int slot_size)
 } /* MboxCreate */
 
 
+int sendMessageToProcess(mboxProcPtr proc, void *msg_ptr, int msg_size){
+
+}
+
+
+int send(int mbox_id, void *msg_ptr, int msg_size, int conditional){
+
+    disableInterrupts();
+    makeSureCurrentFunctionIsInKernelMode("MboxSend()");
+    if(debugEnabled())
+        USLOSS_Console("send(): Called with mbox_id: %d, msg_ptr: %d, msg_size: %d, conditional: %d\n",
+                        mbox_id, msg_ptr, msg_size, conditional);
+
+    // Check for invalid mbox_id
+    if(mbox_id < 0 || mbox_id >= MAXMBOX){
+        if(debugEnabled())
+            USLOSS_Console("MboxSend(): Called with invalid mbox_id: %d, returning -1\n", mbox_id);
+        enableInterrupts();
+        return -1;
+    }
+
+    // Get the mailbox
+    mailbox *box = &MailBoxTable[mbox_id];
+
+    // Check for Invalid Arguments
+    if(box->status == INACTIVE || msg_size < 0 || msg_size > box->slotSize){
+        if(debugEnabled())
+            USLOSS_Console("MboxSend(): Called with an invalid argument, returning -1\n", mbox_id);
+        enableInterrupts();
+        return -1;
+    }
+
+    // Handle blocked reciever
+    if(box->blockedProcsRecieve.length > 0 && (box->slots.length < box->totalSlots || box->totalSlots == 0)){
+        mboxProcPtr proc = (mboxProcPtr)popFromQueue(&box->blockedProcsRecieve);
+
+        // Give the message to the sender
+        int result =
+    }
+}
+
+
+
 /* ------------------------------------------------------------------------
    Name - MboxSend
    Purpose - Put a message into a slot for the indicated mailbox.
@@ -185,10 +228,6 @@ int MboxCreate(int slots, int slot_size)
    ----------------------------------------------------------------------- */
 int MboxSend(int mbox_id, void *msg_ptr, int msg_size)
 {
-    disableInterrupts();
-    makeSureCurrentFunctionIsInKernelMode("MboxSend()");
-    if(debugEnabled())
-        
     return 0;
 } /* MboxSend */
 
