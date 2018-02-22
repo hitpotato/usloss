@@ -21,6 +21,9 @@
 
 
 #include "handler.c"
+#include "phase1.h"
+#include "usyscall.h"
+#include "usloss.h"
 
 
 /* ------------------------- Prototypes ----------------------------------- */
@@ -30,8 +33,8 @@ void    disableInterrupts();
 int     debugEnabled();
 void    makeSureCurrentFunctionIsInKernelMode(char *name);
 int     inKernelMode();
-void initializeBox(int i);
-void initializeSlots(int i);
+void    initializeBox(int i);
+void    initializeSlots(int i);
 
 
 
