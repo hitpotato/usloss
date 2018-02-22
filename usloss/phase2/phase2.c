@@ -35,6 +35,7 @@ void    makeSureCurrentFunctionIsInKernelMode(char *name);
 int     inKernelMode();
 void    initializeBox(int i);
 void    initializeSlot(int i);
+int     checkmbox_id(int mbox_id);
 
 
 
@@ -241,7 +242,7 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int condSend){
                         mbox_id, msg_ptr, msg_size, condSend);
 
     // Check for invalid mbox_id
-    if(mbox_id < 0 || mbox_id >= MAXMBOX){
+    if(checkmbox_id(mbox_id)){
         if(debugEnabled())
             USLOSS_Console("MboxSend(): Called with invalid mbox_id: %d, returning -1\n", mbox_id);
         enableInterrupts();
@@ -610,6 +611,11 @@ int MboxRelease(int mbox_id){
     enableInterrupts();
     return 0;
 
+}
+
+
+int checkmbox_id(int mbox_id){
+    return (mbox_id < 0 || mbox_id >= MAXMBOX);
 }
 
 /* ------------------------------------------------------------------------
