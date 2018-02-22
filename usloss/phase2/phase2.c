@@ -14,15 +14,14 @@
 #include <phase2.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <message.h>
 
 //For cLion
-#include "usloss.h"
-#include "phase2.h"
-#include "message.h"
-#include "phase1.h"
-#include "usyscall.h"
+
+
 #include "handler.c"
+
 
 /* ------------------------- Prototypes ----------------------------------- */
 int     start1 (char *);
@@ -31,6 +30,9 @@ void    disableInterrupts();
 int     debugEnabled();
 void    makeSureCurrentFunctionIsInKernelMode(char *name);
 int     inKernelMode();
+void initializeBox(int i);
+void initializeSlots(int i);
+
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -175,8 +177,55 @@ int MboxCreate(int slots, int slot_size)
 } /* MboxCreate */
 
 
-int sendMessageToProcess(mboxProcPtr proc, void *msg_ptr, int msg_size){
+int findAndInitializeFreeMailSlot(void *msg_ptr, int msg_size){
 
+    disableInterrupts();
+    makeSureCurrentFunctionIsInKernelMode("findAndInitializeFreeMailSlot()");
+
+    // If the index is taken, find the first available index
+    if(nextSlotID >= MAXSLOTS || MailSlotTable[nextSlotID].status == USED){
+        for(int i = 0; i < MAXSLOTS; i++){
+            if(MailSlotTable[i].status == EMPTY){
+                nextSlotID = i;
+                break;
+            }
+        }
+    }
+
+    slotPtr slot = &MailSlotTable[nextSlotID];
+    slot->slotID = nextSlotID++;
+    slot->status = USED;
+    slot->messageSize = msg_size;
+    numSlots++;
+
+    memcpy(slot->message, msg_ptr, msg_size);
+
+    if(debugEnabled())
+        USLOSS_Console("createSlot(): Created new slot for message size: %d, slotID: %d, total slots: %d\n",
+                        msg_size, slot->slotID, numSlots);
+
+    return slot->slotID;
+}
+
+
+int sendMessageToProcess(mboxProcPtr proc, void *msg_ptr, int msg_length){
+
+    // Check for error cases
+    if(proc == NULL || proc->msg_ptr == NULL || proc->msg_length < msg_length){
+        if(debugEnabled())
+            USLOSS_Console("sendMessageToProcess(): Invalid arguments, returning -1\n");
+        proc->msg_length = -1;
+        return -1;
+    }
+
+    // Copy the message
+    memcpy(proc->msg_ptr, msg_ptr, msg_length);
+    proc->msg_length = msg_length;
+
+    if(debugEnabled())
+        USLOSS_Console("sendToProc(): Gave message size %d to process %d\n", msg_length, proc->pid);
+
+    return 0;
 }
 
 
@@ -212,8 +261,71 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int conditional){
         mboxProcPtr proc = (mboxProcPtr)popFromQueue(&box->blockedProcsRecieve);
 
         // Give the message to the sender
-        int result =
+        int result = sendMessageToProcess(proc, msg_ptr, msg_size);
+        if(debugEnabled())
+            USLOSS_Console("MboxSend(): Unblocking process %d that was blocked on recieve\n", proc->pid);
+        unblockProc(proc->pid);
+        enableInterrupts();
+        if(result < 0)
+            return -1;
+        return 0;
     }
+
+    // If all the slots are taken, block caller until slots are avaialable
+    if(box->slots.length == box->totalSlots){
+        if(conditional){
+            if(debugEnabled())
+                USLOSS_Console("MboxSend(): Conditional send failed, returning -2\n");
+            enableInterrupts();
+            return -2;
+        }
+
+        // Initialize process details
+        mboxProc mproc;
+        mproc.nextMboxProc = NULL;
+        mproc.pid = getpid();
+        mproc.msg_ptr = msg_ptr;
+        mproc.msg_length = msg_size;
+
+        if(debugEnabled())
+            USLOSS_Console("MboxSend(): All slots are full, blocking pid %d\n", mproc.pid);
+
+        appendProcessToQueue(&box->blockedProcsSend, &mproc);
+
+        blockMe(FULL_BOX);
+        disableInterrupts();
+
+        // Return -3 if the process zap'd or the mailbox released whil blocked on the mailbox
+        if(isZapped() || box->status == INACTIVE){
+            if(debugEnabled())
+                USLOSS_Console("MboxSend(): process %d was zapped while blocked on a send, returning -3\n",
+                               mproc.pid);
+            enableInterrupts();
+            return -3;
+        }
+        enableInterrupts();
+        return 0;
+    }
+
+    // If the mail slot table overflows, that is an error that should halt USLOSS
+    if(numSlots == MAXSLOTS){
+        if(conditional){
+            if(debugEnabled())
+                USLOSS_Console("MboxSend(): No slots available for conditional send to box %d, returning "
+                                       "-2\n", mbox_id);
+            return -2;
+        }
+        USLOSS_Console("MboxSend(): Mail slot table overflow. Halting...\n");
+        USLOSS_Halt(1);
+    }
+
+    // Create a new slot and add message to it
+    int slotId = findAndInitializeFreeMailSlot(msg_ptr, msg_size);
+    slotPtr slot = &MailSlotTable[slotId];
+    appendProcessToQueue(&box->slots, slot);    // Add the slot to the mailbox
+
+    enableInterrupts();
+    return 0;
 }
 
 
@@ -228,8 +340,10 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int conditional){
    ----------------------------------------------------------------------- */
 int MboxSend(int mbox_id, void *msg_ptr, int msg_size)
 {
-    return 0;
+    return send(mbox_id, msg_ptr, msg_size, 0);
 } /* MboxSend */
+
+
 
 
 /* ------------------------------------------------------------------------
@@ -329,7 +443,7 @@ void makeSureCurrentFunctionIsInKernelMode(char *name)
 {
     if(!inKernelMode()) {
         USLOSS_Console("%s: called while in user mode, by process %d. Halting...\n",
-                       name, Current->pid);
+                       name, getpid());
         USLOSS_Halt(1);
     }
 } /* makeSureCurrentFunctionIsInKernelMode */

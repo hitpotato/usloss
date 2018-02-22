@@ -1,4 +1,7 @@
 
+#ifndef MESSAGE_H
+#define MESSAGE_H
+
 #include "phase2.h"
 #include <stdlib.h>
 
@@ -178,6 +181,8 @@ void* peekAtHead(processQueue *queue) {
 
     return queue->headProcess;
 }
+
+#endif /* GRANDPARENT_H */
 
 
 
