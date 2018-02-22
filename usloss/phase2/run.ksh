@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-resultsDirectory="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase2/testResults"
+resultsDirectory="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase2/testResults"
 
 if [ "$#" -eq 0 ] 
 then
