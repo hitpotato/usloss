@@ -32,7 +32,7 @@ typedef struct mboxProc     mboxProc;
 typedef struct processQueue processQueue;
 
 int IOmailboxes[7];     // mboxIDs for the IO devices
-int IOblocked = 0;      // number of processes blocked on IO mailboxes
+
 
 struct mboxProc {
     mboxProcPtr     nextMboxProc;

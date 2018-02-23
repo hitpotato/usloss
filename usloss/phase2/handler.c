@@ -8,6 +8,7 @@
 
 
 extern int debugflag2;
+int IOblocked = 0;      // number of processes blocked on IO mailboxes
 
 // Calls recieve on the mailbox associated with the given unit of the device type
 extern int waitDevice(int type, int unit, int *status){
@@ -49,6 +50,13 @@ void nullsys(USLOSS_Sysargs *args)
 } /* nullsys */
 
 
+/* ------------------------------------------------------------------------
+   Name - diskHandler
+   Purpose - Handle clock calls
+   Returns - nothing
+   Side Effects - nothing
+
+   ------------------------------------------------------------------------ */
 void clockHandler2(int dev, void *arg)
 {
 
@@ -81,7 +89,13 @@ void clockHandler2(int dev, void *arg)
 
 } /* clockHandler */
 
+/* ------------------------------------------------------------------------
+   Name - diskHandler
+   Purpose - Handle disk calls
+   Returns - nothing
+   Side Effects - May halt USLOSS.
 
+   ------------------------------------------------------------------------ */
 void diskHandler(int dev, void *arg)
 {
 
@@ -115,7 +129,13 @@ void diskHandler(int dev, void *arg)
 
 } /* diskHandler */
 
+/* ------------------------------------------------------------------------
+   Name - termHandler
+   Purpose - Handle terminal calls
+   Returns - nothing
+   Side Effects - May halt USLOSS.
 
+   ------------------------------------------------------------------------ */
 void termHandler(int dev, void *arg)
 {
 
@@ -147,7 +167,13 @@ void termHandler(int dev, void *arg)
 
 } /* termHandler */
 
+/* ------------------------------------------------------------------------
+   Name - syscallHandler
+   Purpose - Handle system calls
+   Returns - nothing
+   Side Effects - May halt USLOSS.
 
+   ------------------------------------------------------------------------ */
 void syscallHandler(int dev, void *arg)
 {
 

@@ -1,10 +1,6 @@
 start2(): started
 start2(): calling USLOSS_DeviceOutput to enable receive interrupts, control = 2
 XXp0(): started, calling waitDevice for terminal 0
-Bos is: 3, unit is: 0
 XXp1(): started, calling waitDevice for terminal 1
-Bos is: 3, unit is: 1
 XXp2(): started, calling waitDevice for terminal 2
-Bos is: 3, unit is: 2
 XXp3(): started, calling waitDevice for terminal 3
-Bos is: 3, unit is: 3
