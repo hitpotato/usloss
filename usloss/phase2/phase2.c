@@ -17,10 +17,6 @@
 #include <string.h>
 
 #include <message.h>
-#include <handler.c>
-
-//For cLion
-
 
 
 
@@ -363,6 +359,14 @@ int sendMessageToProcess(mboxProcPtr process, void *msg_ptr, int msg_length){
 }
 
 
+/* ------------------------------------------------------------------------
+   Name - send
+   Purpose - Put a message into a slot for the given mailbox.
+   Parameters - mailbox id, pointer to msg, size of message,
+                type of send ( 0 for regular, 1 for conditional)
+   Returns - 0 if successful, -1 if invalid args, -2 if not sent.
+   Side Effects - none.
+   ----------------------------------------------------------------------- */
 int send(int mbox_id, void *msg_ptr, int msg_size, int condSend){
 
     disableInterrupts();
@@ -462,6 +466,16 @@ int send(int mbox_id, void *msg_ptr, int msg_size, int condSend){
     return 0;
 }
 
+
+/* ------------------------------------------------------------------------
+   Name - receive
+   Purpose - Get a message from a slot of the given mailbox.
+   Parameters - mailbox id, pointer to message, size of message that
+                can be received, type of receive (0 for regular, 1 for conditional)
+   Returns - size of message if successfull, otherwise, -1 if invalid args,
+                -2 if conditional receive failed.
+   Side Effects - none.
+   ----------------------------------------------------------------------- */
 int receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve){
 
     disableInterrupts();
@@ -476,11 +490,11 @@ int receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve){
         return -1;
     }
 
-    mailbox *box = &MailBoxTable[mbox_id];
+    mailbox *mailbox = &MailBoxTable[mbox_id];
     int size;
 
     // Make sure the box is active
-    if(box->status == INACTIVE){
+    if(mailbox->status == INACTIVE){
         if(debugEnabled())
             USLOSS_Console("MboxRecieve(): Invalid box id: %d, returning -1\n,", mbox_id);
         enableInterrupts();
@@ -488,19 +502,19 @@ int receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve){
     }
 
     // If mailbox has 0 slots
-    if(box->totalSlots == 0){
-        mboxProc mproc;
+    if(mailbox->totalSlots == 0){
+        mboxProc mailboxProcess;
 
         // Initialize mailbox values
-        mproc.nextMboxProc  = NULL;
-        mproc.pid           = getpid();
-        mproc.msg_ptr       = msg_ptr;
-        mproc.msg_length    = msg_length;
+        mailboxProcess.nextMboxProc  = NULL;
+        mailboxProcess.pid           = getpid();
+        mailboxProcess.msg_ptr       = msg_ptr;
+        mailboxProcess.msg_length    = msg_length;
 
         // If there is a process that has sent, unblock it and get its message
-        if(box->blockedProcsSend.length > 0){
-            mboxProcPtr proc = (mboxProcPtr)popFromQueue(&box->blockedProcsSend);
-            sendMessageToProcess(&mproc, proc->msg_ptr, proc->msg_length);
+        if(mailbox->blockedProcsSend.length > 0){
+            mboxProcPtr proc = (mboxProcPtr)popFromQueue(&mailbox->blockedProcsSend);
+            sendMessageToProcess(&mailboxProcess, proc->msg_ptr, proc->msg_length);
             if(debugEnabled())
                 USLOSS_Console("MboxRecieve(): Unblocking process %d that was blocked on "
                                        "send to 0 slot mailbox\n", proc->pid);
@@ -511,45 +525,45 @@ int receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve){
         else if(!condRecieve){
             if(debugEnabled())
                 USLOSS_Console("MboxRecieve(): Blocking process %d on 0 slot mailbox\n"
-                ,mproc.pid);
-            appendProcessToQueue(&box->blockedProcsRecieve, &mproc);
+                ,mailboxProcess.pid);
+            appendProcessToQueue(&mailbox->blockedProcsRecieve, &mailboxProcess);
             blockMe(NO_MESSAGES);
 
             // If the process is zapped or the mailbox is inactive
-            if(isZapped() || box->status == INACTIVE){
+            if(isZapped() || mailbox->status == INACTIVE){
                 if(debugEnabled())
                     USLOSS_Console("MboxSend(): Process %d was zapped while blocked on a send,"
-                                           "returning -3\n", mproc.pid);
+                                           "returning -3\n", mailboxProcess.pid);
                 enableInterrupts();
                 return -3;
             }
         }
 
         enableInterrupts();
-        return mproc.msg_length;
+        return mailboxProcess.msg_length;
     }
 
     // Block if there are no messages available
-    if(box->slots.length == 0){
-        mboxProc mproc;
+    if(mailbox->slots.length == 0){
+        mboxProc mailboxProcess;
 
         // Initialize mailbox values
-        mproc.nextMboxProc      = NULL;
-        mproc.pid               = getpid();
-        mproc.msg_ptr           = msg_ptr;
-        mproc.msg_length        = msg_length;
-        mproc.messageRecieved   = NULL;
+        mailboxProcess.nextMboxProc      = NULL;
+        mailboxProcess.pid               = getpid();
+        mailboxProcess.msg_ptr           = msg_ptr;
+        mailboxProcess.msg_length        = msg_length;
+        mailboxProcess.messageRecieved   = NULL;
 
         // Check for a 0 slot mailbox
-        if(box->totalSlots == 0 && box->blockedProcsSend.length > 0){
-            mboxProcPtr proc = (mboxProcPtr)popFromQueue(&box->blockedProcsSend);
-            sendMessageToProcess(&mproc, proc->msg_ptr, proc->msg_length);
+        if(mailbox->totalSlots == 0 && mailbox->blockedProcsSend.length > 0){
+            mboxProcPtr proc = (mboxProcPtr)popFromQueue(&mailbox->blockedProcsSend);
+            sendMessageToProcess(&mailboxProcess, proc->msg_ptr, proc->msg_length);
             if(debugEnabled())
                 USLOSS_Console("MboxRecieve(): Unblocking process %d tht was blocked on send to"
                                        "0 slot mailbox\n", proc->pid);
             unblockProc(proc->pid);
             enableInterrupts();
-            return mproc.msg_length;
+            return mailboxProcess.msg_length;
         }
 
         // On conditional receive, return -2
@@ -562,26 +576,26 @@ int receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve){
 
         if(debugEnabled())
             USLOSS_Console("MboxRecieve(): No messages available, blocking pid %d...\n",
-                           mproc.pid);
+                           mailboxProcess.pid);
 
         // Append to the queue of blocked processes on receive
-        appendProcessToQueue(&box->blockedProcsRecieve, &mproc);
+        appendProcessToQueue(&mailbox->blockedProcsRecieve, &mailboxProcess);
         blockMe(NO_MESSAGES);
         disableInterrupts();
 
         // Return -3 if the process is zap'd or the mailbox released while blocked on the mailbox
-        if(isZapped() || box->status == INACTIVE){
+        if(isZapped() || mailbox->status == INACTIVE){
             if(debugEnabled())
                 USLOSS_Console("MboxRecieve(): Either process %d was zapped, mailbox was freed"
-                                       "or we did not receive message, returning -2", mproc.pid);
+                                       "or we did not receive message, returning -2", mailboxProcess.pid);
             enableInterrupts();
             return -3;
         }
 
-        return mproc.msg_length;
+        return mailboxProcess.msg_length;
     }
     else
-        slot = popFromQueue(&box->slots);   // Get the mailSlot
+        slot = popFromQueue(&mailbox->slots);   // grab the mailSlot
 
     // Check if the slot has enough space
     if(slot == NULL || slot->status == EMPTY || msg_length < slot->messageSize){
@@ -603,13 +617,13 @@ int receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve){
     initializeSlot(slot->slotID);
 
     // Unblock a process that was blocked on a send to this mailbox
-    if(box->blockedProcsSend.length > 0){
-        mboxProcPtr proc = (mboxProcPtr)popFromQueue(&box->blockedProcsSend);
+    if(mailbox->blockedProcsSend.length > 0){
+        mboxProcPtr proc = (mboxProcPtr)popFromQueue(&mailbox->blockedProcsSend);
 
         // Create slot for the sender's message
         int slotID = findAndInitializeFreeMailSlot(proc->msg_ptr, proc->msg_length);
         slotPtr slot = &MailSlotTable[slotID];
-        appendProcessToQueue(&box->slots, slot);
+        appendProcessToQueue(&mailbox->slots, slot);
 
         // Unblock the sender
         if(debugEnabled())
@@ -623,6 +637,14 @@ int receive(int mbox_id, void *msg_ptr, int msg_length, int condRecieve){
 }
 
 
+/* ------------------------------------------------------------------------
+   Name -           isBadMBoxID
+   Purpose -        Checks if given id is valid for a mailbox
+   Parameters -
+                    index of mailbox in the table of mailboxes
+   Returns -        nothing
+   Side Effects -   Will stop function if it returns false
+   ----------------------------------------------------------------------- */
 int isBadMBoxID(int mbox_id){
     return (mbox_id < 0 || mbox_id >= MAXMBOX);
 }
@@ -752,3 +774,108 @@ void enableInterrupts()
     else
         whatever = USLOSS_PsrSet( USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT );
 } /* enableInterrupts */
+
+/* ------------------------------------------------------------------------
+   Name -           initializeQueue
+   Purpose -        Just initialize a ready list
+   Parameters -
+                    processQueue* processQueue:
+                        Pointer to processQueue to be initialized
+                    queueType
+                        An int specifying what the processQueue is to be used for
+   Returns -        Nothing
+   Side Effects -   The passed processQueue is now no longer NULL
+   ------------------------------------------------------------------------ */
+void initializeQueue(processQueue *q, int queueType) {
+    q->headProcess  = NULL;
+    q->tailProcess  = NULL;
+    q->length       = 0;
+    q->typeOfQueue  = queueType;
+}
+
+/* ------------------------------------------------------------------------
+   Name -           appendProcessToQueue
+   Purpose -        Adds a process to the end of a processQueue
+   Parameters -
+                    processQueue* processQueue:
+                        Pointer to processQueue to be added to
+                    procPty process
+                        Pointer to the process that will be added
+   Returns -        Nothing
+   Side Effects -   The length of the processQueue increases by 1.
+   ------------------------------------------------------------------------ */
+void appendProcessToQueue(processQueue *queue, void* process) {
+
+    if (queue->headProcess == NULL && queue->tailProcess == NULL) {
+        queue->headProcess = queue->tailProcess = process;
+    }
+
+    else {
+        if (queue->typeOfQueue == SLOTQUEUE)
+            ((slotPtr)(queue->tailProcess))->nextSlotPtr = process;
+        else if (queue->typeOfQueue == PROCQUEUE)
+            ((mboxProcPtr)(queue->tailProcess))->nextMboxProc = process;
+        queue->tailProcess = process;
+    }
+
+    queue->length++;
+}
+
+/* ------------------------------------------------------------------------
+   Name -           popFromQueue
+   Purpose -        Remove and return the first element from the processQueue
+   Parameters -
+                    processQueue *processQueue
+                        A pointer to the processQueue who we want to modify
+   Returns -
+                    procPtr:
+                        Pointer to the element that we want
+   Side Effects -   Length of processQueue is decreased by 1
+   ------------------------------------------------------------------------ */
+void* popFromQueue(processQueue *queue) {
+
+    void* temp = queue->headProcess;
+
+    // If there is no headProcess element, return null
+    if (queue->headProcess == NULL) {
+        return NULL;
+    }
+
+    //  If the list is of length 1, set the first and last nodes
+    // 		equal to null to ensure that the list is represented as empty
+    if (queue->headProcess == queue->tailProcess) {
+        queue->headProcess = queue->tailProcess = NULL;
+    }
+
+    else {
+        if (queue->typeOfQueue == SLOTQUEUE)
+            queue->headProcess = ((slotPtr)(queue->headProcess))->nextSlotPtr;
+        else if (queue->typeOfQueue == PROCQUEUE)
+            queue->headProcess = ((mboxProcPtr)(queue->headProcess))->nextMboxProc;
+    }
+
+    // Decrease the length of the list  and return the headProcess element
+    queue->length--;
+    return temp;
+}
+
+
+/* ------------------------------------------------------------------------
+   Name -           peekAtHead
+   Purpose -        Returns a pointer to the first element in processQueue
+   Parameters -
+                    processQueue *processQueue
+                        The processQueue we want to look at the first element of
+   Returns -        A pointer to the headProcess of the given processQueue
+   Side Effects -   None
+   ------------------------------------------------------------------------ */
+/* Return the headProcess of the given processQueue. */
+void* peekAtHead(processQueue *queue) {
+
+    // Check to make sure that the list is not empty
+    if (queue->headProcess == NULL) {
+        return NULL;
+    }
+
+    return queue->headProcess;
+}

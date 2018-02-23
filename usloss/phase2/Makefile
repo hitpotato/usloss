@@ -5,7 +5,7 @@ ASSIGNMENT = 452phase2
 CC = gcc
 AR = ar
 
-COBJS = phase2.o
+COBJS = phase2.o handler.o
 CSRCS = ${COBJS:.o=.c}
 
 PHASE1LIB = patrickphase1
@@ -13,7 +13,7 @@ PHASE1LIB = patrickphase1
 #PHASE1LIB = phase1
 #PHASE1LIB = phase1debug
 
-HDRS = message.h
+HDRS = message.h phase1.h phase2.h
 
 INCLUDE = ${PREFIX}/include
 
@@ -52,4 +52,4 @@ clean:
 phase2.o:	message.h
 
 submit: $(CSRCS) $(HDRS) Makefile
-	tar cvzf phase2.tgz $(CSRCS) $(HDRS) handler.c Makefile
+	tar cvzf phase2.tgz $(CSRCS) $(HDRS) Makefile

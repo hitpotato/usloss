@@ -1,3 +1,5 @@
+#include <usloss.h>
+#include <usyscall.h>
 #include <stdio.h>
 #include <phase1.h>
 #include <phase2.h>
@@ -6,14 +8,6 @@
 
 
 extern int debugflag2;
-
-
-#define CLOCKBOX 0
-#define DISKBOX 1
-#define TERMBOX 3
-
-int IOmailboxes[7];     // mboxIDs for the IO devices
-int IOblocked = 0;      // number of processes blocked on IO mailboxes
 
 // Calls recieve on the mailbox associated with the given unit of the device type
 extern int waitDevice(int type, int unit, int *status){
