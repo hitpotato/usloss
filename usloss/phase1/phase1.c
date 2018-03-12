@@ -27,7 +27,7 @@ void enableInterrupts(void);
 void makeSureCurrentFunctionIsInKernelMode(char *);
 void clockHandler(int dev, void *arg);
 int readtime();
-void initializeAndEmptyProcessSlot(int);
+void emptyProcessSlot(int);
 int block(int);
 int debugEnabled();
 int findAvailableProcSlot();
@@ -79,7 +79,7 @@ void startup()
     if (debugEnabled())
         USLOSS_Console("startup(): initializing process table, ProcTable[]\n");
     for (int i = 0; i < MAXPROC; i++) {
-        initializeAndEmptyProcessSlot(i);
+        emptyProcessSlot(i);
     }
 
     //--------------------------- Initialize ReadyList -------------//
@@ -411,7 +411,7 @@ int join(int *status)
 
 
     // Blank out the childs slot in the process table
-    initializeAndEmptyProcessSlot(childPid);
+    emptyProcessSlot(childPid);
 
 
     if (Current->zapQueue.length != 0 ) {
@@ -472,7 +472,7 @@ void quit(int status)
     //      and remove them from the dead children queue as well as the process table
     while (Current->deadChildrenQueue.length > 0) {
         procPtr child = popFromQueue(&Current->deadChildrenQueue);
-        initializeAndEmptyProcessSlot(child->pid);
+        emptyProcessSlot(child->pid);
     }
 
     // If this process was zapped by others, unblock them and add them back to the ready list
@@ -485,7 +485,7 @@ void quit(int status)
 
     // If current has no parent, remove it from the process table list
     if (Current->parentPtr == NULL)
-        initializeAndEmptyProcessSlot(Current->pid);
+        emptyProcessSlot(Current->pid);
 
     // Call the p1_quit function
     p1_quit(Current->pid);
@@ -796,7 +796,7 @@ void timeSlice() {
    Returns - nothing
    Side Effects - changes ProcTable
    ----------------------------------------------------------------------- */
-void initializeAndEmptyProcessSlot(int pid) {
+void emptyProcessSlot(int pid) {
 
     makeSureCurrentFunctionIsInKernelMode("initializeAndEmptyProcessSlot()");
     disableInterrupts();

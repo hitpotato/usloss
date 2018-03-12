@@ -36,9 +36,10 @@ int spawnReal(char *, int(*)(char *), char *, int, int);
 int waitReal(int *);
 void terminateReal(int);
 
-int spawnLaunch(char *);
+int spawnLaunch(char *arg);
 
-void initializeAndEmptyProcessSlot(int);
+void emptyProcessSlot(int);
+void initializeProcessSlot(int);
 void initializeAndEmptySemaphoreSlot(int);
 
 void appendProcessToQueue3(processQueue* queue, procPtr3 process);
@@ -80,7 +81,7 @@ int start2(char *arg)
     systemCallVec[SYS_GETPID]       = getPID;
 
     for(int i = 0; i < MAXPROC; i++){
-        initializeAndEmptyProcessSlot(i);
+        emptyProcessSlot(i);
     }
 
     for(int i = 0; i < MAXSEMS; i++){
@@ -188,7 +189,7 @@ int spawnReal(char *name, int (*func)(char *), char *arg, int stack_size, int pr
     if(child->pid < 0){
         if (debug3)
             USLOSS_Console("spawnReal(): initializing proc table entry for pid %d\n", pid);
-        initializeAndEmptyProcessSlot(pid);
+        emptyProcessSlot(pid);
     }
 
     child->startFunc = func;
@@ -198,6 +199,43 @@ int spawnReal(char *name, int (*func)(char *), char *arg, int stack_size, int pr
 
     return pid;
 }
+
+int spawnLaunch(char *arg){
+
+    makeSureCurrentFunctionIsInKernelMode("spawnLaunch");
+
+    if (debug3)
+        USLOSS_Console("spawnLaunch(): launched pid = %d\n", getpid());
+
+    if (isZapped())
+        terminateReal(1);
+
+    procPtr3 proc = &ProcTable3[getpid() % MAXPROC];        // Get the process info
+
+    // If spawnReal hasn't done it yet, set up the proc table entry
+    if (proc->pid < 0){
+        if (debug3)
+            USLOSS_Console("spawnLaunch(): initializing proc table entry for pid %d\n", getpid());
+        initializeProcessSlot(getpid());
+
+        MboxReceive(proc->mboxID, 0, 0);
+    }
+
+    switchToUserMode();
+
+    if (debug3)
+        USLOSS_Console("spawnLaunch(): starting process %d...\n", proc->pid);
+
+    int status = proc->startFunc(arg);
+
+    if (debug3)
+        USLOSS_Console("spawnLaunch(): terminating process %d with status %d\n", proc->pid, status);
+
+    Terminate(status);      // Terminate the process
+    return 0;
+}
+
+
 
 /* ------------------------------------------------------------------------
    Name - makeSureCurrentFunctionIsInKernelMode
@@ -217,16 +255,29 @@ void makeSureCurrentFunctionIsInKernelMode(char *name)
 } /* makeSureCurrentFunctionIsInKernelMode */
 
 
+void initializeProcessSlot(int pid){
+    makeSureCurrentFunctionIsInKernelMode("initializeProcessSlot()");
+
+    int i = pid % MAXPROC;
+
+    ProcTable3[i].pid = pid;
+    ProcTable3[i].mboxID = MboxCreate(0, 0);
+    ProcTable3[i].startFunc = NULL;
+    ProcTable3[i].nextProcPtr = NULL;
+    initializeQueue3(&ProcTable3[i].childrenQueue, CHILDREN);
+}
+
+
 /* ------------------------------------------------------------------------
-   Name - initializeAndEmptyProcessSlot
+   Name - emptyProcessSlot
    Purpose - Cleans out the ProcTable entry of the given process.
    Parameters - pid of process to remove
    Returns - nothing
    Side Effects - changes ProcTable
    ----------------------------------------------------------------------- */
-void initializeAndEmptyProcessSlot(int pid) {
+void emptyProcessSlot(int pid) {
 
-    makeSureCurrentFunctionIsInKernelMode("initializeAndEmptyProcessSlot()");
+    makeSureCurrentFunctionIsInKernelMode("emptyProcessSlot()");
 
     int i = pid % MAXPROC;
 
