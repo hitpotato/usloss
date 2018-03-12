@@ -2,13 +2,13 @@
 
 typedef struct procStruct3      procStruct3;
 typedef struct procStruct3      * procPtr3;
-typedef struct procQueue        procQueue;
+typedef struct processQueue        processQueue;
 typedef struct semaphore semaphore;
 
 #define BLOCKED 0
 #define CHILDREN 1
 
-struct procQueue {
+struct processQueue {
     procPtr3        head;
     procPtr3        tail;
     int 	        size;
@@ -22,14 +22,14 @@ struct procStruct3 {
     procPtr3     	    nextProcPtr;
     procPtr3            nextSiblingPtr;
     procPtr3            parentPtr;
-    procQueue 		    childrenQueue;
+    processQueue 		    childrenQueue;
 };
 
 struct semaphore {
     int 		        id;
     int 		        value;
     int 		        startingValue;
-    procQueue           blockedProcesses;
+    processQueue        blockedProcesses;
     int 		        private_mBoxID;
     int 		        mutex_mBoxID;
 };

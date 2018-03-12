@@ -12,11 +12,11 @@
 #include "structures.h"
 #include "phase3.h"
 #include "phase2.h"
-#include "structures.h"
 #include "../src/usloss.h"
 
 // --------------- Function Prototypes ---------------------//
 void makeSureCurrentFunctionIsInKernelMode(char *name);
+void switchToUserMode();
 
 // Required phase3 functions
 void nullsys3(USLOSS_Sysargs *args);
@@ -40,6 +40,12 @@ int spawnLaunch(char *);
 
 void initializeAndEmptyProcessSlot(int);
 void initializeAndEmptySemaphoreSlot(int);
+
+void appendProcessToQueue3(processQueue* queue, procPtr3 process);
+procPtr3 peekAtHead3(processQueue* queue);
+void removeChild3(processQueue* queue, procPtr3 child);
+procPtr3 popFromQueue3(processQueue* queue);
+void initializeQueue3(processQueue* queue, int type);
 
 
 // ---------------- Globals -------------------//
@@ -170,7 +176,27 @@ int spawnReal(char *name, int (*func)(char *), char *arg, int stack_size, int pr
     int pid = fork1(name, spawnLaunch, arg, stack_size, priority);
 
     if(debug3)
-        USLOSS_Console("spawnReal(): forked process name = %s, pid = %d\n", name, pid); 
+        USLOSS_Console("spawnReal(): forked process name = %s, pid = %d\n", name, pid);
+
+    if(pid < 0)             // If fork failed
+        return -1;
+
+    procPtr3 child = &ProcTable3[pid % MAXPROC];
+    appendProcessToQueue3(&ProcTable3[getpid() % MAXPROC].childrenQueue, child);    // Add to the children queue
+
+    // If spawnLaunch has not yet set up the process table entry
+    if(child->pid < 0){
+        if (debug3)
+            USLOSS_Console("spawnReal(): initializing proc table entry for pid %d\n", pid);
+        initializeAndEmptyProcessSlot(pid);
+    }
+
+    child->startFunc = func;
+    child->parentPtr = &ProcTable3[getpid() % MAXPROC];
+
+    MboxCondSend(child->mboxID, 0, 0);
+
+    return pid;
 }
 
 /* ------------------------------------------------------------------------
@@ -222,5 +248,109 @@ void initializeAndEmptySemaphoreSlot(int i) {
 
 void switchToUserMode(){
     USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_MODE );
+}
+
+/* ------------------------------------------------------------------------
+   Name -           initializeQueue
+   Purpose -        Just initialize a ready list
+   Parameters -
+                    processQueue* processQueue:
+                        Pointer to processQueue to be initialized
+                    queueType
+                        An int specifying what the processQueue is to be used for
+   Returns -        Nothing
+   Side Effects -   The passed processQueue is now no longer NULL
+   ------------------------------------------------------------------------ */
+void initializeQueue3(processQueue* queue, int type){
+    queue->head = NULL;
+    queue->tail = NULL;
+    queue->size = 0;
+    queue->type = type;
+}
+
+/* ------------------------------------------------------------------------
+   Name -           appendProcessToQueue
+   Purpose -        Adds a process to the end of a processQueue
+   Parameters -
+                    processQueue* processQueue:
+                        Pointer to processQueue to be added to
+                    procPtr process
+                        Pointer to the process that will be added
+   Returns -        Nothing
+   Side Effects -   The length of the processQueue increases by 1.
+   ------------------------------------------------------------------------ */
+void appendProcessToQueue3(processQueue* queue, procPtr3 process){
+    if (queue->head == NULL && queue->tail == NULL){
+        queue->head = process;
+        queue->tail = process;
+    }
+    else {
+        if (queue->type == BLOCKED)
+            queue->tail->nextProcPtr = process;
+        else if (queue->type == CHILDREN)
+            queue->tail->nextSiblingPtr = process;
+        queue->tail = process;
+    }
+    queue->size++;
+}
+
+/* ------------------------------------------------------------------------
+   Name -           popFromQueue
+   Purpose -        Remove and return the first element from the processQueue
+   Parameters -
+                    processQueue *processQueue
+                        A pointer to the processQueue who we want to modify
+   Returns -
+                    procPtr:
+                        Pointer to the element that we want
+   Side Effects -   Length of processQueue is decreased by 1
+   ------------------------------------------------------------------------ */
+procPtr3 popFromQueue3(processQueue* queue) {
+    procPtr3 temp = queue->head;
+
+    if (queue->head == NULL)
+        return NULL;
+    if (queue->head == queue->tail)
+        queue->head = queue->tail = NULL;
+    else {
+        if (queue->type == BLOCKED)
+            queue->head = queue->head->nextProcPtr;
+        else if (queue->type == CHILDREN)
+            queue->head = queue->head->nextSiblingPtr;
+    }
+    queue->size--;
+    return temp;
+}
+
+void removeChild3(processQueue* queue, procPtr3 child) {
+    if (queue->head == NULL || queue->type != CHILDREN)
+        return;
+
+    // If the child we want to remove is the head, just pop
+    if (queue->head == child) {
+        popFromQueue3(queue);
+        return;
+    }
+
+    procPtr3 prev = queue->head;
+    procPtr3 p = queue->head->nextSiblingPtr;
+
+    while (p != NULL) {
+        if (p == child) {
+            if (p == queue->tail)
+                queue->tail = prev;
+            else
+                prev->nextSiblingPtr = p->nextSiblingPtr->nextSiblingPtr;
+            queue->size--;
+        }
+        prev = p;
+        p = p->nextSiblingPtr;
+    }
+}
+
+procPtr3 peekAtHead3(processQueue* queue){
+    if (queue->head == NULL)
+        return NULL;
+    return queue->head;
 }
 
