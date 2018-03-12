@@ -1,4 +1,4 @@
-# Install script for directory: /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss
+# Install script for directory: /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,5 +35,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -51,6 +51,8 @@ add_executable(usloss
         phase1/phase1.c
         phase1/phase1.h
         phase1/usloss.h
+        phase2
+        phase3
         pterm/pterm.c
         src/dev_alarm.c
         src/dev_alarm.h

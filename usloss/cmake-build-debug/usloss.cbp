@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug"/>
+				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug"/>
+				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug"/>
+				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="usloss">
-				<Option output="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/usloss" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug"/>
+				<Option output="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/usloss" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -53,15 +53,15 @@
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 usloss"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 usloss"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="usloss/fast">
-				<Option output="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/usloss" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug"/>
+				<Option output="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/usloss" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -75,227 +75,233 @@
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 usloss/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 usloss/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/config.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/config.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/libdisk/disk.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/libdisk/disk.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/libdisk/libdisk.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/libdisk/libdisk.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/libdisk/makedisk.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/libdisk/makedisk.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/libuser/libuser.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/libuser/libuser.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/libuser/libuser.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/libuser/libuser.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/kernel.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/kernel.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/p1.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/p1.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/phase1.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/phase1.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/phase1.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/phase1.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test00.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test00.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test01.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test01.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test02.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test02.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test03.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test03.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test04.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test04.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test05.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test05.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test06.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test06.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test07.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test07.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test08.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test08.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test09.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test09.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test10.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test10.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test11.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test11.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test12.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test12.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test13.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test13.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test14.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test14.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test15.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test15.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test16.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test16.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test17.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test17.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test18.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test18.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test19.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test19.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test20.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test20.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test21.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test21.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test22.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test22.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test23.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test23.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test24.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test24.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test25.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test25.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test26.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test26.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test27.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test27.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test28.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test28.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test29.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test29.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test30.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test30.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test31.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test31.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test32.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test32.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test33.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test33.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test34.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test34.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test35.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test35.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/testcases/test36.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/testcases/test36.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/phase1/usloss.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase1/usloss.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/pterm/pterm.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase2">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/dev_alarm.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/dev_alarm.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/pterm/pterm.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/dev_clock.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/dev_alarm.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/dev_clock.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/dev_alarm.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/dev_disk.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/dev_clock.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/dev_disk.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/dev_clock.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/dev_term.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/dev_disk.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/dev_term.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/dev_disk.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/devices.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/dev_term.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/devices.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/dev_term.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/globals.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/devices.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/globals.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/devices.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/main.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/globals.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/main.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/globals.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/mmu.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/main.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/mmuInt.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/main.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/project.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/mmu.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/sig_ints.c">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/mmuInt.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/sig_ints.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/project.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/syscall.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/sig_ints.c">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/usloss.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/sig_ints.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/src/usyscall.h">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/syscall.h">
 			<Option target="usloss"/>
 		</Unit>
-		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/CMakeLists.txt">
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/usloss.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/src/usyscall.h">
+			<Option target="usloss"/>
+		</Unit>
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>
