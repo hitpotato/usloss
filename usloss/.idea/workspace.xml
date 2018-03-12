@@ -26,23 +26,29 @@
       <file leaf-file-name="handler.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/phase2/handler.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="840">
+            <state relative-caret-position="0">
               <caret line="56" column="25" lean-forward="false" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="message.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/phase2/message.h">
+      <file leaf-file-name="structures.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/phase3/structures.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-              <folding>
-                <element signature="e#38#57#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="480">
+              <caret line="32" column="31" lean-forward="false" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="phase3.c" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/phase3/phase3.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="452">
+              <caret line="172" column="88" lean-forward="false" selection-start-line="172" selection-start-column="88" selection-end-line="172" selection-end-column="88" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -50,20 +56,18 @@
       <file leaf-file-name="phase2.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/phase2/phase2.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="685" column="58" lean-forward="false" selection-start-line="685" selection-start-column="52" selection-end-line="685" selection-end-column="58" />
-              <folding>
-                <element signature="e#258#277#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="5970">
+              <caret line="398" column="24" lean-forward="false" selection-start-line="398" selection-start-column="20" selection-end-line="398" selection-end-column="24" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <file leaf-file-name="phase3.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/phase3/phase3.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="470">
-              <caret line="54" column="14" lean-forward="false" selection-start-line="54" selection-start-column="14" selection-end-line="54" selection-end-column="14" />
+            <state relative-caret-position="150">
+              <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -72,8 +76,8 @@
       <file leaf-file-name="phase1.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/phase1/phase1.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13860">
-              <caret line="924" column="19" lean-forward="false" selection-start-line="924" selection-start-column="19" selection-end-line="924" selection-end-column="19" />
+            <state relative-caret-position="83">
+              <caret line="791" column="0" lean-forward="false" selection-start-line="791" selection-start-column="0" selection-end-line="797" selection-end-column="77" />
               <folding />
             </state>
           </provider>
@@ -122,6 +126,7 @@
       <find>IOblocked</find>
       <find>kernel</find>
       <find>kernelMode</find>
+      <find>Proc</find>
     </findStrings>
     <replaceStrings>
       <replace>USLOSS_DeviceInput(0, 0, &amp;status);</replace>
@@ -146,6 +151,10 @@
         <option value="$PROJECT_DIR$/phase2/message.h" />
         <option value="$PROJECT_DIR$/phase2/handler.c" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/phase3/phase3.h" />
+        <option value="$PROJECT_DIR$/phase3/skeleton.c" />
+        <option value="$PROJECT_DIR$/phase3/structures.h" />
+        <option value="$PROJECT_DIR$/phase3/phase3.c" />
       </list>
     </option>
   </component>
@@ -156,9 +165,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="20" />
+    <option name="x" value="967" />
     <option name="y" value="20" />
-    <option name="width" value="1880" />
+    <option name="width" value="933" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectView">
@@ -182,6 +191,16 @@
             <path>
               <item name="usloss" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="usloss" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="usloss" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
+              <item name="usloss" type="462c0819:PsiDirectoryNode" />
+              <item name="phase1" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="usloss" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
+              <item name="usloss" type="462c0819:PsiDirectoryNode" />
+              <item name="phase3" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -234,18 +253,18 @@
       <workItem from="1517495388584" duration="9096000" />
       <workItem from="1517516305816" duration="13265000" />
       <workItem from="1519932444295" duration="481000" />
-      <workItem from="1520822761438" duration="25000" />
+      <workItem from="1520822761438" duration="4206000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29524000" />
+    <option name="totallyTimeSpent" value="33705000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="20" y="20" width="1880" height="1040" extended-state="0" />
+    <frame x="967" y="20" width="933" height="1040" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13770844" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20394737" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -289,27 +308,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/phase1/testcases/test20.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/phase1/testcases/test19.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/phase1/testcases/test18.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/phase1/testcases/test17.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="230">
@@ -338,6 +336,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="296">
           <caret line="3148" column="68" lean-forward="false" selection-start-line="3148" selection-start-column="68" selection-end-line="3148" selection-end-column="68" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -345,6 +344,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -367,6 +367,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="16" lean-forward="false" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="16" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -437,6 +438,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -534,13 +536,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../../My Files/phase1/kernel.h" />
     <entry file="file://$PROJECT_DIR$/../../My Files/phase1/phase1.c" />
-    <entry file="file:///usr/include/tclDecls.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="3148" column="68" lean-forward="false" selection-start-line="3148" selection-start-column="68" selection-end-line="3148" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/phase1/Makefile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -548,18 +543,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phase1/kernel.h">
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-358">
-          <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
+        <state relative-caret-position="470">
+          <caret line="54" column="14" lean-forward="false" selection-start-line="54" selection-start-column="14" selection-end-line="54" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phase1/phase1.h">
+    <entry file="file://$PROJECT_DIR$/phase3/phase3.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="16" lean-forward="false" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="16" />
+        <state relative-caret-position="150">
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -571,10 +567,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/phase1/phase1.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="7" column="16" lean-forward="false" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/tclDecls.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="2570" column="31" lean-forward="false" selection-start-line="2570" selection-start-column="31" selection-end-line="2570" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phase1/kernel.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="7" lean-forward="false" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/phase2/message.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+        <state relative-caret-position="465">
+          <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="41" />
           <folding>
             <element signature="e#38#57#0" expanded="true" />
           </folding>
@@ -583,36 +603,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/phase2/handler.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
+        <state relative-caret-position="0">
           <caret line="56" column="25" lean-forward="false" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/phase1/phase1.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13860">
-          <caret line="924" column="19" lean-forward="false" selection-start-line="924" selection-start-column="19" selection-end-line="924" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/phase2/phase2.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="685" column="58" lean-forward="false" selection-start-line="685" selection-start-column="52" selection-end-line="685" selection-end-column="58" />
-          <folding>
-            <element signature="e#258#277#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="5970">
+          <caret line="398" column="24" lean-forward="false" selection-start-line="398" selection-start-column="20" selection-end-line="398" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/phase1/phase1.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="470">
-          <caret line="54" column="14" lean-forward="false" selection-start-line="54" selection-start-column="14" selection-end-line="54" selection-end-column="14" />
+        <state relative-caret-position="83">
+          <caret line="791" column="0" lean-forward="false" selection-start-line="791" selection-start-column="0" selection-end-line="797" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phase3/structures.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="31" lean-forward="false" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phase3/phase3.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="452">
+          <caret line="172" column="88" lean-forward="false" selection-start-line="172" selection-start-column="88" selection-end-line="172" selection-end-column="88" />
           <folding />
         </state>
       </provider>

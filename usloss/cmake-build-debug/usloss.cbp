@@ -232,6 +232,9 @@
 		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3">
 			<Option target="usloss"/>
 		</Unit>
+		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/structures.h">
+			<Option target="usloss"/>
+		</Unit>
 		<Unit filename="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/pterm/pterm.c">
 			<Option target="usloss"/>
 		</Unit>
