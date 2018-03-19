@@ -1,0 +1,1 @@
+./run.ksh: line 21: ./test12+=: not found
