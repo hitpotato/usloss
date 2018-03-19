@@ -1,0 +1,113 @@
+start3(): started
+start3(): spawned process 5
+
+Child1(): starting, pid = 5
+
+Child2(): starting, pid = 6
+Child2(): spawned process 7
+Child2(): spawned process 8
+Child2(): spawned process 9
+Child2(): spawned process 10
+Child2(): spawned process 11
+Child2(): spawned process 12
+Child2(): spawned process 13
+Child2(): spawned process 14
+Child2(): spawned process 15
+Child2(): spawned process 16
+Child2(): spawned process 17
+Child2(): spawned process 18
+Child2(): spawned process 19
+Child2(): spawned process 20
+Child2(): spawned process 21
+Child2(): spawned process 22
+Child2(): spawned process 23
+Child2(): spawned process 24
+Child2(): spawned process 25
+Child2(): spawned process 26
+Child2(): spawned process 27
+Child2(): spawned process 28
+Child2(): spawned process 29
+Child2(): spawned process 30
+Child2(): spawned process 31
+Child2(): spawned process 32
+Child2(): spawned process 33
+Child2(): spawned process 34
+Child2(): spawned process 35
+Child2(): spawned process 36
+Child2(): spawned process 37
+Child2(): spawned process 38
+Child2(): spawned process 39
+Child2(): spawned process 40
+Child2(): spawned process 41
+Child2(): spawned process 42
+Child2(): spawned process 43
+Child2(): spawned process 44
+Child2(): spawned process 45
+Child2(): spawned process 46
+Child2(): spawned process 47
+Child2(): spawned process 48
+Child2(): spawned process 49
+Child2(): spawned process 50
+Child2(): spawned attempt failed, pid = -1
+Child2(): spawned attempt failed, pid = -1
+Child2(): spawned attempt failed, pid = -1
+Child2(): spawned attempt failed, pid = -1
+Child2(): spawned attempt failed, pid = -1
+Child2(): spawned attempt failed, pid = -1
+
+Child2(): Terminating self and all my children
+Child1(): spawned process 6
+Child2b(): starting, pid = 56
+Child2b(): spawned process 57
+Child2b(): spawned process 58
+Child2b(): spawned process 59
+Child2b(): spawned process 60
+Child2b(): spawned process 61
+Child2b(): spawned process 62
+Child2b(): spawned process 63
+Child2b(): spawned process 64
+Child2b(): spawned process 65
+Child2b(): spawned process 66
+Child2b(): spawned process 67
+Child2b(): spawned process 68
+Child2b(): spawned process 69
+Child2b(): spawned process 70
+Child2b(): spawned process 71
+Child2b(): spawned process 72
+Child2b(): spawned process 73
+Child2b(): spawned process 74
+Child2b(): spawned process 75
+Child2b(): spawned process 76
+Child2b(): spawned process 77
+Child2b(): spawned process 78
+Child2b(): spawned process 79
+Child2b(): spawned process 80
+Child2b(): spawned process 81
+Child2b(): spawned process 82
+Child2b(): spawned process 83
+Child2b(): spawned process 84
+Child2b(): spawned process 85
+Child2b(): spawned process 86
+Child2b(): spawned process 87
+Child2b(): spawned process 88
+Child2b(): spawned process 89
+Child2b(): spawned process 90
+Child2b(): spawned process 91
+Child2b(): spawned process 92
+Child2b(): spawned process 93
+Child2b(): spawned process 94
+Child2b(): spawned process 95
+Child2b(): spawned process 96
+Child2b(): spawned process 97
+Child2b(): spawned process 98
+Child2b(): spawned process 99
+Child2b(): spawned process 100
+Child2b(): spawned attempt failed, pid = -1
+Child2b(): spawned attempt failed, pid = -1
+Child2b(): spawned attempt failed, pid = -1
+Child2b(): spawned attempt failed, pid = -1
+Child2b(): spawned attempt failed, pid = -1
+Child2b(): spawned attempt failed, pid = -1
+
+Child2b(): Terminating self and all my children
+zap(): process being zapped does not exist.  Halting...
