@@ -41,13 +41,15 @@ void getPID(USLOSS_Sysargs *);
 
 void emptyProc3(int);
 void initProc(int);
-void setUserMode();
+void switchToUserMode();
+
+// Queue functions
 void initProcQueue3(processQueue*, int);
 void appendProcessToQueue3(processQueue *, procPtr3);
 procPtr3 popFromQueue3(processQueue *);
 procPtr3 peekAtHead3(processQueue *);
 void removeChild3(processQueue*, procPtr3);
-extern int start3();
+
 
 /* -------------------------- Globals ------------------------------------- */
 int debug3 = 0;
@@ -178,7 +180,7 @@ void spawn(USLOSS_Sysargs *args)
         terminateReal(1);
 
     // switch to user mode
-    setUserMode();
+    switchToUserMode();
 
     // swtich back to kernel mode and put values for Spawn
     args->arg1 = (void *) ((long)pid);
@@ -253,7 +255,7 @@ int spawnLaunch(char *startArg) {
     }
 
     // switch to user mode
-    setUserMode();
+    switchToUserMode();
 
     if (debug3)
         USLOSS_Console("spawnLaunch(): starting process %d...\n", proc->pid);
@@ -295,7 +297,7 @@ void wait(USLOSS_Sysargs *args)
         terminateReal(1);
 
     // switch back to user mode
-    setUserMode();
+    switchToUserMode();
 }
 
 int waitReal(int *status)
@@ -322,7 +324,7 @@ void terminate(USLOSS_Sysargs *args)
     int status = (int)((long)args->arg1);
     terminateReal(status);
     // switch back to user mode
-    setUserMode();
+    switchToUserMode();
 }
 
 void terminateReal(int status)
@@ -371,7 +373,7 @@ void semCreate(USLOSS_Sysargs *args)
         terminateReal(0);
     }
     else {
-        setUserMode();
+        switchToUserMode();
     }
 }
 
@@ -430,7 +432,7 @@ void semP(USLOSS_Sysargs *args)
         terminateReal(0);
     }
     else {
-        setUserMode();
+        switchToUserMode();
     }
 }
 
@@ -496,7 +498,7 @@ void semV(USLOSS_Sysargs *args)
         terminateReal(0);
     }
     else {
-        setUserMode();
+        switchToUserMode();
     }
 }
 
@@ -508,11 +510,8 @@ void semVReal(int handle) {
     // unblock blocked proc
     if (SemTable[handle].blockedProcesses.size > 0) {
         popFromQueue3(&SemTable[handle].blockedProcesses);
-
-        MboxReceive(SemTable[handle].mutex_mBoxID, NULL, 0); // need to receive on mutex so semP can send right after receiving on privmbox
-
+        MboxReceive(SemTable[handle].mutex_mBoxID, NULL, 0);
         MboxSend(SemTable[handle].private_mBoxID, NULL, 0);
-
         MboxSend(SemTable[handle].mutex_mBoxID, NULL, 0);
     }
     else {
@@ -547,7 +546,7 @@ void semFree(USLOSS_Sysargs *args)
         terminateReal(0);
     }
     else {
-        setUserMode();
+        switchToUserMode();
     }
 }
 
@@ -707,7 +706,7 @@ void makeSureCurrentFunctionIsInKernelMode(char *name)
    Parameters - none
    Side Effects - none
    ------------------------------------------------------------------------ */
-void setUserMode()
+void switchToUserMode()
 {
     USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_MODE );
 }
