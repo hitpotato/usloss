@@ -1,1 +1,0 @@
-./run.ksh: line 21: ./test25+=: not found
