@@ -594,7 +594,9 @@ int semFreeReal(int handle) {
 void getTimeOfDay(USLOSS_Sysargs *args)
 {
     makeSureCurrentFunctionIsInKernelMode("getTimeOfDay");
-    //*((int *)(args->arg1)) = USLOSS_Clock();
+    int status;
+    USLOSS_DeviceInput(0, 0, &status);
+    *((int *)(args->arg1)) = status;
 }
 
 

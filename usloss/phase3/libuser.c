@@ -147,7 +147,7 @@ int SemCreate(int value, int *semaphore)
     USLOSS_Syscall(&sysArg);
 
     *semaphore = (int) ((long) sysArg.arg1);
-    return (long) sysArg.arg4;
+    return (int) sysArg.arg4;
 } /* end of SemCreate */
 
 
@@ -169,7 +169,7 @@ int SemP(int semaphore)
 
     USLOSS_Syscall(&sysArg);
 
-    return (long) sysArg.arg4;
+    return (int) sysArg.arg4;
 } /* end of SemP */
 
 
@@ -191,7 +191,7 @@ int SemV(int semaphore)
 
     USLOSS_Syscall(&sysArg);
 
-    return (long) sysArg.arg4;
+    return (int) sysArg.arg4;
 } /* end of SemV */
 
 
@@ -213,7 +213,7 @@ int SemFree(int semaphore)
 
     USLOSS_Syscall(&sysArg);
 
-    return (long) sysArg.arg4;
+    return (int) sysArg.arg4;
 } /* end of SemFree */
 
 

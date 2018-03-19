@@ -1,4 +1,4 @@
 start3(): started
-start3(): elapsed time in middle = 855392401 Should be close, but does not have to be an exact match
-start3(): elapsed time at end    = 1082755255 Should be close, but does not have to be an exact match
+start3(): elapsed time in middle =  0 Should be close, but does not have to be an exact match
+start3(): elapsed time at end    =  0 Should be close, but does not have to be an exact match
 All processes completed.
