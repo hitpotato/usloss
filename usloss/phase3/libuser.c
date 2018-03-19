@@ -248,7 +248,7 @@ void GetPID(int *pid)
     sysArg.number = SYS_GETPID;
     sysArg.arg1 = pid;
 
-    USLOSS_Syscall(&sysArg); 
+    USLOSS_Syscall(&sysArg);
 } /* end of GetPID */
 
 /* end libuser.c */

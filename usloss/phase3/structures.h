@@ -1,4 +1,6 @@
 
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
 
 typedef struct procStruct3      procStruct3;
 typedef struct procStruct3      * procPtr3;
@@ -33,3 +35,5 @@ struct semaphore {
     int 		        private_mBoxID;
     int 		        mutex_mBoxID;
 };
+
+#endif /* STRUCTURES */
