@@ -10,6 +10,7 @@ typedef struct semaphore            semaphore;
 #define BLOCKED 0
 #define CHILDREN 1
 
+// Queue for processes
 struct processQueue {
     procPtr3        head;
     procPtr3        tail;
@@ -17,16 +18,18 @@ struct processQueue {
     int 	        type;
 };
 
+// Struct for the processes
 struct procStruct3 {
     int                 pid;
-    int 		        mboxID;         /* 0 slot mailbox belonging to this process */
-    int (* startFunc)   (char *);       /* function where process begins */
+    int 		        mboxID;
+    int (* startFunc)   (char *);
     procPtr3     	    nextProcPtr;
     procPtr3            nextSiblingPtr;
     procPtr3            parentPtr;
     processQueue 		childrenQueue;
 };
 
+// Struct to represent a semaphore
 struct semaphore {
     int 		        id;
     int 		        value;
