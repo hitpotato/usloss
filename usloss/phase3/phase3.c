@@ -5,6 +5,7 @@
 #include <phase3.h>
 #include <structures.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 
 #include "../src/usyscall.h"
@@ -18,6 +19,10 @@
 /* ------------------------- Prototypes ----------------------------------- */
 void makeSureCurrentFunctionIsInKernelMode(char *);
 void nullsys3(USLOSS_Sysargs *);
+int spawnLaunch(char *);
+void getTimeOfDay(USLOSS_Sysargs *);
+void cpuTime(USLOSS_Sysargs *);
+void getPID(USLOSS_Sysargs *);
 void spawn(USLOSS_Sysargs *);
 void wait(USLOSS_Sysargs *);
 void terminate(USLOSS_Sysargs *);
@@ -26,6 +31,7 @@ void semP(USLOSS_Sysargs *);
 void semV(USLOSS_Sysargs *);
 void semFree(USLOSS_Sysargs *);
 
+// The real functions
 int semFreeReal(int);
 int semCreateReal(int);
 void semPReal(int);
@@ -34,11 +40,8 @@ int spawnReal(char *, int(*)(char *), char *, int, int);
 int waitReal(int *);
 void terminateReal(int);
 
-int spawnLaunch(char *);
-void getTimeOfDay(USLOSS_Sysargs *);
-void cpuTime(USLOSS_Sysargs *);
-void getPID(USLOSS_Sysargs *);
 
+// Process and misc. functions
 void emptyProc3(int);
 void initProc(int);
 void switchToUserMode();
@@ -54,7 +57,7 @@ void removeChild3(processQueue*, procPtr3);
 /* -------------------------- Globals ------------------------------------- */
 int debug3 = 0;
 
-int numSems;
+int numberOfSems;
 semaphore SemTable[MAXSEMS];
 procStruct3 ProcTable3[MAXPROC];
 
@@ -66,35 +69,34 @@ start2(char *arg)
     /*
      * Check kernel mode here.
      */
-    makeSureCurrentFunctionIsInKernelMode("start2");
+    makeSureCurrentFunctionIsInKernelMode("start2()");
 
     /*
      * Data structure initialization as needed...
      */
 
     // populate system call vec
-    int i;
-    for (i = 0; i < USLOSS_MAX_SYSCALLS; i++) {
+    for (int i = 0; i < USLOSS_MAX_SYSCALLS; i++) {
         systemCallVec[i] = nullsys3;
     }
-    systemCallVec[SYS_SPAWN] = spawn;
-    systemCallVec[SYS_WAIT] = wait;
-    systemCallVec[SYS_TERMINATE] = terminate;
-    systemCallVec[SYS_SEMCREATE] = semCreate;
-    systemCallVec[SYS_SEMP] = semP;
-    systemCallVec[SYS_SEMV] = semV;
-    systemCallVec[SYS_SEMFREE] = semFree;
-    systemCallVec[SYS_GETTIMEOFDAY] = getTimeOfDay;
-    systemCallVec[SYS_CPUTIME] = cpuTime;
-    systemCallVec[SYS_GETPID] = getPID;
+    systemCallVec[SYS_SPAWN]            = spawn;
+    systemCallVec[SYS_WAIT]             = wait;
+    systemCallVec[SYS_TERMINATE]        = terminate;
+    systemCallVec[SYS_SEMCREATE]        = semCreate;
+    systemCallVec[SYS_SEMP]             = semP;
+    systemCallVec[SYS_SEMV]             = semV;
+    systemCallVec[SYS_SEMFREE]          = semFree;
+    systemCallVec[SYS_GETTIMEOFDAY]     = getTimeOfDay;
+    systemCallVec[SYS_CPUTIME]          = cpuTime;
+    systemCallVec[SYS_GETPID]           = getPID;
 
     // populate proc table
-    for (i = 0; i < MAXPROC; i++) {
+    for (int i = 0; i < MAXPROC; i++) {
         emptyProc3(i);
     }
 
     // populate semaphore table
-    for (i = 0; i < MAXSEMS; i++) {
+    for (int i = 0; i < MAXSEMS; i++) {
         SemTable[i].id = -1;
         SemTable[i].value = -1;
         SemTable[i].startingValue = -1;
@@ -102,7 +104,7 @@ start2(char *arg)
         SemTable[i].mutex_mBoxID = -1;
     }
 
-    numSems = 0;
+    numberOfSems = 0;       // Set the current number of semaphores to 0
 
     /*
      * Create first user-level process and wait for it to finish.
@@ -158,13 +160,13 @@ start2(char *arg)
    ----------------------------------------------------------------------- */
 void spawn(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("spawn");
+    makeSureCurrentFunctionIsInKernelMode("spawn()");
 
-    int (*func)(char *) = args->arg1;
-    char *arg = args->arg2;
-    int stack_size = (int) ((long)args->arg3);
-    int priority = (int) ((long)args->arg4);
-    char *name = (char *)(args->arg5);
+    int (*func)(char *)         = args->arg1;
+    char *arg                   = args->arg2;
+    int stack_size              = (int) ((long)args->arg3);
+    int priority                = (int) ((long)args->arg4);
+    char *name                  = (char *)(args->arg5);
 
     if (debug3)
         USLOSS_Console("spawn(): args are: name = %s, stack size = %d, priority = %d\n", name, stack_size, priority);
@@ -175,48 +177,46 @@ void spawn(USLOSS_Sysargs *args)
     if (debug3)
         USLOSS_Console("spawn(): spawnd pid %d\n", pid);
 
-    // terminate self if zapped
+    // Terminate ourselves if we are zapped
     if (isZapped())
         terminateReal(1);
 
-    // switch to user mode
-    switchToUserMode();
 
-    // swtich back to kernel mode and put values for Spawn
+    switchToUserMode();
     args->arg1 = (void *) ((long)pid);
     args->arg4 = (void *) ((long)status);
 }
 
 int spawnReal(char *name, int (*func)(char *), char *arg, int stack_size, int priority)
 {
-    makeSureCurrentFunctionIsInKernelMode("spawnReal");
+    makeSureCurrentFunctionIsInKernelMode("spawnReal()");
 
     if (debug3)
         USLOSS_Console("spawnReal(): forking process %s... \n", name);
 
-    // fork the process and get its pid
+    // Fork process, get its PID
     int pid = fork1(name, spawnLaunch, arg, stack_size, priority);
 
     if (debug3)
         USLOSS_Console("spawnReal(): forked process name = %s, pid = %d\n", name, pid);
 
-    // return -1 if fork failed
+    // If fork failed
     if (pid < 0)
         return -1;
 
-    // now we have the pid, we can get the child table entry
+    // Get child table entry
     procPtr3 child = &ProcTable3[pid % MAXPROC];
     appendProcessToQueue3(&ProcTable3[getpid() % MAXPROC].childrenQueue, child); // add to children queue
 
-    // if spawnLaunch hasn't done it yet, set up proc table entry
+    // et up proc table entry
     if (child->pid < 0) {
         if (debug3)
             USLOSS_Console("spawnReal(): initializing proc table entry for pid %d\n", pid);
         initProc(pid);
     }
 
-    child->startFunc = func; // give proc its starting function
-    child->parentPtr = &ProcTable3[getpid() % MAXPROC]; // set child's parent pointer
+    child->startFunc = func; // give proc start function to func
+    child->parentPtr = &ProcTable3[getpid() % MAXPROC]; // set the childs parent pointer
 
     // unblock the process so spawnLaunch can start it
     MboxCondSend(child->mboxID, 0, 0);
@@ -232,7 +232,7 @@ int spawnReal(char *name, int (*func)(char *), char *arg, int stack_size, int pr
    Returns - 0
    ----------------------------------------------------------------------- */
 int spawnLaunch(char *startArg) {
-    makeSureCurrentFunctionIsInKernelMode("spawnLaunch");
+    makeSureCurrentFunctionIsInKernelMode("spawnLaunch()");
 
     if (debug3)
         USLOSS_Console("spawnLaunch(): launched pid = %d\n", getpid());
@@ -279,7 +279,7 @@ int spawnLaunch(char *startArg) {
    ------------------------------------------------------------------------ */
 void wait(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("wait");
+    makeSureCurrentFunctionIsInKernelMode("wait()");
 
     int *status = args->arg2;
     int pid = waitReal(status);
@@ -292,11 +292,9 @@ void wait(USLOSS_Sysargs *args)
     args->arg2 = (void *) ((long) *status);
     args->arg4 = (void *) ((long) 0);
 
-    // terminate self if zapped
     if (isZapped())
         terminateReal(1);
 
-    // switch back to user mode
     switchToUserMode();
 }
 
@@ -319,28 +317,28 @@ int waitReal(int *status)
    ------------------------------------------------------------------------ */
 void terminate(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("terminate");
+    makeSureCurrentFunctionIsInKernelMode("terminate()");
 
     int status = (int)((long)args->arg1);
     terminateReal(status);
-    // switch back to user mode
     switchToUserMode();
 }
 
 void terminateReal(int status)
 {
-    makeSureCurrentFunctionIsInKernelMode("terminateReal");
+    makeSureCurrentFunctionIsInKernelMode("terminateReal()");
 
     if (debug3)
         USLOSS_Console("terminateReal(): terminating pid %d, status = %d\n", getpid(), status);
 
-    // zap all children
+    // Zap all the children of the current process
     procPtr3 proc = &ProcTable3[getpid() % MAXPROC];
     while (proc->childrenQueue.size > 0) {
         procPtr3 child = popFromQueue3(&proc->childrenQueue);
         zap(child->pid);
     }
-    // remove self from parent's list of children
+    // If this process is a child, remove ourseleves from
+    // parents queue of children
     removeChild3(&(proc->parentPtr->childrenQueue), proc);
     quit(status);
 }
@@ -354,31 +352,27 @@ void terminateReal(int status)
    ------------------------------------------------------------------------ */
 void semCreate(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("semCreate");
+    makeSureCurrentFunctionIsInKernelMode("semCreate()");
 
-    int value = (long) args->arg1;
+    int arg1 = (long) args->arg1;
 
-    // fails if value is negative or no sems avaliable
-    if (value < 0 || numSems == MAXSEMS) {
+    //
+    if (arg1 < 0 || numberOfSems == MAXSEMS) {
         args->arg4 = (void*) (long) -1;
     }
     else {
-        numSems++;
-        int handle = semCreateReal(value);
+        numberOfSems++;
+        int handle = semCreateReal(arg1);
         args->arg1 = (void*) (long) handle;
         args->arg4 = 0;
     }
 
-    if (isZapped()) {
-        terminateReal(0);
-    }
-    else {
-        switchToUserMode();
-    }
+    isZapped() == true ? terminateReal(0) : switchToUserMode();
 }
 
-int semCreateReal(int value) {
-    makeSureCurrentFunctionIsInKernelMode("semCreateReal");
+int semCreateReal(int value)
+{
+    makeSureCurrentFunctionIsInKernelMode("semCreateReal()");
 
     int i;
     int private_mBoxID = MboxCreate(value, 0);
@@ -398,14 +392,13 @@ int semCreateReal(int value) {
         }
     }
 
-    int j;
-    for (j = 0; j < value; j++) {
+    for (int j = 0; j < value; j++) {
         MboxSend(private_mBoxID, NULL, 0);
     }
 
     MboxReceive(mutex_mBoxID, NULL, 0);
 
-    return SemTable[i].id;
+    return SemTable[i].id;      // Return the id of the last initialized sem
 }
 
 
@@ -417,7 +410,7 @@ int semCreateReal(int value) {
    ------------------------------------------------------------------------ */
 void semP(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("semP");
+    makeSureCurrentFunctionIsInKernelMode("semP()");
 
     int handle = (long) args->arg1;
 
@@ -428,28 +421,23 @@ void semP(USLOSS_Sysargs *args)
         semPReal(handle);
     }
 
-    if (isZapped()) {
-        terminateReal(0);
-    }
-    else {
-        switchToUserMode();
-    }
+    isZapped() == true ? terminateReal(0) : switchToUserMode();
 }
 
 void semPReal(int handle) {
-    makeSureCurrentFunctionIsInKernelMode("semPReal");
+    makeSureCurrentFunctionIsInKernelMode("semPReal()");
 
     // get mutex on this semaphore
     MboxSend(SemTable[handle].mutex_mBoxID, NULL, 0);
 
-    // block if value is 0
+    // If the value is zero, block
     if (SemTable[handle].value == 0) {
         appendProcessToQueue3(&SemTable[handle].blockedProcesses, &ProcTable3[getpid() % MAXPROC]);
         MboxReceive(SemTable[handle].mutex_mBoxID, NULL, 0);
 
         int result = MboxReceive(SemTable[handle].private_mBoxID, NULL, 0);
 
-        // terminate if the semaphore freed while we were blocked
+        // If the semaphore was freed, terminate
         if (SemTable[handle].id < 0)
             terminateReal(1);
 
@@ -483,7 +471,7 @@ void semPReal(int handle) {
    ------------------------------------------------------------------------ */
 void semV(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("semV");
+    makeSureCurrentFunctionIsInKernelMode("semV()");
 
     int handle = (long) args->arg1;
 
@@ -503,7 +491,7 @@ void semV(USLOSS_Sysargs *args)
 }
 
 void semVReal(int handle) {
-    makeSureCurrentFunctionIsInKernelMode("semVReal");
+    makeSureCurrentFunctionIsInKernelMode("semVReal()");
 
     MboxSend(SemTable[handle].mutex_mBoxID, NULL, 0);
 
@@ -530,7 +518,7 @@ void semVReal(int handle) {
    ------------------------------------------------------------------------ */
 void semFree(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("semFree");
+    makeSureCurrentFunctionIsInKernelMode("semFree()");
 
     int handle = (long) args->arg1;
 
@@ -551,7 +539,7 @@ void semFree(USLOSS_Sysargs *args)
 }
 
 int semFreeReal(int handle) {
-    makeSureCurrentFunctionIsInKernelMode("semFreeReal");
+    makeSureCurrentFunctionIsInKernelMode("semFreeReal()");
 
     int mutexID = SemTable[handle].mutex_mBoxID;
     MboxSend(mutexID, NULL, 0);
@@ -563,7 +551,7 @@ int semFreeReal(int handle) {
     SemTable[handle].startingValue = -1;
     SemTable[handle].private_mBoxID = -1;
     SemTable[handle].mutex_mBoxID = -1;
-    numSems--;
+    numberOfSems--;
 
     // terminate procs waiting on this semphore
     if (SemTable[handle].blockedProcesses.size > 0) {
@@ -608,7 +596,7 @@ void getTimeOfDay(USLOSS_Sysargs *args)
    ------------------------------------------------------------------------ */
 void cpuTime(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("cpuTime");
+    makeSureCurrentFunctionIsInKernelMode("cpuTime()");
     *((int *)(args->arg1)) = readtime();
 }
 
@@ -621,7 +609,7 @@ void cpuTime(USLOSS_Sysargs *args)
    ------------------------------------------------------------------------ */
 void getPID(USLOSS_Sysargs *args)
 {
-    makeSureCurrentFunctionIsInKernelMode("getPID");
+    makeSureCurrentFunctionIsInKernelMode("getPID()");
     *((int *)(args->arg1)) = getpid();
 }
 

@@ -9,6 +9,8 @@ resultsDirectory="/Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/
   #  exit 1
 #fi
 
+counter=1
+
 for num in 00 01 02 03 04 05 06 07 08 09 {10..25}
 do 
     if [ -f test${num} ]
@@ -30,6 +32,7 @@ do
         then
             echo
             echo test${num} passed!
+            counter=`expr $counter + 1`
         else
             echo
             diff -C 1 ./output/test${num}.txt ${resultsDirectory}/test${num}.txt
@@ -37,3 +40,5 @@ do
     fi
 echo
 done
+
+echo $counter tests passed!
