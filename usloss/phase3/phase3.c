@@ -3,18 +3,12 @@
 #include <phase1.h>
 #include <phase2.h>
 #include <phase3.h>
-#include <structures.h>
+#include "sems.h"
+#include <libuser.h>
 #include <stddef.h>
 #include <stdbool.h>
 
 
-#include "../src/usyscall.h"
-#include "phase1.h"
-#include "structures.h"
-#include "phase3.h"
-#include "phase2.h"
-#include "../src/usloss.h"
-#include "libuser.h"
 
 /* ------------------------- Prototypes ----------------------------------- */
 void makeSureCurrentFunctionIsInKernelMode(char *);
@@ -42,8 +36,8 @@ void terminateReal(int);
 
 
 // Process and misc. functions
-void emptyProc3(int);
-void initProc(int);
+void emptyProcessSlot3(int);
+void initializeProcessSlot3(int);
 void switchToUserMode();
 
 // Queue functions
@@ -60,8 +54,7 @@ int numberOfSems;
 semaphore SemTable[MAXSEMS];
 procStruct3 ProcTable3[MAXPROC];
 
-int
-start2(char *arg) {
+int start2(char *arg) {
     int pid;
     int status;
     /*
@@ -89,7 +82,7 @@ start2(char *arg) {
 
     // Fill the process table
     for (int i = 0; i < MAXPROC; i++) {
-        emptyProc3(i);
+        emptyProcessSlot3(i);
     }
 
     // Fill the semaphore table
@@ -151,9 +144,10 @@ start2(char *arg) {
 
 /* ------------------------------------------------------------------------
    Name - spawn
-   Purpose - Extracts arguments and checks for correctness.
+   Purpose -
    Parameters - USLOSS_Sysargs containing parameters for fork1
-   Returns - arg1: pid of forked process, arg4: success (0) or failure (-1)
+   Returns -    arg1: pid of forked process,
+                arg4: success (0) or failure (-1)
    ----------------------------------------------------------------------- */
 void spawn(USLOSS_Sysargs *args) {
     makeSureCurrentFunctionIsInKernelMode("spawn()");
@@ -207,7 +201,7 @@ int spawnReal(char *name, int (*func)(char *), char *arg, int stack_size, int pr
     if (child->pid < 0) {
         if (debug3)
             USLOSS_Console("spawnReal(): initializing proc table entry for pid %d\n", pid);
-        initProc(pid);
+        initializeProcessSlot3(pid);
     }
 
     child->startFunc = func; // give proc start function to func
@@ -243,7 +237,7 @@ int spawnLaunch(char *startArg) {
     if (proc->pid < 0) {
         if (debug3)
             USLOSS_Console("spawnLaunch(): initializing proc table entry for pid %d\n", getpid());
-        initProc(getpid());
+        initializeProcessSlot3(getpid());
 
         // block until spawnReal is done
         MboxReceive(proc->mboxID, 0, 0);
@@ -269,7 +263,9 @@ int spawnLaunch(char *startArg) {
    Name - wait
    Purpose - waits for a child process to terminate
    Parameters - arg1: pointer for pid, arg2: pointer for status
-   Returns - arg1: pid, arg2: status, arg4: success (0) or failure (-1)
+   Returns -    arg1: pid,
+                arg2: status,
+                arg4: success (0) or failure (-1)
    ------------------------------------------------------------------------ */
 void wait(USLOSS_Sysargs *args) {
     makeSureCurrentFunctionIsInKernelMode("wait()");
@@ -303,7 +299,7 @@ int waitReal(int *status) {
 /* ------------------------------------------------------------------------
    Name - terminate
    Purpose - terminates the invoking process and all of its children
-   Parameters - arg1: termination code
+   Parameters - termination code from arg1 given by *args
    Returns - nothing
    ------------------------------------------------------------------------ */
 void terminate(USLOSS_Sysargs *args) {
@@ -336,7 +332,8 @@ void terminateReal(int status) {
    Name - semCreate
    Purpose - create a new semaphore
    Parameters - USLOSS_Sysargs containing arguments
-   Returns - arg1: semaphore handle, arg4: success (0) or failure (-1)
+   Returns -    arg1: semaphore handle,
+                arg4: success (0) or failure (-1)
    ------------------------------------------------------------------------ */
 void semCreate(USLOSS_Sysargs *args) {
     makeSureCurrentFunctionIsInKernelMode("semCreate()");
@@ -540,7 +537,7 @@ int semFreeReal(int handle) {
 
 /* ------------------------------------------------------------------------
    Name - getTimeOfDay
-   Purpose - 
+   Purpose - get the amount of time that Usloss has been turned on for
    Parameters - USLOSS_Sysargs containing arguments
    Returns - nothing
    ------------------------------------------------------------------------ */
@@ -554,7 +551,7 @@ void getTimeOfDay(USLOSS_Sysargs *args) {
 
 /* ------------------------------------------------------------------------
    Name - cpuTime
-   Purpose - 
+   Purpose - Get the cpuTime and return it
    Parameters - USLOSS_Sysargs containing arguments
    Returns - nothing
    ------------------------------------------------------------------------ */
@@ -566,7 +563,7 @@ void cpuTime(USLOSS_Sysargs *args) {
 
 /* ------------------------------------------------------------------------
    Name - getPID
-   Purpose - 
+   Purpose - Get the PID of the current function and return it
    Parameters - USLOSS_Sysargs containing arguments
    Returns - nothing
    ------------------------------------------------------------------------ */
@@ -576,15 +573,20 @@ void getPID(USLOSS_Sysargs *args) {
 }
 
 
-/* an error method to handle invalid syscalls */
+/* ------------------------------------------------------------------------
+   Name - nullsys3
+   Purpose - Handle invalid syscalls
+   Parameters - USLOSS_Sysargs containing arguments
+   Returns - nothing
+   ------------------------------------------------------------------------ */
 void nullsys3(USLOSS_Sysargs *args) {
     USLOSS_Console("nullsys(): Invalid syscall %d. Terminating...\n", args->number);
     terminateReal(1);
 }
 
 
-/* initializes proc struct */
-void initProc(int pid) {
+
+void initializeProcessSlot3(int pid) {
     makeSureCurrentFunctionIsInKernelMode("initProc()");
 
     int i = pid % MAXPROC;
@@ -597,8 +599,8 @@ void initProc(int pid) {
 }
 
 
-/* empties proc struct */
-void emptyProc3(int pid) {
+
+void emptyProcessSlot3(int pid) {
     makeSureCurrentFunctionIsInKernelMode("emptyProc()");
 
     int i = pid % MAXPROC;
@@ -668,59 +670,79 @@ void initProcQueue3(processQueue *q, int type) {
     q->type = type;
 }
 
-/* Add the given procPtr3 to the back of the given queue. */
-void appendProcessToQueue3(processQueue *q, procPtr3 p) {
-    if (q->head == NULL && q->tail == NULL) {
-        q->head = q->tail = p;
+/* ------------------------------------------------------------------------
+   Name -           appendProcessToQueue
+   Purpose -        Adds a process to the end of a processQueue
+   Parameters -
+                    processQueue* processQueue:
+                        Pointer to processQueue to be added to
+                    procPty process
+                        Pointer to the process that will be added
+   Returns -        Nothing
+   Side Effects -   The length of the processQueue increases by 1.
+   ------------------------------------------------------------------------ */
+void appendProcessToQueue3(processQueue *queue, procPtr3 process) {
+    if (queue->head == NULL && queue->tail == NULL) {
+        queue->head = queue->tail = process;
     }
     else {
-        if (q->type == BLOCKED)
-            q->tail->nextProcPtr = p;
-        else if (q->type == CHILDREN)
-            q->tail->nextSiblingPtr = p;
-        q->tail = p;
+        if (queue->type == BLOCKED)
+            queue->tail->nextProcPtr = process;
+        else if (queue->type == CHILDREN)
+            queue->tail->nextSiblingPtr = process;
+        queue->tail = process;
     }
-    q->size++;
+    queue->size++;
 }
 
-/* Remove and return the head of the given queue. */
-procPtr3 popFromQueue3(processQueue *q) {
-    procPtr3 temp = q->head;
-    if (q->head == NULL) {
+/* ------------------------------------------------------------------------
+   Name -           popFromQueue3
+   Purpose -        Remove and return the first element from the processQueue
+   Parameters -
+                    processQueue *processQueue
+                        A pointer to the processQueue who we want to modify
+   Returns -
+                    procPtr:
+                        Pointer to the element that we want
+   Side Effects -   Length of processQueue is decreased by 1
+   ------------------------------------------------------------------------ */
+procPtr3 popFromQueue3(processQueue *queue) {
+    procPtr3 temp = queue->head;
+    if (queue->head == NULL) {
         return NULL;
     }
-    if (q->head == q->tail) {
-        q->head = q->tail = NULL;
+    if (queue->head == queue->tail) {
+        queue->head = queue->tail = NULL;
     } else {
-        if (q->type == BLOCKED)
-            q->head = q->head->nextProcPtr;
-        else if (q->type == CHILDREN)
-            q->head = q->head->nextSiblingPtr;
+        if (queue->type == BLOCKED)
+            queue->head = queue->head->nextProcPtr;
+        else if (queue->type == CHILDREN)
+            queue->head = queue->head->nextSiblingPtr;
     }
-    q->size--;
+    queue->size--;
     return temp;
 }
 
 /* Remove the child process from the queue */
-void removeChild3(processQueue *q, procPtr3 child) {
-    if (q->head == NULL || q->type != CHILDREN)
+void removeChild3(processQueue *queue, procPtr3 childProcess) {
+    if (queue->head == NULL || queue->type != CHILDREN)
         return;
 
-    if (q->head == child) {
-        popFromQueue3(q);
+    if (queue->head == childProcess) {
+        popFromQueue3(queue);
         return;
     }
 
-    procPtr3 prev = q->head;
-    procPtr3 p = q->head->nextSiblingPtr;
+    procPtr3 prev = queue->head;
+    procPtr3 p = queue->head->nextSiblingPtr;
 
     while (p != NULL) {
-        if (p == child) {
-            if (p == q->tail)
-                q->tail = prev;
+        if (p == childProcess) {
+            if (p == queue->tail)
+                queue->tail = prev;
             else
                 prev->nextSiblingPtr = p->nextSiblingPtr->nextSiblingPtr;
-            q->size--;
+            queue->size--;
         }
         prev = p;
         p = p->nextSiblingPtr;
