@@ -1,0 +1,390 @@
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test00.c
+gcc -L. -L/Users/rodrigo/lib -o test00 test00.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test00 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test01.c
+gcc -L. -L/Users/rodrigo/lib -o test01 test01.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test01 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test02.c
+gcc -L. -L/Users/rodrigo/lib -o test02 test02.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test02 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test03.c
+gcc -L. -L/Users/rodrigo/lib -o test03 test03.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test03 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test04.c
+gcc -L. -L/Users/rodrigo/lib -o test04 test04.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test04 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test05.c
+gcc -L. -L/Users/rodrigo/lib -o test05 test05.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test05 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test06.c
+gcc -L. -L/Users/rodrigo/lib -o test06 test06.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test06 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test07.c
+gcc -L. -L/Users/rodrigo/lib -o test07 test07.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test07 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test08.c
+gcc -L. -L/Users/rodrigo/lib -o test08 test08.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test08 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test09.c
+gcc -L. -L/Users/rodrigo/lib -o test09 test09.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test09 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test10.c
+gcc -L. -L/Users/rodrigo/lib -o test10 test10.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+Files /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test10.txt and ./output/test10.txt differ
+
+*** ./output/test10.txt	2018-03-25 10:18:44.000000000 -0700
+--- /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test10.txt	2018-03-11 19:39:25.000000000 -0700
+***************
+*** 3,7 ****
+  Child1a(): starting
+! Child1a(): current time = 69  Should be close, but does not have to be an exact match
+! Child1a(): current time = 78  Should be close, but does not have to be an exact match
+! Child1a(): current time = 83  Should be close, but does not have to be an exact match
+  Child1a(): done
+--- 3,7 ----
+  Child1a(): starting
+! Child1a(): current time = 61  Should be close, but does not have to be an exact match
+! Child1a(): current time = 67  Should be close, but does not have to be an exact match
+! Child1a(): current time = 74  Should be close, but does not have to be an exact match
+  Child1a(): done
+***************
+*** 9,13 ****
+  Child1b(): starting
+! Child1b(): current time = 117  Should be close, but does not have to be an exact match
+! Child1b(): current time = 124  Should be close, but does not have to be an exact match
+! Child1b(): current time = 133  Should be close, but does not have to be an exact match
+  Child1b(): done
+--- 9,13 ----
+  Child1b(): starting
+! Child1b(): current time = 109  Should be close, but does not have to be an exact match
+! Child1b(): current time = 114  Should be close, but does not have to be an exact match
+! Child1b(): current time = 120  Should be close, but does not have to be an exact match
+  Child1b(): done
+***************
+*** 15,19 ****
+  Child1c(): starting
+! Child1c(): current time = 171  Should be close, but does not have to be an exact match
+! Child1c(): current time = 178  Should be close, but does not have to be an exact match
+! Child1c(): current time = 183  Should be close, but does not have to be an exact match
+  Child1c(): done
+--- 15,19 ----
+  Child1c(): starting
+! Child1c(): current time = 154  Should be close, but does not have to be an exact match
+! Child1c(): current time = 163  Should be close, but does not have to be an exact match
+! Child1c(): current time = 170  Should be close, but does not have to be an exact match
+  Child1c(): done
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test11.c
+gcc -L. -L/Users/rodrigo/lib -o test11 test11.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+Files /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test11.txt and ./output/test11.txt differ
+
+*** ./output/test11.txt	2018-03-25 10:18:44.000000000 -0700
+--- /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test11.txt	2018-03-11 19:39:24.000000000 -0700
+***************
+*** 3,7 ****
+  Child1a(): starting
+! Child1a(): current time = 16  Should be close, but does not have to be an exact match
+! Child1a(): current time = 25  Should be close, but does not have to be an exact match
+! Child1a(): current time = 30  Should be close, but does not have to be an exact match
+  Child1a(): done
+--- 3,7 ----
+  Child1a(): starting
+! Child1a(): current time = 14  Should be close, but does not have to be an exact match
+! Child1a(): current time = 20  Should be close, but does not have to be an exact match
+! Child1a(): current time = 27  Should be close, but does not have to be an exact match
+  Child1a(): done
+***************
+*** 10,13 ****
+  Child1b(): current time = 14  Should be close, but does not have to be an exact match
+! Child1b(): current time = 21  Should be close, but does not have to be an exact match
+! Child1b(): current time = 30  Should be close, but does not have to be an exact match
+  Child1b(): done
+--- 10,13 ----
+  Child1b(): current time = 14  Should be close, but does not have to be an exact match
+! Child1b(): current time = 19  Should be close, but does not have to be an exact match
+! Child1b(): current time = 25  Should be close, but does not have to be an exact match
+  Child1b(): done
+***************
+*** 15,18 ****
+  Child1c(): starting
+! Child1c(): current time = 16  Should be close, but does not have to be an exact match
+! Child1c(): current time = 23  Should be close, but does not have to be an exact match
+  Child1c(): current time = 28  Should be close, but does not have to be an exact match
+--- 15,18 ----
+  Child1c(): starting
+! Child1c(): current time = 12  Should be close, but does not have to be an exact match
+! Child1c(): current time = 21  Should be close, but does not have to be an exact match
+  Child1c(): current time = 28  Should be close, but does not have to be an exact match
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test12.c
+gcc -L. -L/Users/rodrigo/lib -o test12 test12.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+Files /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test12.txt and ./output/test12.txt differ
+
+*** ./output/test12.txt	2018-03-25 10:18:44.000000000 -0700
+--- /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test12.txt	2018-03-11 19:39:23.000000000 -0700
+***************
+*** 3,10 ****
+  Child1a(): starting
+! Child1a(): current time of day =  69  Should be close, but does not have to be an exact match
+! Child1a(): current CPU time =  25     Should be close, but does not have to be an exact match
+! Child1a(): current time of day =  83  Should be close, but does not have to be an exact match
+! Child1a(): current CPU time =  35     Should be close, but does not have to be an exact match
+! Child1a(): current time of day =  95  Should be close, but does not have to be an exact match
+! Child1a(): current CPU time =  49     Should be close, but does not have to be an exact match
+  Child1a(): done
+--- 3,10 ----
+  Child1a(): starting
+! Child1a(): current time of day =  61  Should be close, but does not have to be an exact match
+! Child1a(): current CPU time =  20     Should be close, but does not have to be an exact match
+! Child1a(): current time of day =  74  Should be close, but does not have to be an exact match
+! Child1a(): current CPU time =  34     Should be close, but does not have to be an exact match
+! Child1a(): current time of day =  86  Should be close, but does not have to be an exact match
+! Child1a(): current CPU time =  48     Should be close, but does not have to be an exact match
+  Child1a(): done
+***************
+*** 12,19 ****
+  Child1b(): starting
+! Child1b(): current time of day = 138  Should be close, but does not have to be an exact match
+! Child1b(): current CPU time =  18     Should be close, but does not have to be an exact match
+! Child1b(): current time of day = 153  Should be close, but does not have to be an exact match
+! Child1b(): current CPU time =  35     Should be close, but does not have to be an exact match
+! Child1b(): current time of day = 171  Should be close, but does not have to be an exact match
+! Child1b(): current CPU time =  51     Should be close, but does not have to be an exact match
+  Child1b(): done
+--- 12,19 ----
+  Child1b(): starting
+! Child1b(): current time of day = 127  Should be close, but does not have to be an exact match
+! Child1b(): current CPU time =  17     Should be close, but does not have to be an exact match
+! Child1b(): current time of day = 139  Should be close, but does not have to be an exact match
+! Child1b(): current CPU time =  31     Should be close, but does not have to be an exact match
+! Child1b(): current time of day = 154  Should be close, but does not have to be an exact match
+! Child1b(): current CPU time =  47     Should be close, but does not have to be an exact match
+  Child1b(): done
+***************
+*** 21,28 ****
+  Child1c(): starting
+! Child1c(): current time of day = 214  Should be close, but does not have to be an exact match
+! Child1c(): current CPU time =  19     Should be close, but does not have to be an exact match
+! Child1c(): current time of day = 226  Should be close, but does not have to be an exact match
+! Child1c(): current CPU time =  32     Should be close, but does not have to be an exact match
+! Child1c(): current time of day = 239  Should be close, but does not have to be an exact match
+! Child1c(): current CPU time =  46     Should be close, but does not have to be an exact match
+  Child1c(): done
+--- 21,28 ----
+  Child1c(): starting
+! Child1c(): current time of day = 197  Should be close, but does not have to be an exact match
+! Child1c(): current CPU time =  18     Should be close, but does not have to be an exact match
+! Child1c(): current time of day = 211  Should be close, but does not have to be an exact match
+! Child1c(): current CPU time =  34     Should be close, but does not have to be an exact match
+! Child1c(): current time of day = 225  Should be close, but does not have to be an exact match
+! Child1c(): current CPU time =  49     Should be close, but does not have to be an exact match
+  Child1c(): done
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test13.c
+gcc -L. -L/Users/rodrigo/lib -o test13 test13.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test13 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test14.c
+gcc -L. -L/Users/rodrigo/lib -o test14 test14.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test14 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test15.c
+gcc -L. -L/Users/rodrigo/lib -o test15 test15.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test15 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test16.c
+gcc -L. -L/Users/rodrigo/lib -o test16 test16.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test16 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test17.c
+gcc -L. -L/Users/rodrigo/lib -o test17 test17.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test17 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test18.c
+gcc -L. -L/Users/rodrigo/lib -o test18 test18.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test18 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test19.c
+gcc -L. -L/Users/rodrigo/lib -o test19 test19.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+Files /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test19.txt and ./output/test19.txt differ
+
+*** ./output/test19.txt	2018-03-25 10:18:44.000000000 -0700
+--- /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test19.txt	2018-03-11 19:39:24.000000000 -0700
+***************
+*** 1,4 ****
+  start3(): started
+! start3(): elapsed time in middle =  9 Should be close, but does not have to be an exact match
+! start3(): elapsed time at end    = 17 Should be close, but does not have to be an exact match
+  All processes completed.
+--- 1,4 ----
+  start3(): started
+! start3(): elapsed time in middle =  6 Should be close, but does not have to be an exact match
+! start3(): elapsed time at end    = 13 Should be close, but does not have to be an exact match
+  All processes completed.
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test20.c
+gcc -L. -L/Users/rodrigo/lib -o test20 test20.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+Files /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test20.txt and ./output/test20.txt differ
+
+*** ./output/test20.txt	2018-03-25 10:18:45.000000000 -0700
+--- /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test20.txt	2018-03-11 19:39:25.000000000 -0700
+***************
+*** 13,17 ****
+  Child2(): starting
+- Child1(): After P attempt #3 -- may appear before: start3(): After V
+  
+  start3(): After V -- may appear before: Child1(): After P attempt #3
+  Child2(): After V attempt #0
+--- 13,17 ----
+  Child2(): starting
+  
+  start3(): After V -- may appear before: Child1(): After P attempt #3
++ Child1(): After P attempt #3 -- may appear before: start3(): After V
+  Child2(): After V attempt #0
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test21.c
+gcc -L. -L/Users/rodrigo/lib -o test21 test21.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+Files /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test21.txt and ./output/test21.txt differ
+
+*** ./output/test21.txt	2018-03-25 10:18:45.000000000 -0700
+--- /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test21.txt	2018-03-11 19:39:23.000000000 -0700
+***************
+*** 11,19 ****
+  Child2a(): starting the code for Child2a
+! Child2(): Wait result for child 0 has status 11
+  
+  Child2b(): starting the code for Child2b
+! Child2(): Wait result for child 0 has status 11
+  
+  Child2c(): starting the code for Child2c
+! Child2(): Wait result for child 0 has status 11
+  
+--- 11,19 ----
+  Child2a(): starting the code for Child2a
+! Child2(): Wait result for child 7 has status 11
+  
+  Child2b(): starting the code for Child2b
+! Child2(): Wait result for child 8 has status 11
+  
+  Child2c(): starting the code for Child2c
+! Child2(): Wait result for child 9 has status 11
+  
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test22.c
+gcc -L. -L/Users/rodrigo/lib -o test22 test22.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test22 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test23.c
+gcc -L. -L/Users/rodrigo/lib -o test23 test23.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test23 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test24.c
+gcc -L. -L/Users/rodrigo/lib -o test24 test24.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+
+test24 passed!
+
+gcc -Wall -g -std=gnu99 -I. -I/Users/rodrigo/include  -D_XOPEN_SOURCE -c testcases/test25.c
+gcc -L. -L/Users/rodrigo/lib -o test25 test25.o -lpatrickphase2 -lpatrickphase1 -lusloss3.6 -lpatrickphase1 -lpatrickphase2 -lphase3 p1.o
+Files /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test25.txt and ./output/test25.txt differ
+
+*** ./output/test25.txt	2018-03-25 10:18:45.000000000 -0700
+--- /Users/rodrigo/Documents/UniversityOfArizona/Spring_18/CS_452/USLOSS_Project/usloss/usloss/phase3/testResults/test25.txt	2018-03-11 19:39:23.000000000 -0700
+***************
+*** 59,113 ****
+  Child1(): spawned process 6
+  Child2b(): starting, pid = 56
+  Child2b(): spawned process 57
+! Child2b(): spawned process 58
+! Child2b(): spawned process 59
+! Child2b(): spawned process 60
+! Child2b(): spawned process 61
+! Child2b(): spawned process 62
+! Child2b(): spawned process 63
+! Child2b(): spawned process 64
+! Child2b(): spawned process 65
+! Child2b(): spawned process 66
+! Child2b(): spawned process 67
+! Child2b(): spawned process 68
+! Child2b(): spawned process 69
+! Child2b(): spawned process 70
+! Child2b(): spawned process 71
+! Child2b(): spawned process 72
+! Child2b(): spawned process 73
+! Child2b(): spawned process 74
+! Child2b(): spawned process 75
+! Child2b(): spawned process 76
+! Child2b(): spawned process 77
+! Child2b(): spawned process 78
+! Child2b(): spawned process 79
+! Child2b(): spawned process 80
+! Child2b(): spawned process 81
+! Child2b(): spawned process 82
+! Child2b(): spawned process 83
+! Child2b(): spawned process 84
+! Child2b(): spawned process 85
+! Child2b(): spawned process 86
+! Child2b(): spawned process 87
+! Child2b(): spawned process 88
+! Child2b(): spawned process 89
+! Child2b(): spawned process 90
+! Child2b(): spawned process 91
+! Child2b(): spawned process 92
+! Child2b(): spawned process 93
+! Child2b(): spawned process 94
+! Child2b(): spawned process 95
+! Child2b(): spawned process 96
+! Child2b(): spawned process 97
+! Child2b(): spawned process 98
+! Child2b(): spawned process 99
+! Child2b(): spawned process 100
+! Child2b(): spawned attempt failed, pid = -1
+! Child2b(): spawned attempt failed, pid = -1
+! Child2b(): spawned attempt failed, pid = -1
+! Child2b(): spawned attempt failed, pid = -1
+! Child2b(): spawned attempt failed, pid = -1
+! Child2b(): spawned attempt failed, pid = -1
+! 
+! Child2b(): Terminating self and all my children
+! zap(): process being zapped does not exist.  Halting...
+--- 59,69 ----
+  Child1(): spawned process 6
++ 
+  Child2b(): starting, pid = 56
++ Child2c(): starting the code for Child2c
+  Child2b(): spawned process 57
+! Child1(): spawned process 56
+! Child1(): child 56 returned status of 50
+! Child1(): done
+! start3(): child 5 returned status of 9
+! start3(): done
+! All processes completed.
+
+20 tests passed!

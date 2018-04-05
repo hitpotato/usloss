@@ -76,4 +76,4 @@ add_executable(usloss
         src/syscall.h
         src/usloss.h
         src/usyscall.h
-        config.h phase3/structures.h)
+        config.h phase3/sems.h)
