@@ -24,16 +24,16 @@ struct heap {
 };
 
 struct procStruct {
-    int         pid;
-    int 		  mboxID;
-    int         blockSem;
-    int		  wakeTime;
-    int 		  diskTrack;
-    int 		  diskFirstSec;
-    int 		  diskSectors;
-    void 		  *diskBuffer;
-    procPtr 	  prevDiskPtr;
-    procPtr 	  nextDiskPtr;
+    int             pid;
+    int 		    mboxID;
+    int             blockSem;
+    int		        wakeTime;
+    int 		    diskTrack;
+    int 		    diskFirstSec;
+    int 		    diskSectors;
+    void 		    *diskBuffer;
+    procPtr 	    prevDiskPtr;
+    procPtr 	    nextDiskPtr;
     USLOSS_DeviceRequest diskRequest;
 };
 

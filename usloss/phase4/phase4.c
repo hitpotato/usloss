@@ -50,7 +50,7 @@ procPtr peekAtDiskQueue(diskQueue *);
 procPtr removeFromDiskQueue(diskQueue *);
 
 void initializeHeap(heap *);
-void appendTOHeap(heap *, procPtr);
+void appendToHeap(heap *, procPtr);
 procPtr peekAtHeap(heap *);
 procPtr popFromHeap(heap *);
 
@@ -58,13 +58,13 @@ procPtr popFromHeap(heap *);
 // ---------------------------------- Globals ----------//
 int debug4 = 0;
 int running;
-int diskZapped; // indicates if the disk drivers are 'zapped' or not
-int diskPids[USLOSS_DISK_UNITS]; // pids of the disk drivers
+int diskZapped;                             // indicates if the disk drivers are 'zapped' or not
+int diskPids[USLOSS_DISK_UNITS];            // pids of the disk drivers
 
 procStruct ProcTable[MAXPROC];
 heap sleepinProcsHeap;
-diskQueue diskQs[USLOSS_DISK_UNITS]; // queues for disk drivers
-int termProcTable[USLOSS_TERM_UNITS][3]; // keep track of term procs
+diskQueue diskQs[USLOSS_DISK_UNITS];        // queues for disk drivers
+int termProcTable[USLOSS_TERM_UNITS][3];    // keep track of term procs
 
 int charRecvMbox[USLOSS_TERM_UNITS];        // receive char
 int charSendMbox[USLOSS_TERM_UNITS];        // send char
@@ -73,8 +73,7 @@ int lineWriteMbox[USLOSS_TERM_UNITS];       // write line
 int pidMbox[USLOSS_TERM_UNITS];             // pid to block
 int termInt[USLOSS_TERM_UNITS];             // interupt for term (control writing)
 
-void start3(void)
-{
+void start3(void) {
     char	name[128];
     char    termbuf[10];
     char    diskbuf[10];
@@ -249,32 +248,13 @@ void start3(void)
         join(&status);
     }
 
-    // close out the term files
-    FILE *file = fopen("term0.in", "a");
-    fprintf(file, "last line for termination");
-    fflush(file);
-    fclose(file);
-    file = fopen("term1.in", "a");
-    fprintf(file, "last line for termination");
-    fflush(file);
-    fclose(file);
-    file = fopen("term2.in", "a");
-    fprintf(file, "last line for termination");
-    fflush(file);
-    fclose(file);
-    file = fopen("term3.in", "a");
-    fprintf(file, "last line for termination");
-    fflush(file);
-    fclose(file);
-
     // eventually, at the end:
     quit(0);
 
 }
 
 /* Clock Driver */
-static int ClockDriver(char *arg)
-{
+static int ClockDriver(char *arg) {
     int result;
     int status;
 
@@ -304,8 +284,7 @@ static int ClockDriver(char *arg)
 }
 
 /* Disk Driver */
-static int DiskDriver(char *arg)
-{
+static int DiskDriver(char *arg) {
     int result;
     int status;
     int unit = atoi( (char *) arg);     // Unit is passed as arg.
@@ -406,8 +385,7 @@ static int DiskDriver(char *arg)
 }
 
 /* Terminal Driver */
-static int TermDriver(char *arg)
-{
+static int TermDriver(char *arg) {
     int result;
     int status;
     int unit = atoi( (char *) arg);     // Unit is passed as arg.
@@ -448,8 +426,7 @@ static int TermDriver(char *arg)
 }
 
 /* Terminal Reader */
-static int TermReader(char * arg)
-{
+static int TermReader(char * arg) {
     int unit = atoi( (char *) arg);     // Unit is passed as arg.
     int i;
     int receive; // char to receive
@@ -489,8 +466,7 @@ static int TermReader(char * arg)
 }
 
 /* Terminal Writer */
-static int TermWriter(char * arg)
-{
+static int TermWriter(char * arg) {
     int unit = atoi( (char *) arg);     // Unit is passed as arg.
     int size;
     int ctrl = 0;
@@ -583,7 +559,7 @@ int sleepReal(int seconds) {
     if (debug4)
         USLOSS_Console("sleepReal: set wake time for process %d to %d, adding to heap...\n", proc->pid, proc->wakeTime);
 
-    appendTOHeap(&sleepinProcsHeap, proc); // add to sleep heap
+    appendToHeap(&sleepinProcsHeap, proc); // add to sleep heap
     if (debug4)
         USLOSS_Console("sleepReal: Process %d going to sleep until %d\n", proc->pid, proc->wakeTime);
     sempReal(proc->blockSem); // block the process
@@ -886,9 +862,7 @@ void initializeProcessSlot(int pid) {
 }
 
 
-/* ------------------------------------------------------------------------
-  Functions for the dskQueue and heap.
-   ----------------------------------------------------------------------- */
+/* -------------------------------- Disk Queue Functions ---------------*/
 
 /* Initialize the given diskQueue */
 void initializeDiskQueue(diskQueue *q) {
@@ -993,66 +967,105 @@ procPtr removeFromDiskQueue(diskQueue *q) {
 }
 
 
-/* Setup heap, implementation based on https://gist.github.com/aatishnn/8265656 */
+/* -------------------------------- Heap Functions ---------------*/
 void initializeHeap(heap *h) {
     h->size = 0;
 }
 
-/* Add to heap */
-void appendTOHeap(heap *h, procPtr p) {
+/* ------------------------------------------------------------------------
+   Name -           appendProcessToQueue
+   Purpose -        Adds a process to the end of a processQueue
+   Parameters -
+                    processQueue* processQueue:
+                        Pointer to processQueue to be added to
+                    procPty process
+                        Pointer to the process that will be added
+   Returns -        Nothing
+   Side Effects -   The length of the processQueue increases by 1.
+   ------------------------------------------------------------------------ */
+void appendToHeap(heap *processHeap, procPtr process) {
     // start from bottom and find correct place
     int i, parent;
-    for (i = h->size; i > 0; i = parent) {
+    for (i = processHeap->size; i > 0; i = parent) {
         parent = (i-1)/2;
-        if (h->procs[parent]->wakeTime <= p->wakeTime)
+        if (processHeap->procs[parent]->wakeTime <= process->wakeTime)
             break;
         // move parent down
-        h->procs[i] = h->procs[parent];
+        processHeap->procs[i] = processHeap->procs[parent];
     }
-    h->procs[i] = p; // put at final location
-    h->size++;
+    processHeap->procs[i] = process; // put at final location
+    processHeap->size++;
     if (debug4)
-        USLOSS_Console("heapAdd: Added proc %d to heap at index %d, size = %d\n", p->pid, i, h->size);
+        USLOSS_Console("heapAdd: Added proc %d to heap at index %d, size = %d\n", process->pid, i, processHeap->size);
 }
 
-/* Return min process on heap */
+
+/* ------------------------------------------------------------------------
+   Name -           peekAtHeap
+   Purpose -        Return a pointer to the first element
+   Parameters -
+                    heap *h
+                        A pointer to the heap who we want to modify
+   Returns -
+                    procPtr:
+                        Pointer to the element that we want
+   Side Effects -   Length of heap is decreased by 1
+   ------------------------------------------------------------------------ */
 procPtr peekAtHeap(heap *h) {
     return h->procs[0];
 }
 
-/* Remove earlist waking process form the heap */
-procPtr popFromHeap(heap *h) {
-    if (h->size == 0)
+
+/* ------------------------------------------------------------------------
+   Name -           popFromHeap
+   Purpose -        Remove and return the first element from the processHeap
+   Parameters -
+                    heap *processHeap
+                        A pointer to the heap who we want to modify
+   Returns -
+                    procPtr:
+                        Pointer to the element that we want
+   Side Effects -   Length of heap is decreased by 1
+   ------------------------------------------------------------------------ */
+procPtr popFromHeap(heap *processHeap) {
+
+    if (processHeap->size == 0)
         return NULL;
 
-    procPtr removed = h->procs[0]; // remove min
-    h->size--;
-    h->procs[0] = h->procs[h->size]; // put last in first spot
 
-    // re-heapify
+    procPtr removedProcess = processHeap->procs[0];                  // Remove first process
+    processHeap->size--;                                            // Decrease size of heap
+    processHeap->procs[0] = processHeap->procs[processHeap->size]; // Put the last elment in the first
+
+    // Re-create the heap
     int i = 0, left, right, min = 0;
-    while (i*2 <= h->size) {
-        // get locations of children
+    while (i*2 <= processHeap->size) {
+        // Get the children
         left = i*2 + 1;
         right = i*2 + 2;
 
-        // get min child
-        if (left <= h->size && h->procs[left]->wakeTime < h->procs[min]->wakeTime)
+        // Get the smallest child
+        if (left <= processHeap->size && processHeap->procs[left]->wakeTime < processHeap->procs[min]->wakeTime)
             min = left;
-        if (right <= h->size && h->procs[right]->wakeTime < h->procs[min]->wakeTime)
+        if (right <= processHeap->size && processHeap->procs[right]->wakeTime < processHeap->procs[min]->wakeTime)
             min = right;
 
-        // swap current with min child if needed
+        // Swap current with min child
         if (min != i) {
-            procPtr temp = h->procs[i];
-            h->procs[i] = h->procs[min];
-            h->procs[min] = temp;
+            procPtr temp = processHeap->procs[i];
+            processHeap->procs[i] = processHeap->procs[min];
+            processHeap->procs[min] = temp;
             i = min;
         }
-        else
-            break; // otherwise we're done
+        else {
+            break;
+        }
+
     }
+
     if (debug4)
-        USLOSS_Console("heapRemove: Called, returning pid %d, size = %d\n", removed->pid, h->size);
-    return removed;
+        USLOSS_Console("heapRemove: Called, returning pid %d, size = %d\n",
+                       removedProcess->pid, processHeap->size);
+
+    return removedProcess;
 }
