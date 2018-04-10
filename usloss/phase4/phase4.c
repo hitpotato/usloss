@@ -234,8 +234,8 @@ void start3(void) {
     {
         int ctrl = 0;
         ctrl = USLOSS_TERM_CTRL_RECV_INT(ctrl);
-        USLOSS_DeviceOutput(USLOSS_TERM_DEV, i, (void *)((long) ctrl));
-
+        int w = USLOSS_DeviceOutput(USLOSS_TERM_DEV, i, (void *)((long) ctrl));
+        w += 5;
         // file stuff
         sprintf(filename, "term%d.in", i);
         FILE *f = fopen(filename, "a+");
@@ -260,7 +260,8 @@ static int ClockDriver(char *arg) {
 
     // Let the parent know we are running and enable interrupts.
     semvReal(running);
-    USLOSS_PsrSet(USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT);
+    int w = USLOSS_PsrSet(USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT);
+    w += 5;
 
     // Infinite loop until we are zap'd
     while(! isZapped()) {
@@ -272,7 +273,8 @@ static int ClockDriver(char *arg) {
         // Compute the current time and wake up any processes whose time has come.
         procPtr proc;
         int time;
-        USLOSS_DeviceInput(0, 0, &time);
+        int w = USLOSS_DeviceInput(0, 0, &time);
+        w += 5;
         while (sleepinProcsHeap.size > 0 && time >= peekAtHeap(&sleepinProcsHeap)->wakeTime) {
             proc = popFromHeap(&sleepinProcsHeap);
             if (debug4)
@@ -300,7 +302,8 @@ static int DiskDriver(char *arg) {
 
     // Let the parent know we are running and enable interrupts.
     semvReal(running);
-    USLOSS_PsrSet(USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT);
+    int w = USLOSS_PsrSet(USLOSS_PsrGet() | USLOSS_PSR_CURRENT_INT);
+    w += 5;
 
     // Infinite loop until we are zap'd
     while(!isZapped()) {
@@ -323,7 +326,9 @@ static int DiskDriver(char *arg) {
 
             // handle tracks request
             if (proc->diskRequest.opr == USLOSS_DISK_TRACKS) {
-                USLOSS_DeviceOutput(USLOSS_DISK_DEV, unit, &proc->diskRequest);
+                int w = USLOSS_DeviceOutput(USLOSS_DISK_DEV, unit, &proc->diskRequest);
+                w += 5;
+
                 result = waitDevice(USLOSS_DISK_DEV, unit, &status);
                 if (result != 0) {
                     return 0;
@@ -336,7 +341,9 @@ static int DiskDriver(char *arg) {
                     USLOSS_DeviceRequest request;
                     request.opr = USLOSS_DISK_SEEK;
                     request.reg1 = &track;
-                    USLOSS_DeviceOutput(USLOSS_DISK_DEV, unit, &request);
+                    int w = USLOSS_DeviceOutput(USLOSS_DISK_DEV, unit, &request);
+                    w += 5;
+
                     // wait for result
                     result = waitDevice(USLOSS_DISK_DEV, unit, &status);
                     if (result != 0) {
@@ -351,7 +358,8 @@ static int DiskDriver(char *arg) {
                     int s;
                     for (s = proc->diskFirstSec; proc->diskSectors > 0 && s < USLOSS_DISK_TRACK_SIZE; s++) {
                         proc->diskRequest.reg1 = (void *) ((long) s);
-                        USLOSS_DeviceOutput(USLOSS_DISK_DEV, unit, &proc->diskRequest);
+                        int w = USLOSS_DeviceOutput(USLOSS_DISK_DEV, unit, &proc->diskRequest);
+                        w += 5;
                         result = waitDevice(USLOSS_DISK_DEV, unit, &status);
                         if (result != 0) {
                             return 0;
@@ -486,7 +494,8 @@ static int TermWriter(char * arg) {
 
         // enable xmit interrupt and receive interrupt
         ctrl = USLOSS_TERM_CTRL_XMIT_INT(ctrl);
-        USLOSS_DeviceOutput(USLOSS_TERM_DEV, unit, (void *) ((long) ctrl));
+        int w = USLOSS_DeviceOutput(USLOSS_TERM_DEV, unit, (void *) ((long) ctrl));
+        w += 5;
 
         // xmit the line
         next = 0;
@@ -504,7 +513,8 @@ static int TermWriter(char * arg) {
                 ctrl = USLOSS_TERM_CTRL_XMIT_CHAR(ctrl);
                 ctrl = USLOSS_TERM_CTRL_XMIT_INT(ctrl);
 
-                USLOSS_DeviceOutput(USLOSS_TERM_DEV, unit, (void *) ((long) ctrl));
+                int w = USLOSS_DeviceOutput(USLOSS_TERM_DEV, unit, (void *) ((long) ctrl));
+                w += 5;
             }
 
             next++;
@@ -514,7 +524,9 @@ static int TermWriter(char * arg) {
         ctrl = 0;
         if (termInt[unit] == 1)
             ctrl = USLOSS_TERM_CTRL_RECV_INT(ctrl);
-        USLOSS_DeviceOutput(USLOSS_TERM_DEV, unit, (void *) ((long) ctrl));
+        w = USLOSS_DeviceOutput(USLOSS_TERM_DEV, unit, (void *) ((long) ctrl));
+        w += 5;
+
         termInt[unit] = 0;
         int pid;
         MboxReceive(pidMbox[unit], &pid, sizeof(int));
@@ -554,7 +566,8 @@ int sleepReal(int seconds) {
 
     // set wake time
     int time;
-    USLOSS_DeviceInput(0, 0, &time);
+    int w = USLOSS_DeviceInput(0, 0, &time);
+    w += 5;
     proc->wakeTime = time + seconds*1000000;
     if (debug4)
         USLOSS_Console("sleepReal: set wake time for process %d to %d, adding to heap...\n", proc->pid, proc->wakeTime);
@@ -563,7 +576,8 @@ int sleepReal(int seconds) {
     if (debug4)
         USLOSS_Console("sleepReal: Process %d going to sleep until %d\n", proc->pid, proc->wakeTime);
     sempReal(proc->blockSem); // block the process
-    USLOSS_DeviceInput(0, 0, &time);
+    w = USLOSS_DeviceInput(0, 0, &time);
+    w += 5;
     if (debug4)
         USLOSS_Console("sleepReal: Process %d woke up, time is %d\n", proc->pid, time);
     return 0;
@@ -649,6 +663,7 @@ int diskReadOrWriteReal(int unit, int track, int first, int sectors, void *buffe
         proc->diskRequest.opr = USLOSS_DISK_WRITE;
     else
         proc->diskRequest.opr = USLOSS_DISK_READ;
+
     proc->diskRequest.reg2 = buffer;
     proc->diskTrack = track;
     proc->diskFirstSec = first;
@@ -671,9 +686,11 @@ int diskReadOrWriteReal(int unit, int track, int first, int sectors, void *buffe
 /* extract values from sysargs and call diskSizeReal */
 void diskSize(USLOSS_Sysargs * args) {
     makeSureCurrentFunctionIsInKernelMode("diskSize");
+
     int unit = (long) args->arg1;
     int sector, track, disk;
     int retval = diskSizeReal(unit, &sector, &track, &disk);
+
     args->arg1 = (void *) ((long) sector);
     args->arg2 = (void *) ((long) track);
     args->arg3 = (void *) ((long) disk);
@@ -731,6 +748,7 @@ int diskSizeReal(int unit, int *sector, int *track, int *disk) {
 void termRead(USLOSS_Sysargs * args) {
     if (debug4)
         USLOSS_Console("termRead\n");
+
     makeSureCurrentFunctionIsInKernelMode("termRead");
 
     char *buffer = (char *) args->arg1;
@@ -752,11 +770,12 @@ void termRead(USLOSS_Sysargs * args) {
 int termReadReal(int unit, int size, char *buffer) {
     if (debug4)
         USLOSS_Console("termReadReal\n");
+
     makeSureCurrentFunctionIsInKernelMode("termReadReal");
 
-    if (unit < 0 || unit > USLOSS_TERM_UNITS - 1 || size < 0) {
+    if (unit < 0 || unit > USLOSS_TERM_UNITS - 1 || size < 0)
         return -1;
-    }
+
     char line[MAXLINE];
     int ctrl = 0;
 
@@ -765,25 +784,30 @@ int termReadReal(int unit, int size, char *buffer) {
         if (debug4)
             USLOSS_Console("termReadReal enable interrupts\n");
         ctrl = USLOSS_TERM_CTRL_RECV_INT(ctrl);
-        USLOSS_DeviceOutput(USLOSS_TERM_DEV, unit, (void *) ((long) ctrl));
+        int w = USLOSS_DeviceOutput(USLOSS_TERM_DEV, unit, (void *) ((long) ctrl));
+        w += 5;
         termInt[unit] = 1;
     }
+
     int retval = MboxReceive(lineReadMbox[unit], &line, MAXLINE);
 
     if (debug4)
-        USLOSS_Console("termReadReal (unit %d): size %d retval %d \n", unit, size, retval);
+        USLOSS_Console("termReadReal (unit %d): size %d retval %d \n",
+                       unit, size, retval);
 
-    if (retval > size) {
+    if (retval > size)
         retval = size;
-    }
+
     memcpy(buffer, line, retval);
 
     return retval;
 }
 
 void termWrite(USLOSS_Sysargs * args) {
+
     if (debug4)
         USLOSS_Console("termWrite\n");
+
     makeSureCurrentFunctionIsInKernelMode("termWrite");
 
     char *text = (char *) args->arg1;
@@ -795,10 +819,12 @@ void termWrite(USLOSS_Sysargs * args) {
     if (retval == -1) {
         args->arg2 = (void *) ((long) retval);
         args->arg4 = (void *) ((long) -1);
-    } else {
+    }
+    else {
         args->arg2 = (void *) ((long) retval);
         args->arg4 = (void *) ((long) 0);
     }
+
     switchToUserMode();
 }
 
@@ -843,10 +869,18 @@ void makeSureCurrentFunctionIsInKernelMode(char *name)
    ------------------------------------------------------------------------ */
 void switchToUserMode()
 {
-    USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_MODE );
+    int w = USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_MODE );
+    w += 5; 
 }
 
-/* initializes proc struct */
+/* ------------------------------------------------------------------------
+   Name -           initializeProcessSlot
+   Purpose -        Emptys/initializes a process slot
+   Parameters -
+                    index of process in the table of processes
+   Returns -        nothing
+   Side Effects -
+   ----------------------------------------------------------------------- */
 void initializeProcessSlot(int pid) {
     makeSureCurrentFunctionIsInKernelMode("initProc()");
 
@@ -862,9 +896,15 @@ void initializeProcessSlot(int pid) {
 }
 
 
-/* -------------------------------- Disk Queue Functions ---------------*/
-
-/* Initialize the given diskQueue */
+/* ------------------------------------------------------------------------
+   Name -           initializeDiskQueue
+   Purpose -        Just initialize a queue
+   Parameters -
+                    diskQueue* q:
+                        Pointer to diskQueue to be initialized
+   Returns -        Nothing
+   Side Effects -   The passed diskQueue is now no longer NULL
+   ------------------------------------------------------------------------ */
 void initializeDiskQueue(diskQueue *q) {
     q->head = NULL;
     q->tail = NULL;
@@ -872,7 +912,17 @@ void initializeDiskQueue(diskQueue *q) {
     q->size = 0;
 }
 
-/* Adds the proc pointer to the disk queue in sorted order */
+/* ------------------------------------------------------------------------
+   Name -           addToDiskQueue
+   Purpose -        Adds a process to the end of a diskQueue
+   Parameters -
+                    diskQueue* q:
+                        Pointer to diskQueue to be added to
+                    procPtr p
+                        Pointer to the process that will be added
+   Returns -        Nothing
+   Side Effects -   The length of the processHeap increases by 1.
+   ------------------------------------------------------------------------ */
 void addToDiskQueue(diskQueue *q, procPtr p) {
     if (debug4)
         USLOSS_Console("addDiskQ: adding pid %d, track %d to queue\n", p->pid, p->diskTrack);
@@ -902,16 +952,24 @@ void addToDiskQueue(diskQueue *q, procPtr p) {
         p->nextDiskPtr = next;
         next->prevDiskPtr = p;
         if (p->diskTrack < q->head->diskTrack)
-            q->head = p; // update head
+            q->head = p;
         if (p->diskTrack >= q->tail->diskTrack)
-            q->tail = p; // update tail
+            q->tail = p;
     }
     q->size++;
     if (debug4)
         USLOSS_Console("addDiskQ: add complete, size = %d\n", q->size);
 }
 
-/* Returns the next proc on the disk queue */
+/* ------------------------------------------------------------------------
+   Name -           peekAtDiskQueue
+   Purpose -        Returns a pointer to the first element in the diskQueue
+   Parameters -
+                    diskQueue *q
+                        The diskQueue we want to look at the first element of
+   Returns -        A pointer to the headProcess of the given processQueue
+   Side Effects -   None
+   ------------------------------------------------------------------------ */
 procPtr peekAtDiskQueue(diskQueue *q) {
     if (q->curr == NULL) {
         q->curr = q->head;
@@ -920,7 +978,17 @@ procPtr peekAtDiskQueue(diskQueue *q) {
     return q->curr;
 }
 
-/* Returns and removes the next proc on the disk queue */
+/* ------------------------------------------------------------------------
+   Name -           removeFromDiskQueue
+   Purpose -        Remove and return the first element from the diskQueue
+   Parameters -
+                    diskQueue *q
+                        A pointer to the diskQueue who we want to modify
+   Returns -
+                    procPtr:
+                        Pointer to the element that we want
+   Side Effects -   Length of processQueue is decreased by 1
+   ------------------------------------------------------------------------ */
 procPtr removeFromDiskQueue(diskQueue *q) {
     if (q->size == 0)
         return NULL;
@@ -967,7 +1035,15 @@ procPtr removeFromDiskQueue(diskQueue *q) {
 }
 
 
-/* -------------------------------- Heap Functions ---------------*/
+/* ------------------------------------------------------------------------
+   Name -           initializeHeap
+   Purpose -        Just initialize a process heap
+   Parameters -
+                    heap* h:
+                        Pointer to heap to be initialized
+   Returns -        Nothing
+   Side Effects -   The passed heap is now no longer NULL
+   ------------------------------------------------------------------------ */
 void initializeHeap(heap *h) {
     h->size = 0;
 }
