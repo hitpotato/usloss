@@ -16,11 +16,8 @@
 #include "../phase2/usyscall.h"
 #include "driver.h"
 
-#define ABS(a,b) (a-b > 0 ? a-b : -(a-b))
 
-int debug4 = 0;
-int running;
-
+// -------------------------- Function Prototypes ----------//
 static int ClockDriver(char *);
 static int DiskDriver(char *);
 static int TermDriver(char *);
@@ -43,40 +40,40 @@ int diskReadOrWriteReal(int, int, int, int, void *, int);
 int termReadReal(int, int, char *);
 int termWriteReal(int, int, char *);
 
-void requireKernelMode(char *);
-void emptyProc(int);
-void makeSureCurrentFunctionInKernelMode(int);
+void makeSureCurrentFunctionIsInKernelMode(char *);
+void initializeProcessSlot(int);
 void switchToUserMode();
 
 void initializeDiskQueue(diskQueue *);
 void addToDiskQueue(diskQueue *, procPtr);
-procPtr peekDiskQ(diskQueue*);
-procPtr removeDiskQ(diskQueue*);
-void initHeap(heap *);
-void heapAdd(heap *, procPtr);
-procPtr heapPeek(heap *);
-procPtr heapRemove(heap *);
+procPtr peekAtDiskQueue(diskQueue *);
+procPtr removeFromDiskQueue(diskQueue *);
 
-/* Globals */
-procStruct ProcTable[MAXPROC];
-heap sleepHeap;
+void initializeHeap(heap *);
+void appendTOHeap(heap *, procPtr);
+procPtr peekAtHeap(heap *);
+procPtr popFromHeap(heap *);
+
+
+// ---------------------------------- Globals ----------//
+int debug4 = 0;
+int running;
 int diskZapped; // indicates if the disk drivers are 'zapped' or not
-diskQueue diskQs[USLOSS_DISK_UNITS]; // queues for disk drivers
 int diskPids[USLOSS_DISK_UNITS]; // pids of the disk drivers
 
-// mailboxes for terminal device
-int charRecvMbox[USLOSS_TERM_UNITS]; // receive char
-int charSendMbox[USLOSS_TERM_UNITS]; // send char
-int lineReadMbox[USLOSS_TERM_UNITS]; // read line
-int lineWriteMbox[USLOSS_TERM_UNITS]; // write line
-int pidMbox[USLOSS_TERM_UNITS]; // pid to block
-int termInt[USLOSS_TERM_UNITS]; // interupt for term (control writing)
-
+procStruct ProcTable[MAXPROC];
+heap sleepinProcsHeap;
+diskQueue diskQs[USLOSS_DISK_UNITS]; // queues for disk drivers
 int termProcTable[USLOSS_TERM_UNITS][3]; // keep track of term procs
 
+int charRecvMbox[USLOSS_TERM_UNITS];        // receive char
+int charSendMbox[USLOSS_TERM_UNITS];        // send char
+int lineReadMbox[USLOSS_TERM_UNITS];        // read line
+int lineWriteMbox[USLOSS_TERM_UNITS];       // write line
+int pidMbox[USLOSS_TERM_UNITS];             // pid to block
+int termInt[USLOSS_TERM_UNITS];             // interupt for term (control writing)
 
-void
-start3(void)
+void start3(void)
 {
     char	name[128];
     char    termbuf[10];
@@ -89,16 +86,15 @@ start3(void)
     /*
      * Check kernel mode here.
      */
-    requireKernelMode("start3");
+    makeSureCurrentFunctionIsInKernelMode("start3");
 
     // initialize proc table
     for (i = 0; i < MAXPROC; i++) {
-        //emptyProc(i); Idk why this was here instead of initProc
-        makeSureCurrentFunctionInKernelMode(i);
+        initializeProcessSlot(i);
     }
 
-    // sleep queue
-    initHeap(&sleepHeap);
+    // Create queue of s
+    initializeHeap(&sleepinProcsHeap);
 
     // initialize systemCallVec
     systemCallVec[SYS_SLEEP] = sleep;
@@ -132,7 +128,6 @@ start3(void)
      * Wait for the clock driver to start. The idea is that ClockDriver
      * will V the semaphore "running" once it is running.
      */
-
     sempReal(running);
 
     /*
@@ -163,9 +158,30 @@ start3(void)
 
     for (i = 0; i < USLOSS_TERM_UNITS; i++) {
         sprintf(termbuf, "%d", i);
+
+        // Create the terminal driver
         termProcTable[i][0] = fork1(name, TermDriver, termbuf, USLOSS_MIN_STACK, 2);
+        if (termProcTable[i][0] < 0) {
+            USLOSS_Console("start3(): Can't create term driver %d\n", i);
+            USLOSS_Halt(1);
+        }
+
+        // Create the terminal reader
         termProcTable[i][1] = fork1(name, TermReader, termbuf, USLOSS_MIN_STACK, 2);
+        if (termProcTable[i][1] < 0) {
+            USLOSS_Console("start3(): Can't create term reader %d\n", i);
+            USLOSS_Halt(1);
+        }
+
+        // Create the terminal writer
         termProcTable[i][2] = fork1(name, TermWriter, termbuf, USLOSS_MIN_STACK, 2);
+        if (termProcTable[i][2] < 0) {
+            USLOSS_Console("start3(): Can't create term writer %d\n", i);
+            USLOSS_Halt(1);
+
+        }
+
+        // Wait for the driver, reader and writer to start
         sempReal(running);
         sempReal(running);
         sempReal(running);
@@ -233,14 +249,31 @@ start3(void)
         join(&status);
     }
 
+    // close out the term files
+    FILE *file = fopen("term0.in", "a");
+    fprintf(file, "last line for termination");
+    fflush(file);
+    fclose(file);
+    file = fopen("term1.in", "a");
+    fprintf(file, "last line for termination");
+    fflush(file);
+    fclose(file);
+    file = fopen("term2.in", "a");
+    fprintf(file, "last line for termination");
+    fflush(file);
+    fclose(file);
+    file = fopen("term3.in", "a");
+    fprintf(file, "last line for termination");
+    fflush(file);
+    fclose(file);
+
     // eventually, at the end:
     quit(0);
 
 }
 
 /* Clock Driver */
-static int
-ClockDriver(char *arg)
+static int ClockDriver(char *arg)
 {
     int result;
     int status;
@@ -260,8 +293,8 @@ ClockDriver(char *arg)
         procPtr proc;
         int time;
         USLOSS_DeviceInput(0, 0, &time);
-        while (sleepHeap.size > 0 && time >= heapPeek(&sleepHeap)->wakeTime) {
-            proc = heapRemove(&sleepHeap);
+        while (sleepinProcsHeap.size > 0 && time >= peekAtHeap(&sleepinProcsHeap)->wakeTime) {
+            proc = popFromHeap(&sleepinProcsHeap);
             if (debug4)
                 USLOSS_Console("ClockDriver: Waking up process %d\n", proc->pid);
             semvReal(proc->blockSem);
@@ -271,15 +304,14 @@ ClockDriver(char *arg)
 }
 
 /* Disk Driver */
-static int
-DiskDriver(char *arg)
+static int DiskDriver(char *arg)
 {
     int result;
     int status;
     int unit = atoi( (char *) arg);     // Unit is passed as arg.
 
     // get set up in proc table
-    makeSureCurrentFunctionInKernelMode(getpid());
+    initializeProcessSlot(getpid());
     procPtr me = &ProcTable[getpid() % MAXPROC];
     initializeDiskQueue(&diskQs[unit]);
 
@@ -303,7 +335,7 @@ DiskDriver(char *arg)
 
         // get request off queue
         if (diskQs[unit].size > 0) {
-            procPtr proc = peekDiskQ(&diskQs[unit]);
+            procPtr proc = peekAtDiskQueue(&diskQs[unit]);
             int track = proc->diskTrack;
 
             if (debug4) {
@@ -363,7 +395,7 @@ DiskDriver(char *arg)
             if (debug4)
                 USLOSS_Console("DiskDriver: finished request from pid %d\n", proc->pid, result, status);
 
-            removeDiskQ(&diskQs[unit]); // remove proc from queue
+            removeFromDiskQueue(&diskQs[unit]); // remove proc from queue
             semvReal(proc->blockSem); // unblock caller
         }
 
@@ -374,8 +406,7 @@ DiskDriver(char *arg)
 }
 
 /* Terminal Driver */
-static int
-TermDriver(char *arg)
+static int TermDriver(char *arg)
 {
     int result;
     int status;
@@ -417,8 +448,7 @@ TermDriver(char *arg)
 }
 
 /* Terminal Reader */
-static int
-TermReader(char * arg)
+static int TermReader(char * arg)
 {
     int unit = atoi( (char *) arg);     // Unit is passed as arg.
     int i;
@@ -459,8 +489,7 @@ TermReader(char * arg)
 }
 
 /* Terminal Writer */
-static int
-TermWriter(char * arg)
+static int TermWriter(char * arg)
 {
     int unit = atoi( (char *) arg);     // Unit is passed as arg.
     int size;
@@ -523,7 +552,7 @@ TermWriter(char * arg)
 
 /* sleep function value extraction */
 void sleep(USLOSS_Sysargs * args) {
-    requireKernelMode("sleep");
+    makeSureCurrentFunctionIsInKernelMode("sleep");
     int seconds = (long) args->arg1;
     int retval = sleepReal(seconds);
     args->arg4 = (void *) ((long) retval);
@@ -532,7 +561,7 @@ void sleep(USLOSS_Sysargs * args) {
 
 /* real sleep function */
 int sleepReal(int seconds) {
-    requireKernelMode("sleepReal");
+    makeSureCurrentFunctionIsInKernelMode("sleepReal");
 
     if (debug4)
         USLOSS_Console("sleepReal: called for process %d with %d seconds\n", getpid(), seconds);
@@ -543,7 +572,7 @@ int sleepReal(int seconds) {
 
     // init/get the process
     if (ProcTable[getpid() % MAXPROC].pid == -1) {
-        makeSureCurrentFunctionInKernelMode(getpid());
+        initializeProcessSlot(getpid());
     }
     procPtr proc = &ProcTable[getpid() % MAXPROC];
 
@@ -554,7 +583,7 @@ int sleepReal(int seconds) {
     if (debug4)
         USLOSS_Console("sleepReal: set wake time for process %d to %d, adding to heap...\n", proc->pid, proc->wakeTime);
 
-    heapAdd(&sleepHeap, proc); // add to sleep heap
+    appendTOHeap(&sleepinProcsHeap, proc); // add to sleep heap
     if (debug4)
         USLOSS_Console("sleepReal: Process %d going to sleep until %d\n", proc->pid, proc->wakeTime);
     sempReal(proc->blockSem); // block the process
@@ -566,7 +595,7 @@ int sleepReal(int seconds) {
 
 /* extract values from sysargs and call diskReadReal */
 void diskRead(USLOSS_Sysargs * args) {
-    requireKernelMode("diskRead");
+    makeSureCurrentFunctionIsInKernelMode("diskRead");
 
     int sectors = (long) args->arg2;
     int track = (long) args->arg3;
@@ -587,7 +616,7 @@ void diskRead(USLOSS_Sysargs * args) {
 
 /* extract values from sysargs and call diskWriteReal */
 void diskWrite(USLOSS_Sysargs * args) {
-    requireKernelMode("diskWrite");
+    makeSureCurrentFunctionIsInKernelMode("diskWrite");
 
     int sectors = (long) args->arg2;
     int track = (long) args->arg3;
@@ -607,12 +636,12 @@ void diskWrite(USLOSS_Sysargs * args) {
 }
 
 int diskWriteReal(int unit, int track, int first, int sectors, void *buffer) {
-    requireKernelMode("diskWriteReal");
+    makeSureCurrentFunctionIsInKernelMode("diskWriteReal");
     return diskReadOrWriteReal(unit, track, first, sectors, buffer, 1);
 }
 
 int diskReadReal(int unit, int track, int first, int sectors, void *buffer) {
-    requireKernelMode("diskWriteReal");
+    makeSureCurrentFunctionIsInKernelMode("diskWriteReal");
     return diskReadOrWriteReal(unit, track, first, sectors, buffer, 0);
 }
 
@@ -636,7 +665,7 @@ int diskReadOrWriteReal(int unit, int track, int first, int sectors, void *buffe
 
     // init/get the process
     if (ProcTable[getpid() % MAXPROC].pid == -1) {
-        makeSureCurrentFunctionInKernelMode(getpid());
+        initializeProcessSlot(getpid());
     }
     procPtr proc = &ProcTable[getpid() % MAXPROC];
 
@@ -665,7 +694,7 @@ int diskReadOrWriteReal(int unit, int track, int first, int sectors, void *buffe
 
 /* extract values from sysargs and call diskSizeReal */
 void diskSize(USLOSS_Sysargs * args) {
-    requireKernelMode("diskSize");
+    makeSureCurrentFunctionIsInKernelMode("diskSize");
     int unit = (long) args->arg1;
     int sector, track, disk;
     int retval = diskSizeReal(unit, &sector, &track, &disk);
@@ -683,7 +712,7 @@ void diskSize(USLOSS_Sysargs * args) {
     Returns: -1 if given illegal input, 0 otherwise
  ------------------------------------------------------------------------*/
 int diskSizeReal(int unit, int *sector, int *track, int *disk) {
-    requireKernelMode("diskSizeReal");
+    makeSureCurrentFunctionIsInKernelMode("diskSizeReal");
 
     // check for illegal args
     if (unit < 0 || unit > 1 || sector == NULL || track == NULL || disk == NULL) {
@@ -698,7 +727,7 @@ int diskSizeReal(int unit, int *sector, int *track, int *disk) {
     if (driver->diskTrack == -1) {
         // init/get the process
         if (ProcTable[getpid() % MAXPROC].pid == -1) {
-            makeSureCurrentFunctionInKernelMode(getpid());
+            initializeProcessSlot(getpid());
         }
         procPtr proc = &ProcTable[getpid() % MAXPROC];
 
@@ -726,7 +755,7 @@ int diskSizeReal(int unit, int *sector, int *track, int *disk) {
 void termRead(USLOSS_Sysargs * args) {
     if (debug4)
         USLOSS_Console("termRead\n");
-    requireKernelMode("termRead");
+    makeSureCurrentFunctionIsInKernelMode("termRead");
 
     char *buffer = (char *) args->arg1;
     int size = (long) args->arg2;
@@ -747,7 +776,7 @@ void termRead(USLOSS_Sysargs * args) {
 int termReadReal(int unit, int size, char *buffer) {
     if (debug4)
         USLOSS_Console("termReadReal\n");
-    requireKernelMode("termReadReal");
+    makeSureCurrentFunctionIsInKernelMode("termReadReal");
 
     if (unit < 0 || unit > USLOSS_TERM_UNITS - 1 || size < 0) {
         return -1;
@@ -779,7 +808,7 @@ int termReadReal(int unit, int size, char *buffer) {
 void termWrite(USLOSS_Sysargs * args) {
     if (debug4)
         USLOSS_Console("termWrite\n");
-    requireKernelMode("termWrite");
+    makeSureCurrentFunctionIsInKernelMode("termWrite");
 
     char *text = (char *) args->arg1;
     int size = (long) args->arg2;
@@ -800,7 +829,7 @@ void termWrite(USLOSS_Sysargs * args) {
 int termWriteReal(int unit, int size, char *text) {
     if (debug4)
         USLOSS_Console("termWriteReal\n");
-    requireKernelMode("termWriteReal");
+    makeSureCurrentFunctionIsInKernelMode("termWriteReal");
 
     if (unit < 0 || unit > USLOSS_TERM_UNITS - 1 || size < 0) {
         return -1;
@@ -821,7 +850,7 @@ int termWriteReal(int unit, int size, char *text) {
    Parameters - The name of the function calling it, for the error message.
    Side Effects - Prints and halts if we are not in kernel mode
    ------------------------------------------------------------------------ */
-void requireKernelMode(char *name)
+void makeSureCurrentFunctionIsInKernelMode(char *name)
 {
     if( (USLOSS_PSR_CURRENT_MODE & USLOSS_PsrGet()) == 0 ) {
         USLOSS_Console("%s: called while in user mode, by process %d. Halting...\n",
@@ -842,8 +871,8 @@ void switchToUserMode()
 }
 
 /* initializes proc struct */
-void makeSureCurrentFunctionInKernelMode(int pid) {
-    requireKernelMode("initProc()");
+void initializeProcessSlot(int pid) {
+    makeSureCurrentFunctionIsInKernelMode("initProc()");
 
     int i = pid % MAXPROC;
 
@@ -856,19 +885,6 @@ void makeSureCurrentFunctionInKernelMode(int pid) {
     ProcTable[i].prevDiskPtr = NULL;
 }
 
-/* empties proc struct */
-void emptyProc(int pid) {
-    requireKernelMode("emptyProc()");
-
-    int i = pid % MAXPROC;
-
-    ProcTable[i].pid = -1;
-    ProcTable[i].mboxID = -1;
-    ProcTable[i].blockSem = -1;
-    ProcTable[i].wakeTime = -1;
-    ProcTable[i].nextDiskPtr = NULL;
-    ProcTable[i].prevDiskPtr = NULL;
-}
 
 /* ------------------------------------------------------------------------
   Functions for the dskQueue and heap.
@@ -922,7 +938,7 @@ void addToDiskQueue(diskQueue *q, procPtr p) {
 }
 
 /* Returns the next proc on the disk queue */
-procPtr peekDiskQ(diskQueue* q) {
+procPtr peekAtDiskQueue(diskQueue *q) {
     if (q->curr == NULL) {
         q->curr = q->head;
     }
@@ -931,7 +947,7 @@ procPtr peekDiskQ(diskQueue* q) {
 }
 
 /* Returns and removes the next proc on the disk queue */
-procPtr removeDiskQ(diskQueue* q) {
+procPtr removeFromDiskQueue(diskQueue *q) {
     if (q->size == 0)
         return NULL;
 
@@ -978,12 +994,12 @@ procPtr removeDiskQ(diskQueue* q) {
 
 
 /* Setup heap, implementation based on https://gist.github.com/aatishnn/8265656 */
-void initHeap(heap* h) {
+void initializeHeap(heap *h) {
     h->size = 0;
 }
 
 /* Add to heap */
-void heapAdd(heap * h, procPtr p) {
+void appendTOHeap(heap *h, procPtr p) {
     // start from bottom and find correct place
     int i, parent;
     for (i = h->size; i > 0; i = parent) {
@@ -1000,12 +1016,12 @@ void heapAdd(heap * h, procPtr p) {
 }
 
 /* Return min process on heap */
-procPtr heapPeek(heap * h) {
+procPtr peekAtHeap(heap *h) {
     return h->procs[0];
 }
 
 /* Remove earlist waking process form the heap */
-procPtr heapRemove(heap * h) {
+procPtr popFromHeap(heap *h) {
     if (h->size == 0)
         return NULL;
 
