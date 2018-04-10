@@ -973,30 +973,33 @@ void initializeHeap(heap *h) {
 }
 
 /* ------------------------------------------------------------------------
-   Name -           appendProcessToQueue
-   Purpose -        Adds a process to the end of a processQueue
+   Name -           appendToHeap
+   Purpose -        Adds a process to the end of a processHeap
    Parameters -
-                    processQueue* processQueue:
+                    heap* processHeap:
                         Pointer to processQueue to be added to
-                    procPty process
+                    procPtr process
                         Pointer to the process that will be added
    Returns -        Nothing
-   Side Effects -   The length of the processQueue increases by 1.
+   Side Effects -   The length of the processHeap increases by 1.
    ------------------------------------------------------------------------ */
 void appendToHeap(heap *processHeap, procPtr process) {
-    // start from bottom and find correct place
+
     int i, parent;
     for (i = processHeap->size; i > 0; i = parent) {
         parent = (i-1)/2;
         if (processHeap->procs[parent]->wakeTime <= process->wakeTime)
             break;
-        // move parent down
-        processHeap->procs[i] = processHeap->procs[parent];
+
+        processHeap->procs[i] = processHeap->procs[parent];     // Move the parent towards the bottom
     }
-    processHeap->procs[i] = process; // put at final location
-    processHeap->size++;
+
+    processHeap->procs[i] = process;                            // Place the process at the end
+    processHeap->size++;                                        // Increase the size of the process
+
     if (debug4)
-        USLOSS_Console("heapAdd: Added proc %d to heap at index %d, size = %d\n", process->pid, i, processHeap->size);
+        USLOSS_Console("heapAdd: Added proc %d to heap at index %d, "
+                               "size = %d\n", process->pid, i, processHeap->size);
 }
 
 
