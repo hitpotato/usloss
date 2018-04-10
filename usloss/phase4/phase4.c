@@ -1,3 +1,13 @@
+/* ------------------------------------------------------------------------
+   phase4.c
+
+   University of Arizona
+   Computer Science 452
+
+   Rodrigo Silva Mendoza
+   Long Chen
+   ------------------------------------------------------------------------ */
+
 #include <usloss.h>
 #include <phase1.h>
 #include <phase2.h>
@@ -870,7 +880,7 @@ void makeSureCurrentFunctionIsInKernelMode(char *name)
 void switchToUserMode()
 {
     int w = USLOSS_PsrSet( USLOSS_PsrGet() & ~USLOSS_PSR_CURRENT_MODE );
-    w += 5; 
+    w += 5;
 }
 
 /* ------------------------------------------------------------------------
