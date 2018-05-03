@@ -195,19 +195,19 @@ void * vmInitReal(int mappings, int pages, int frames, int pagers)
     if (debug5)
         USLOSS_Console("vmInitReal: started \n");
 
-    // check if VM was already initialized
-    if (vmRegion > 0)
-        return (void *) ((long) -2);
-
-
     // If mappings and pages aren't the same, then we have invalid parameters
     if (mappings != pages)
         return (void *) ((long) -1);
 
 
+    // check if VM was already initialized
+    if (vmRegion > 0)
+        return (void *) ((long) -2);
+
+
     status = USLOSS_MmuInit(mappings, pages, frames, USLOSS_MMU_MODE_TLB);
     if (status != USLOSS_MMU_OK) {
-        USLOSS_Console("vmInitReal: couldn't initialize MMU, status %d\n", status);
+        USLOSS_Console("vmInitReal: Couldn't initialize MMU, status %d\n", status);
         abort();
     }
     USLOSS_IntVec[USLOSS_MMU_INT] = FaultHandler;
@@ -238,13 +238,15 @@ void * vmInitReal(int mappings, int pages, int frames, int pagers)
         // initialize the fault structs
         faults[i].pid = -1;
         faults[i].addr = NULL;
-        faults[i].replyMbox = MboxCreate(1, 0); // assuming this is just used to block/unblock the process.... probably wrong
+        faults[i].replyMbox = MboxCreate(1, 0);
     }
 
     /*
      * Create the fault mailbox.
      */
     faultMBox = MboxCreate(pagers, sizeof(FaultMsg));
+
+
 
 
     clockHand = 0;              // start at frame 0
@@ -374,9 +376,10 @@ void vmDestroyReal(void)
     /*
      * Kill the pagers here.
      */
-    int i, status;
+    int status;
     FaultMsg dummy;
-    for (i = 0; i < MAXPAGERS; i++) {
+
+    for (int i = 0; i < MAXPAGERS; i++) {
         if (pagerPids[i] == -1)
             break;
         if (debug5)
@@ -387,7 +390,7 @@ void vmDestroyReal(void)
     }
 
     // release fault mailboxes
-    for (i = 0; i < MAXPROC; i++) {
+    for (int i = 0; i < MAXPROC; i++) {
         MboxRelease(faults[i].replyMbox);
     }
 
@@ -400,7 +403,6 @@ void vmDestroyReal(void)
      * Print vm statistics.
      */
     PrintStats();
-    /* and so on... */
 
     vmRegion = NULL;
 } /* vmDestroyReal */
@@ -429,18 +431,17 @@ static void FaultHandler(int  type /* USLOSS_MMU_INT */,
         USLOSS_Console("FaultHandler: called for process %d \n", getpid());
 
     int cause;
-
     int offset = (int) arg;
 
     assert(type == USLOSS_MMU_INT);
     cause = USLOSS_MmuGetCause();
     assert(cause == USLOSS_MMU_FAULT);
     vmStats.faults++;
+
     /*
      * Fill in faults[pid % MAXPROC], send it to the pagers, and wait for the
      * reply.
      */
-
     int pid = getpid();
     FaultMsg *fault = &faults[pid % MAXPROC];
     fault->pid = pid;
@@ -477,7 +478,7 @@ static void FaultHandler(int  type /* USLOSS_MMU_INT */,
  */
 static int Pager(char *buf)
 {
-    int i, frame;
+    int frame;
     char buffer[USLOSS_MmuPageSize()]; // buffer for disk
     Process *proc;
     PTE *page, *oldPage;
@@ -514,7 +515,7 @@ static int Pager(char *buf)
             /* If there isn't one then use clock algorithm to
              * replace a page (perhaps write to disk) */
         else {
-            int access;
+            int access = 0;
             if (debug5)
                 USLOSS_Console("Pager: no free frame found, doing clock algo... \n");
 
@@ -527,7 +528,6 @@ static int Pager(char *buf)
                     frame = clockHand;
                     if (debug5)
                         USLOSS_Console("Pager: replacing frame %d, prev page: %d, prev owner: proc %d \n", clockHand, frameTable[frame].page, frameTable[frame].pid);
-                    // TODO: mark frame to not be used by other pagers
 
                     // update old page
                     oldPage = &processes[frameTable[frame].pid].pageTable[frameTable[frame].page];
@@ -559,7 +559,7 @@ static int Pager(char *buf)
                             USLOSS_Console("Pager: no free disk blocks, halting... \n");
                         USLOSS_Halt(1);
                     }
-                    for (i = 0; i < vmStats.diskBlocks; i++) {
+                    for (int i = 0; i < vmStats.diskBlocks; i++) {
                         if (diskTable[i].pid == -1) {
                             oldPage->diskBlock = i;
                             diskTable[i].pid = frameTable[frame].pid;

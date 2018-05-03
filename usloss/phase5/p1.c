@@ -26,8 +26,7 @@ void clearPage(PTE *page) {
 }
 
 
-void
-p1_fork(int pid)
+void p1_fork(int pid)
 {
     if (debug5)
         USLOSS_Console("p1_fork() called: pid = %d\n", pid);
@@ -43,8 +42,7 @@ p1_fork(int pid)
         proc->pageTable = malloc( proc->numPages * sizeof(PTE));
         if (debug5)
             USLOSS_Console("p1_fork(): malloced page table, clearing pages... \n");
-        int i;
-        for (i = 0; i < proc->numPages; i++) {
+        for (int i = 0; i < proc->numPages; i++) {
             clearPage(&proc->pageTable[i]);
         }
         if (debug5)
@@ -54,24 +52,21 @@ p1_fork(int pid)
 } /* p1_fork */
 
 
-void
-p1_switch(int old, int new)
+void p1_switch(int old, int new)
 {
-    // if (debug5)
-    //     USLOSS_Console("p1_switch() called: old = %d, new = %d\n", old, new);
 
-    if (vmRegion == NULL)
-        return;
+    if (vmRegion == NULL) return;
 
     vmStats.switches++;
-    int i;
 
     // unload old process's mappings
     if (old > 0) {
-        int dummy, dummy2, result; // used to check mappings
+        int dummy;
+        int dummy2;
+        int result;
         Process *oldProc = &processes[old % MAXPROC];
         if (oldProc->pageTable != NULL) {
-            for (i = 0; i < oldProc->numPages; i++) {
+            for (int i = 0; i < oldProc->numPages; i++) {
                 // check if there is a valid mapping
                 result = USLOSS_MmuGetMap(TAG, i, &dummy, &dummy2);
                 if (result != USLOSS_MMU_ERR_NOMAP) {
@@ -87,7 +82,7 @@ p1_switch(int old, int new)
     if (new > 0) {
         Process *newProc = &processes[new % MAXPROC];
         if (newProc->pageTable != NULL) {
-            for (i = 0; i < newProc->numPages; i++) {
+            for (int i = 0; i < newProc->numPages; i++) {
                 if (newProc->pageTable[i].state == INFRAME) { // check if there is a valid mapping
                     USLOSS_MmuMap(TAG, i, newProc->pageTable[i].frame, USLOSS_MMU_PROT_RW);
                     if (debug5)
