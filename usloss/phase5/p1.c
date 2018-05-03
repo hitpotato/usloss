@@ -26,6 +26,16 @@ void clearPage(PTE *page) {
 }
 
 
+/*----------------------------------------------------------------------
+ * p1_fork
+ *
+ * Creates a page table for a process, if the virtual memory system
+ * has been initialized.
+ *
+ * Results: None
+ *
+ * Side effects: pageTable malloced and initialized for process
+ *----------------------------------------------------------------------*/
 void p1_fork(int pid)
 {
     if (debug5)
@@ -52,25 +62,36 @@ void p1_fork(int pid)
 } /* p1_fork */
 
 
+/*----------------------------------------------------------------------
+ * p1_switch
+ *
+ * Unmaps and Maps pages to frames in the MMU for processes that are context
+ * switching. A process must be set as a virtual memory process by the fault
+ * handler in phase5.c to unmap and map.
+ *
+ * Results: None
+ *
+ * Side effects: mapping are added or removed from the MMU
+ *----------------------------------------------------------------------*/
 void p1_switch(int old, int new)
 {
 
     if (vmRegion == NULL) return;
 
-    vmStats.switches++;
+    vmStats.switches++;     // Increase the number of switches
 
-    // unload old process's mappings
+    // Clear the old processes mappings
     if (old > 0) {
         int dummy;
-        int dummy2;
         int result;
         Process *oldProc = &processes[old % MAXPROC];
+
+        // If the old process had a page table that contained information
         if (oldProc->pageTable != NULL) {
             for (int i = 0; i < oldProc->numPages; i++) {
-                // check if there is a valid mapping
-                result = USLOSS_MmuGetMap(TAG, i, &dummy, &dummy2);
+                result = USLOSS_MmuGetMap(TAG, i, &dummy, &dummy);     // check if there is a valid mapping
                 if (result != USLOSS_MMU_ERR_NOMAP) {
-                    USLOSS_MmuUnmap(TAG, i);
+                    USLOSS_MmuUnmap(TAG, i);    // Unmap if a mapping existed
                     if (debug5)
                         USLOSS_Console("p1_switch(): unmapped page %d for proc %d \n", i, old);
                 }
@@ -78,12 +99,12 @@ void p1_switch(int old, int new)
         }
     }
 
-    // map new process's pages
+    // Map the pages for the new process
     if (new > 0) {
         Process *newProc = &processes[new % MAXPROC];
         if (newProc->pageTable != NULL) {
             for (int i = 0; i < newProc->numPages; i++) {
-                if (newProc->pageTable[i].state == INFRAME) { // check if there is a valid mapping
+                if (newProc->pageTable[i].state == INFRAME) { // Check to see if the mapping is valid
                     USLOSS_MmuMap(TAG, i, newProc->pageTable[i].frame, USLOSS_MMU_PROT_RW);
                     if (debug5)
                         USLOSS_Console("p1_switch(): mapped page %d to frame %d for proc %d \n", i, newProc->pageTable[i].frame, new);
@@ -94,9 +115,18 @@ void p1_switch(int old, int new)
 
 } /* p1_switch */
 
+/*----------------------------------------------------------------------
+ * p1_quit
+ *
+ * Removes mappings to the MMU for processes that are quiting.
+ *
+ * Results: None
+ *
+ * Side effects: mappings are removed from the MMU
+ *----------------------------------------------------------------------*/
 void p1_quit(int pid)
 {
-    int i, frame, dummy, result;
+    int frame, dummy, result;
 
     if (debug5)
         USLOSS_Console("p1_quit() called: pid = %d\n", pid);
@@ -106,7 +136,7 @@ void p1_quit(int pid)
         Process *proc = &processes[pid % MAXPROC];
         if (proc->pageTable == NULL)
             return;
-        for (i = 0; i < proc->numPages; i++) {
+        for (int i = 0; i < proc->numPages; i++) {
             // free the frames
             result = USLOSS_MmuGetMap(TAG, i, &frame, &dummy);
             if (result != USLOSS_MMU_ERR_NOMAP) {

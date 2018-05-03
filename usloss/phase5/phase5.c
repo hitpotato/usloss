@@ -46,7 +46,7 @@ static int Pager(char *);
 void switchToUserMode();
 
 /* Global Variables */
-int debug5 = 1;
+int debug5 = 0;
 Process processes[MAXPROC];
 FaultMsg faults[MAXPROC]; /* Note that a process can have only
                            * one fault at a time, so we can
